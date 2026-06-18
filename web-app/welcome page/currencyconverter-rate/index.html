@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title  data-i18n="about_pageTitle-c1">أسعار الصرف و محول العملات - MSB BANK</title>
+    <link rel="stylesheet" href="../../style.css"> <!-- مهم جداً -->
+    <link rel="stylesheet" href="style.css"> <!-- إذا كان لديك ملف خاص بهذه الصفحة -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>    
+    <script src="../../language.js"></script>  
+    <script src="../../load-components.js"></script>  
+    <script src="../../common.js"></script>  
+    <script src="currency-translations.js"></script>  
+    <script src="common.js"></script>
+    <script src="currency-rate.js"></script>
+    <script src="currencyconverter.js"></script>
+    <script src="app.js"></script>
+</head>
+<body>
+    <div id="navbar-container"></div>
+    
+    <header>
+        <div class="header-container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-coins"></i>
+                    <h1 data-i18n="pageTitle1">أسعار الصرف و محول العملات</h1>
+                </div>
+                <div class="date-info">
+                    <div class="current-date" id="current-date"></div>
+                <div class="update-time">
+                    <span data-i18n="lastUpdate">آخر تحديث:</span>
+                    <span id="updateTimestamp">جارٍ التحميل...</span>
+                </div>                
+                </div>
+            </div>
+            
+            <div class="header-buttons">
+                <a href="#" class="exchange-currency-link nav-link active" data-page="rates">
+                    <h3 data-i18n="exchangeRates"><i class="fas fa-chart-line"></i> سعر الصرف (EGP)</h3>
+                </a>
+                <a href="#" class="exchange-currency-link nav-link" data-page="converter">
+                    <h3 data-i18n="currency-converter"><i class="fas fa-calculator"></i> محول العملات</h3>
+                </a>
+            </div>
+        </div>
+    </header>
+    <main id="app">
+    </main>
+    
+    <div style="display: none;">
+
+        <template id="rates-template">
+            <div class="rates-page">
+                <div class="container">
+                    <div class="card">
+                        <div class="card-title">
+                            <h2 data-i18n="currencyRatesTitle"><i class="fas fa-exchange-alt"></i> سعر العملات مقابل الجنيه المصري</h2>
+                        </div>
+                        
+                        <div id="loading" class="loading">
+                            <div class="loading-spinner"></div>
+                            <p data-i18n="loadingRates">جاري تحميل أسعار الصرف...</p>
+                        </div>
+                        
+                        <div id="error-container" style="display: none;"></div>
+                        
+                        <table class="exchange-table" id="exchange-table" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="currencyColumn" style="width: 60%; text-align: center;">العملة</th>
+                                    <th data-i18n="priceColumn" style="width: 40%; text-align: center;">السعر بالجنيه</th>
+                                </tr>
+                            </thead>
+                            <tbody id="exchange-rates"></tbody>
+                        </table>
+                    
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <template id="converter-template">
+            <div class="converter-page">
+                <div class="converter-container">
+                    <h2 data-i18n="currency-converter"> محول العملات</h2>
+                    <form id="converter-form">
+                        <div class="amount">
+                            <p data-i18n="enterAmount">أدخل المبلغ</p> 
+                            <input 
+                                class="box"  
+                                type="number" 
+                                placeholder="0.0"  
+                                data-i18n="amountPlaceholder" 
+                                title="أدخل المبلغ للتحويل"
+                                min="0"
+                                step="0.01"
+                                id="amountInput"
+                                autocomplete="off"
+                            />
+                        </div>
+                        <div class="dropdown">
+                            <div class="from">
+                                <p data-i18n="fromCurrency">من العملة</p>
+                                <div class="select-container">
+                                    <img src="https://flagsapi.com/US/flat/64.png" id="from-flag" />
+                                    <select name="from" id="from-currency"></select>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-arrow-right-arrow-left" id="swap-btn" title="تبديل العملات"></i>
+                            <div class="to">
+                                <p data-i18n="toCurrency">إلى العملة</p>
+                                <div class="select-container">
+                                    <img src="https://flagsapi.com/EG/flat/64.png" id="to-flag" />
+                                    <select name="to" id="to-currency"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="result" id="result-container" style="display: none;">
+                            <div class="result-amount" id="converted-amount"></div>
+                            <div class="result-rate" id="exchange-rate"></div>
+                        </div>
+                        <div class="msg" id="message"></div>
+                        <button type="button" id="convert-btn" class="convert-btn" data-i18n="calculate">
+                            <i class="fas fa-calculator"></i> احسب سعر الصرف
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </template>
+    </div>
+    
+    <div id="footer-container"></div>
+
+</body>
+</html>

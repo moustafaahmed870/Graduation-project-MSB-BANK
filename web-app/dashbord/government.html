@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.name">MSB BANK - الخدمات الحكومية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: linear-gradient(135deg, #0a2438 0%, #081b29 100%);
+            border-radius: 15px;
+            border: 2px solid rgba(49, 124, 129, 0.3);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideInUp 0.3s ease;
+        }
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(49, 124, 129, 0.3);
+        }
+        .modal-header h3 {
+            color: #a0d2db;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #a0d2db;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid rgba(49, 124, 129, 0.3);
+        }
+        .form-text {
+            font-size: 12px;
+            color: #a0d2db;
+            opacity: 0.7;
+            margin-top: 5px;
+            display: block;
+        }
+        .transfer-summary {
+            background: rgba(79, 195, 247, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid rgba(49, 124, 129, 0.3);
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .summary-item.total {
+            font-weight: bold;
+            color: #4fc3f7;
+            font-size: 1.1em;
+        }
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid rgba(49, 124, 129, 0.2);
+            transition: background 0.3s ease;
+        }
+        .service-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .service-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .service-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .service-icon.electricity { background: #f59e0b; color: white; }
+        .service-icon.water { background: #3b82f6; color: white; }
+        .service-icon.internet { background: #8b5cf6; color: white; }
+        .service-icon.phone { background: #10b981; color: white; }
+        .service-icon.gas { background: #ef4444; color: white; }
+        .service-icon.municipality { background: #ec489a; color: white; }
+        .service-icon.tax { background: #6b7280; color: white; }
+        .service-details h4 { margin: 0 0 5px 0; color: #a0d2db; font-size: 14px; }
+        .service-details p { margin: 0; color: #a0d2db; opacity: 0.7; font-size: 12px; }
+        .service-amount { font-weight: bold; font-size: 16px; color: #ef4444; }
+        .service-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .service-status.completed { background: #10b981; color: white; }
+        .service-status.pending { background: #f59e0b; color: white; }
+        .service-status.failed { background: #ef4444; color: white; }
+    </style>
+</head>
+<body class="rtl">
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="https://i.ibb.co/LhY9KjRv/MSB.png" alt="MSB">
+                    <div class="logo-text" data-i18n="app.name">MSB BANK</div>
+                </a>
+                
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="user-info">
+                    <div class="user-welcome">
+                        <div class="user-name" id="userName">
+                            <span data-i18n="hello">مرحباً</span>، <span id="userNameText">---</span>
+                        </div>
+                        <div class="user-account" id="accountNumber"><span data-i18n="accounts.account_number">الحساب</span>: <span id="accountNumberText">---</span></div>
+                        <div class="rewards-badge" onclick="BankApp.openAIAssistant()">
+                            <i class="fas fa-trophy"></i>
+                            <span data-i18n="header.rewards" id="rewardsLevel">---</span>
+                        </div>
+                    </div>
+                    
+                    <div class="header-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="window.location.href='/pages/currencyconverter-rate/index.html'">
+                            <i class="fas fa-coins"></i>
+                            <span data-i18n="header.currency_rates">اسعار العملات</span>
+                        </button>
+                        
+                        <button class="language-btn" id="languageToggle" data-i18n-toggle data-i18n-lang-btn>
+                            <i class="fas fa-language"></i> English
+                        </button>
+                        
+                        <div class="notifications">
+                            <button class="notifications-btn" onclick="document.getElementById('notificationDropdown').classList.toggle('active')">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge" id="notificationBadge">0</span>
+                            </button>
+                            <div class="notification-dropdown" id="notificationDropdown">
+                                <div class="notification-header">
+                                    <div class="notification-title" data-i18n="header.notifications">الإشعارات</div>
+                                    <button class="mark-all-read" onclick="BankApp.markAllNotificationsRead()" data-i18n="header.mark_all_read">تعيين الكل كمقروء</button>
+                                </div>
+                                <div class="notification-list" id="notificationList"></div>
+                                <div class="notification-footer">
+                                    <a href="#" class="view-all-notifications" data-i18n="header.view_all">عرض جميع الإشعارات</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="user-avatar" onclick="BankApp.logout()">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-list" id="navList">
+                <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i><span data-i18n="nav.home">الرئيسية</span></a></li>
+                <li class="nav-item"><a href="accounts.html" class="nav-link"><i class="fas fa-credit-card"></i><span data-i18n="nav.accounts">الحسابات</span></a></li>
+                <li class="nav-item"><a href="transfers.html" class="nav-link"><i class="fas fa-exchange-alt"></i><span data-i18n="nav.transfers">التحويلات</span></a></li>
+                <li class="nav-item"><a href="investments.html" class="nav-link"><i class="fas fa-chart-line"></i><span data-i18n="nav.investments">الاستثمارات</span></a></li>
+                <li class="nav-item"><a href="cards.html" class="nav-link"><i class="fas fa-credit-card"></i><span data-i18n="nav.cards">البطاقات</span></a></li>
+                <li class="nav-item"><a href="loans.html" class="nav-link"><i class="fas fa-hand-holding-usd"></i><span data-i18n="nav.loans">القروض</span></a></li>
+                <li class="nav-item"><a href="wallet.html" class="nav-link"><i class="fas fa-wallet"></i><span data-i18n="nav.wallet">المحفظة</span></a></li>
+                <li class="nav-item"><a href="government.html" class="nav-link active"><i class="fas fa-landmark"></i><span data-i18n="nav.government">الخدمات الحكومية</span></a></li>
+                <li class="nav-item"><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i><span data-i18n="nav.settings">الإعدادات</span></a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="page-section">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="government.title">الخدمات الحكومية</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="refreshGovernmentHistory()">
+                            <i class="fas fa-sync-alt"></i>
+                            تحديث
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- أنواع الخدمات -->
+                <div class="grid grid-4 gap-4 mb-4">
+                    <div class="quick-action-card" onclick="openServiceModal('electricity')">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3 class="action-title" data-i18n="payments.electricity">كهرباء</h3>
+                        <p class="action-desc">دفع فاتورة الكهرباء</p>
+                    </div>
+                    
+                    <div class="quick-action-card" onclick="openServiceModal('water')">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <h3 class="action-title" data-i18n="payments.water">مياه</h3>
+                        <p class="action-desc">دفع فاتورة المياه</p>
+                    </div>
+                    
+                    <div class="quick-action-card" onclick="openServiceModal('internet')">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <h3 class="action-title" data-i18n="payments.internet">إنترنت</h3>
+                        <p class="action-desc">دفع فاتورة الإنترنت</p>
+                    </div>
+                    
+                    <div class="quick-action-card" onclick="openServiceModal('tax')">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <h3 class="action-title" data-i18n="government.taxes">ضرائب</h3>
+                        <p class="action-desc">دفع الضرائب والجمارك</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-4 gap-4 mb-4">
+                    <div class="quick-action-card" onclick="openServiceModal('gas')">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3 class="action-title">غاز طبيعي</h3>
+                        <p class="action-desc">دفع فاتورة الغاز</p>
+                    </div>
+                    
+                    <div class="quick-action-card" onclick="openServiceModal('municipality')">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #ec489a 0%, #f472b6 100%);">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3 class="action-title" data-i18n="government.municipality">بلدية</h3>
+                        <p class="action-desc">الخدمات البلدية والتراخيص</p>
+                    </div>
+                    
+                    <div class="quick-action-card" onclick="openServiceModal('traffic')">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #14b8a6 0%, #2dd4bf 100%);">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <h3 class="action-title">مخالفات مرورية</h3>
+                        <p class="action-desc">دفع المخالفات المرورية</p>
+                    </div>
+                    
+                    <div class="quick-action-card" onclick="openServiceModal('customs')">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #78716c 0%, #a8a29e 100%);">
+                            <i class="fas fa-ship"></i>
+                        </div>
+                        <h3 class="action-title">جمارك</h3>
+                        <p class="action-desc">دفع الرسوم الجمركية</p>
+                    </div>
+                </div>
+                
+                <!-- سجل الخدمات -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-i18n="government.history">سجل الخدمات الحكومية</h2>
+                        <button class="btn btn-sm btn-secondary" onclick="refreshGovernmentHistory()">
+                            <i class="fas fa-sync-alt"></i>
+                            تحديث
+                        </button>
+                    </div>
+                    
+                    <div id="governmentHistoryList" style="max-height: 400px; overflow-y: auto;">
+                        <div class="text-center p-3"><span data-i18n="loading">جاري التحميل...</span></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="app.name">MSB BANK</h3>
+                    <p data-i18n="footer.description">نقدم لكم خدمات مصرفية آمنة وسريعة تلبي جميع احتياجاتكم المالية مع أعلى معايير الأمان والجودة.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="quick_links">روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.home">الرئيسية</span></a></li>
+                        <li><a href="accounts.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.accounts">الحسابات</span></a></li>
+                        <li><a href="transfers.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.transfers">التحويلات</span></a></li>
+                        <li><a href="payments.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.payments">الدفع</span></a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="customer_service">خدمة العملاء</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> <span data-i18n="settings.faq">الأسئلة الشائعة</span></a></li>
+                        <li><a href="#" data-i18n="footer.complaints"><i class="fas fa-chevron-left"></i> الشكاوى والاقتراحات</a></li>
+                        <li><a href="#" data-i18n="footer.technical_support"><i class="fas fa-chevron-left"></i> الدعم الفني</a></li>
+                        <li><a href="#" data-i18n="settings.contact_us"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright" data-i18n-html="footer.copyright">
+                © <span class="current-year">2025</span> <span data-i18n="app.name">MSB BANK</span>. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // ============= إصلاح مشكلة زر القائمة في الجوال =============
+        (function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navList = document.getElementById('navList');
+            
+            if (menuToggle && navList) {
+                const newMenuToggle = menuToggle.cloneNode(true);
+                menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
+                
+                newMenuToggle.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    navList.classList.toggle('mobile-active');
+                });
+
+                document.addEventListener('click', function(event) {
+                    if (navList.classList.contains('mobile-active') && 
+                        !navList.contains(event.target) && 
+                        !newMenuToggle.contains(event.target)) {
+                        navList.classList.remove('mobile-active');
+                    }
+                });
+
+                const navLinks = navList.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        navList.classList.remove('mobile-active');
+                    });
+                });
+            }
+        })();
+
+        // أسماء الخدمات للعرض
+        const serviceNames = {
+            electricity: 'كهرباء',
+            water: 'مياه',
+            internet: 'إنترنت',
+            phone: 'هاتف',
+            gas: 'غاز طبيعي',
+            municipality: 'خدمات بلدية',
+            tax: 'ضرائب',
+            traffic: 'مخالفات مرورية',
+            customs: 'جمارك'
+        };
+
+        const serviceIcons = {
+            electricity: 'bolt',
+            water: 'tint',
+            internet: 'wifi',
+            phone: 'phone',
+            gas: 'fire',
+            municipality: 'building',
+            tax: 'file-invoice-dollar',
+            traffic: 'car',
+            customs: 'ship'
+        };
+
+        const serviceColors = {
+            electricity: '#f59e0b',
+            water: '#3b82f6',
+            internet: '#8b5cf6',
+            phone: '#10b981',
+            gas: '#ef4444',
+            municipality: '#ec489a',
+            tax: '#6b7280',
+            traffic: '#14b8a6',
+            customs: '#78716c'
+        };
+
+        // ============= فتح مودال دفع الخدمة =============
+        function openServiceModal(serviceType) {
+            BankUtils.closeAllModals();
+            
+            const modalHTML = `
+                <div class="modal" id="serviceModal" style="display: flex;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><i class="fas ${serviceIcons[serviceType] === 'bolt' ? 'fa-bolt' : serviceIcons[serviceType] === 'tint' ? 'fa-tint' : serviceIcons[serviceType] === 'wifi' ? 'fa-wifi' : serviceIcons[serviceType] === 'phone' ? 'fa-phone' : serviceIcons[serviceType] === 'fire' ? 'fa-fire' : serviceIcons[serviceType] === 'building' ? 'fa-building' : serviceIcons[serviceType] === 'file-invoice-dollar' ? 'fa-file-invoice-dollar' : serviceIcons[serviceType] === 'car' ? 'fa-car' : 'fa-ship'}"></i>
+                                دفع ${serviceNames[serviceType]}
+                            </h3>
+                            <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="serviceForm" onsubmit="processServicePayment(event, '${serviceType}')">
+                                <div class="form-group">
+                                    <label class="form-label">رقم الفاتورة / الاشتراك</label>
+                                    <input type="text" class="form-control" id="serviceNumber" 
+                                           placeholder="أدخل رقم الفاتورة" required>
+                                    <small class="form-text">أدخل رقم الفاتورة الموجود على الإيصال</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">المبلغ (ج.م)</label>
+                                    <input type="number" class="form-control" id="serviceAmount" 
+                                           min="10" max="100000" value="100" required>
+                                    <div class="quick-amounts" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setServiceAmount(100)">100</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setServiceAmount(500)">500</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setServiceAmount(1000)">1000</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setServiceAmount(2000)">2000</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">من حساب</label>
+                                    <select class="form-control" id="serviceFromAccount" required>
+                                        ${BankApp.user.accounts ? BankApp.user.accounts.map(acc => 
+                                            `<option value="${acc.id}">${acc.name} - ${acc.number} (${(acc.balance || 0).toLocaleString()} ج.م)</option>`
+                                        ).join('') : '<option value="">جاري التحميل...</option>'}
+                                    </select>
+                                </div>
+                                
+                                <div class="transfer-summary">
+                                    <div class="summary-item">
+                                        <span>قيمة الخدمة</span>
+                                        <span id="serviceAmountDisplay">100 ج.م</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span>العمولة</span>
+                                        <span id="serviceFees">5 ج.م</span>
+                                    </div>
+                                    <div class="summary-item total">
+                                        <span>الإجمالي</span>
+                                        <span id="serviceTotal">105 ج.م</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px;">
+                                        <input type="checkbox" id="confirmService" required>
+                                        <span>أؤكد صحة البيانات المدخلة</span>
+                                    </label>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-check"></i>
+                                    دفع الآن
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // تحديث الملخص عند تغيير المبلغ
+            const amountInput = document.getElementById('serviceAmount');
+            if (amountInput) {
+                amountInput.addEventListener('input', updateServiceSummary);
+            }
+            updateServiceSummary();
+        }
+        
+        function setServiceAmount(amount) {
+            document.getElementById('serviceAmount').value = amount;
+            updateServiceSummary();
+        }
+        
+        function updateServiceSummary() {
+            const amount = parseFloat(document.getElementById('serviceAmount').value) || 0;
+            const fees = Math.max(5, Math.ceil(amount * 0.01));
+            const total = amount + fees;
+            
+            document.getElementById('serviceAmountDisplay').innerHTML = amount.toLocaleString() + ' ' + I18n.t('currency.egp');
+            document.getElementById('serviceFees').innerHTML = fees.toLocaleString() + ' ' + I18n.t('currency.egp');
+            document.getElementById('serviceTotal').innerHTML = total.toLocaleString() + ' ' + I18n.t('currency.egp');
+        }
+        
+        // ============= معالجة دفع الخدمة =============
+        async function processServicePayment(event, serviceType) {
+            event.preventDefault();
+            
+            const serviceNumber = document.getElementById('serviceNumber').value.trim();
+            const amount = parseFloat(document.getElementById('serviceAmount').value);
+            const fromAccountId = document.getElementById('serviceFromAccount').value;
+            const confirmCheck = document.getElementById('confirmService').checked;
+            
+            if (!serviceNumber) {
+                BankUtils.showAlert('يرجى إدخال رقم الفاتورة', 'error');
+                return;
+            }
+            
+            if (!amount || amount <= 0) {
+                BankUtils.showAlert('يرجى إدخال مبلغ صحيح', 'error');
+                return;
+            }
+            
+            if (!fromAccountId) {
+                BankUtils.showAlert('يرجى اختيار حساب الدفع', 'error');
+                return;
+            }
+            
+            if (!confirmCheck) {
+                BankUtils.showAlert('يرجى تأكيد صحة البيانات', 'error');
+                return;
+            }
+            
+            const fees = Math.max(5, Math.ceil(amount * 0.01));
+            const totalAmount = amount + fees;
+            
+            const fromAccount = BankApp.user.accounts?.find(acc => acc.id === fromAccountId);
+            if (!fromAccount || fromAccount.balance < totalAmount) {
+                BankUtils.showAlert(`⚠️ الرصيد غير كافٍ. المتاح: ${(fromAccount?.balance || 0).toLocaleString()} ج.م`, 'error');
+                return;
+            }
+            
+            BankUtils.showLoading(true, 'جاري معالجة الدفع...');
+            
+            try {
+                // إرسال طلب الدفع إلى الخادم
+                const result = await BankApp.apiCall('/government/pay', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        serviceType: serviceType,
+                        serviceNumber: serviceNumber,
+                        amount: amount,
+                        fromAccountId: fromAccountId
+                    })
+                });
+                
+                if (result.success) {
+                    // تحديث البيانات محلياً
+                    await BankApp.loadData(false);
+                    
+                    // إضافة الخدمة إلى سجل الخدمات الحكومية
+                    if (!BankApp.user.governmentServices) BankApp.user.governmentServices = [];
+                    
+                    const newService = {
+                        id: `gov_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`,
+                        serviceType: serviceType,
+                        serviceName: serviceNames[serviceType],
+                        serviceNumber: serviceNumber,
+                        amount: totalAmount,
+                        fees: fees,
+                        serviceAmount: amount,
+                        status: 'completed',
+                        date: new Date().toISOString(),
+                        icon: serviceIcons[serviceType]
+                    };
+                    
+                    BankApp.user.governmentServices.unshift(newService);
+                    
+                    // حفظ في Firebase عبر API
+                    await BankApp.apiCall('/government/history/add', {
+                        method: 'POST',
+                        body: JSON.stringify(newService)
+                    }).catch(e => console.log('History save warning:', e));
+                    
+                    // تحديث سجل الخدمات في الواجهة
+                    updateGovernmentHistoryList();
+                    
+                    BankUtils.showLoading(false);
+                    BankUtils.closeAllModals();
+                    BankUtils.showAlert(`✅ تم دفع ${serviceNames[serviceType]} بنجاح`, 'success');
+                    
+                    // إضافة إشعار
+                    if (BankApp.addNotification) {
+                        BankApp.addNotification({
+                            title: 'تم دفع خدمة حكومية',
+                            message: `تم دفع ${serviceNames[serviceType]} بمبلغ ${amount.toLocaleString()} ج.م بنجاح`,
+                            type: 'success',
+                            icon: 'check-circle'
+                        });
+                    }
+                    
+                } else {
+                    throw new Error(result.message || 'فشل في دفع الخدمة');
+                }
+                
+            } catch (error) {
+                BankUtils.showLoading(false);
+                console.error('❌ Service payment error:', error);
+                BankUtils.showAlert(error.message || 'فشل في دفع الخدمة', 'error');
+            }
+        }
+        
+        // ============= تحديث سجل الخدمات =============
+        async function updateGovernmentHistoryList() {
+            const container = document.getElementById('governmentHistoryList');
+            if (!container) return;
+            
+            try {
+                // جلب سجل الخدمات من API
+                const result = await BankApp.apiCall('/government/history', { method: 'GET' });
+                let services = [];
+                
+                if (result.success && result.history) {
+                    services = result.history;
+                    BankApp.user.governmentServices = services;
+                } else if (BankApp.user.governmentServices) {
+                    services = BankApp.user.governmentServices;
+                }
+                
+                if (!services || services.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center p-3" style="color: var(--text-color); opacity: 0.7;">
+                            <i class="fas fa-landmark" style="font-size: 48px; margin-bottom: 15px; display: block; opacity: 0.5;"></i>
+                            لا توجد خدمات حكومية سابقة
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = services.slice(0, 30).map(service => `
+                    <div class="service-item">
+                        <div class="service-info">
+                            <div class="service-icon ${service.serviceType}" style="background: ${serviceColors[service.serviceType] || '#6b7280'};">
+                                <i class="fas fa-${service.icon || serviceIcons[service.serviceType] || 'landmark'}"></i>
+                            </div>
+                            <div class="service-details">
+                                <h4>${service.serviceName || serviceNames[service.serviceType] || service.serviceType}</h4>
+                                <p>رقم: ${service.serviceNumber || '---'} | ${BankUtils.formatDate(service.date)}</p>
+                            </div>
+                        </div>
+                        <div class="service-amount">
+                            ${(service.amount || 0).toLocaleString()} ${I18n.t('currency.egp')}
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('❌ Error updating government history:', error);
+                container.innerHTML = `
+                    <div class="text-center p-3" style="color: var(--text-color); opacity: 0.7;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 15px; display: block; opacity: 0.5;"></i>
+                        خطأ في تحميل السجل
+                    </div>
+                `;
+            }
+        }
+        
+        // ============= تحديث الصفحة =============
+        async function refreshGovernmentHistory() {
+            BankUtils.showLoading(true, 'جاري تحديث سجل الخدمات...');
+            await BankApp.loadData(false);
+            await updateGovernmentHistoryList();
+            BankUtils.showLoading(false);
+            BankUtils.showAlert('تم تحديث سجل الخدمات', 'success');
+        }
+        
+        // ============= تحديث عند تغيير اللغة =============
+        document.addEventListener('languageChanged', function() {
+            updateGovernmentHistoryList();
+        });
+        
+        // ============= تهيئة الصفحة =============
+        document.addEventListener('DOMContentLoaded', async function() {
+            const checkBankApp = setInterval(async () => {
+                if (window.BankApp && BankApp.user) {
+                    clearInterval(checkBankApp);
+                    console.log('✅ BankApp loaded, initializing government page...');
+                    
+                    // تحميل سجل الخدمات
+                    await updateGovernmentHistoryList();
+                }
+            }, 100);
+            
+            setTimeout(async () => {
+                clearInterval(checkBankApp);
+                if (window.BankApp && BankApp.user) {
+                    console.log('✅ Fallback: initializing government page...');
+                    await updateGovernmentHistoryList();
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

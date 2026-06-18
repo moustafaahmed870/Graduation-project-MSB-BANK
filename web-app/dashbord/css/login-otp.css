@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0a2438 0%, #082430 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px;
+}
+
+.otp-container {
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(14, 239, 245, 0.2);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(14, 239, 245, 0.1);
+    padding: 40px;
+    text-align: center;
+}
+
+.logo {
+    margin-bottom: 20px;
+}
+
+.logo i {
+    font-size: 50px;
+    color: #0ef;
+    text-shadow: 0 0 20px rgba(14, 239, 245, 0.5);
+}
+
+.otp-container h2 {
+    color: #fff;
+    font-size: 28px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.otp-container p {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.otp-container .email-display {
+    background: rgba(14, 239, 245, 0.1);
+    border: 1px solid rgba(14, 239, 245, 0.3);
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-bottom: 30px;
+    color: #0ef;
+    font-weight: 500;
+}
+
+.otp-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.otp-inputs input {
+    width: 50px;
+    height: 60px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.otp-inputs input:focus {
+    border-color: #0ef;
+    box-shadow: 0 0 20px rgba(14, 239, 245, 0.3);
+    outline: none;
+}
+
+.otp-inputs input.valid {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.timer {
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.timer span {
+    color: #0ef;
+    font-weight: 600;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #0ef 0%, #6958d5 100%);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(14, 239, 245, 0.4);
+}
+
+.submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.submit-btn.enabled {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.resend-link {
+    margin-top: 20px;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+}
+
+.resend-link a {
+    color: #0ef;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.resend-link a:hover {
+    text-decoration: underline;
+}
+
+.resend-link a.disabled {
+    color: rgba(255,255,255,0.3);
+    pointer-events: none;
+}
+
+.biometric-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.biometric-section p {
+    margin-bottom: 15px;
+}
+
+.biometric-btns {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.biometric-btn {
+    flex: 1;
+    padding: 15px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.biometric-btn:hover {
+    border-color: #0ef;
+    background: rgba(14, 239, 245, 0.1);
+}
+
+.biometric-btn i {
+    font-size: 28px;
+    color: #0ef;
+}
+
+.biometric-btn span {
+    font-size: 12px;
+}
+
+.error-message {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    color: #ef4444;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.success-message {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    color: #10b981;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+@media (max-width: 480px) {
+    .otp-container {
+        padding: 25px;
+    }
+    
+    .otp-inputs {
+        gap: 8px;
+    }
+    
+    .otp-inputs input {
+        width: 42px;
+        height: 50px;
+        font-size: 20px;
+    }
+}

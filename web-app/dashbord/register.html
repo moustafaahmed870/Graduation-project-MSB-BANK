@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/login-signup pages/dashbord/css/login.css">
+    <script type="module" src="/login-signup pages/dashbord/js/login.js"></script>
+    <title>MSB Bank</title>
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+</head>
+<body>
+    <div class="wrapper active">  <!-- إضافة 'active' هنا لجعل الريجستر مرئي افتراضيًا -->
+        <span class="bg-animate"></span>
+        <span class="bg-animate2"></span>
+        <div class="form-box login">
+            <h2 class="animation" style="--i:0; --j:21;">Login</h2>
+            <form action="#" id="loginForm">
+                <div class="input-box animation" style="--i:1; --j:22;">
+                    <input type="text" required>
+                    <label>Username</label>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-box animation" style="--i:2; --j:23;">
+                    <input type="password" required>
+                    <label>Password</label>
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <button type="submit" class="btn animation" style="--i:3; --j:24;">Login</button>
+                <div class="logreg-link animation" style="--i:4; --j:25;">
+                    <p><a href="forget.html">Forget Password</a></p>
+                    <p>Don't have an account? <a href="#" class="register-link">Sign Up</a></p>
+                </div>
+            </form>
+        </div>
+        <div class="info-text login">
+            <h2 class="animation" style="--i:0; --j:20;">Welcome To MSB</h2>
+            <p class="animation" style="--i:1; --j:21;">Your financial safety begins with protected access. Never share your login credentials.</p>
+        </div>
+        
+        <div class="form-box register">
+            <h2 class="animation" style="--i:17; --j:0;">Sign Up</h2>
+            <form action="#" id="signupForm">
+                <div class="input-box animation" style="--i:18; --j:1;">
+                    <input type="text" required>
+                    <label>Username</label>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="input-box animation" style="--i:19; --j:2;">
+                    <input type="text" required>
+                    <label>National ID number</label>
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
+                <div class="input-box animation" style="--i:20; --j:3;">
+                    <input type="text" required>
+                    <label>Date of birth</label>
+                    <i class="fa-solid fa-calendar"></i>
+                </div>
+                <button type="submit" class="btn animation" style="--i:21; --j:4;" onclick="location.href='form.html'">Sign Up</button>
+                <div class="logreg-link animation" style="--i:22; --j:5;">
+                    <p>Already have an account? <a href="#" class="login-link">Login</a></p>
+                </div>
+            </form>
+        </div>
+        <div class="info-text register">
+            <h2 class="animation" style="--i:17; --j:0;">Welcome To MSB</h2>
+            <p class="animation" style="--i:18; --j:1;">Your financial safety begins with protected access. Never share your login credentials.</p>
+        </div>
+    </div>
+</body>
+</html>

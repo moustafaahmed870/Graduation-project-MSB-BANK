@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html rtl="ar" lang="en">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/Loans.css">
+    <script type="module" src="js/Loans.js"></script>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>    
+    <script src="/language.js"></script>  
+    <script src="/load-components.js"></script> 
+    <title data-i18n="loansTitle">القروض الاستهلاكية من بنك MSB</title>
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+</head>
+<body>
+    <div id="navbar-container"></div>   
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title" data-i18n="loansTitle">القروض الاستهلاكية من بنك MSB</h1>
+            <p class="hero-subtitle" data-i18n="loansSubtitle">
+                احصل على القرض الذي يناسب احتياجاتك الشخصية والعائلية. نوفر لك حلول تمويل مرنة وسريعة لتحقيق أحلامك ومتطلبات عائلتك مع شروط ميسرة وأسعار تنافسية.
+            </p>
+            <div class="vip-badge">
+                <i class="fas fa-bolt"></i> <span data-i18n="vipBadge1">موافقة فورية على القروض</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loans Section -->
+    <section class="loans-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="loanTypes">أنواع القروض الاستهلاكية</h2>
+            <p class="section-subtitle" data-i18n="loanTypesSubtitle">
+                اختر القرض المناسب لاحتياجاتك من مجموعة متنوعة من القروض الاستهلاكية المصممة خصيصًا لتلبية متطلباتك المالية.
+            </p>
+            
+            <!-- Loans Filter -->
+            <div class="loans-filter">
+                <button class="filter-btn active" data-filter="all" data-i18n="allLoans">جميع القروض</button>
+                <button class="filter-btn" data-filter="personal" data-i18n="personalLoans">قروض شخصية</button>
+                <button class="filter-btn" data-filter="auto" data-i18n="autoLoans">قروض سيارات</button>
+                <button class="filter-btn" data-filter="real-estate" data-i18n="realEstateLoans">قروض عقارية</button>
+                <button class="filter-btn" data-filter="education" data-i18n="educationLoans">قروض تعليمية</button>
+            </div>
+            
+            <!-- Loans Grid -->
+            <div class="loans-grid" id="loansContainer">
+                <!-- Personal Loan 1 -->
+                <div class="loan-item" data-type="personal">
+                    <div class="loan-header">
+                        <div class="loan-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="loan-type" data-i18n="personalLoans">قرض شخصي</div>
+                        <div class="loan-name" data-i18n="personalLoan1">القرض الشخصي المميز</div>
+                    </div>
+                    <div class="loan-body">
+                        <ul class="loan-details">
+                            <li>
+                                <span class="loan-detail-label" data-i18n="amount">المبلغ:</span>
+                                <span class="loan-detail-value" data-i18n="personalLoan1Amount">حتى 500,000 جنيه</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="term">المدة:</span>
+                                <span class="loan-detail-value" data-i18n="personalLoan1Term">حتى 7 سنوات</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="interestRate">سعر الفائدة:</span>
+                                <span class="loan-detail-value" data-i18n="personalLoan1Rate">من 15% سنويًا</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="insurance">التأمين:</span>
+                                <span class="loan-detail-value" data-i18n="personalLoan1Insurance">متضمن مجانًا</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="approval">الموافقة:</span>
+                                <span class="loan-detail-value" data-i18n="personalLoan1Approval">خلال 48 ساعة</span>
+                            </li>
+                        </ul>
+                        <p style="color: #a0d2db; font-size: 16px; line-height: 1.6;" data-i18n="personalLoan1Desc">
+                            قرض مرن لتلبية الاحتياجات الشخصية المختلفة مثل السفر، العلاج الطبي، أو التجديدات المنزلية.
+                        </p>
+                    </div>
+                    <div class="loan-footer">
+                        <button class="loan-btn" data-i18n="sendRequest">قدم على القرض</button>
+                        <div class="loan-details" style="color: #d4af37; font-weight: 700;" data-i18n="noGuarantees">بدون ضمانات</div>
+                    </div>
+                </div>
+                
+                <!-- Auto Loan -->
+                <div class="loan-item" data-type="auto">
+                    <div class="loan-header">
+                        <div class="loan-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="loan-type" data-i18n="autoLoans">قرض سيارة</div>
+                        <div class="loan-name" data-i18n="autoLoan">تمويل شراء السيارات</div>
+                    </div>
+                    <div class="loan-body">
+                        <ul class="loan-details">
+                            <li>
+                                <span class="loan-detail-label" data-i18n="amount">المبلغ:</span>
+                                <span class="loan-detail-value" data-i18n="autoLoanAmount">حتى 80% من قيمة السيارة</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="term">المدة:</span>
+                                <span class="loan-detail-value" data-i18n="autoLoanTerm">حتى 10 سنوات</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="interestRate">سعر الفائدة:</span>
+                                <span class="loan-detail-value" data-i18n="autoLoanRate">من 14% سنويًا</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="guarantee">الضمان:</span>
+                                <span class="loan-detail-value" data-i18n="autoLoanGuarantee">رهن السيارة</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="approval">الموافقة:</span>
+                                <span class="loan-detail-value" data-i18n="autoLoanApproval">خلال 72 ساعة</span>
+                            </li>
+                        </ul>
+                        <p style="color: #a0d2db; font-size: 16px; line-height: 1.6;" data-i18n="autoLoanDesc">
+                            تمويل لشراء سيارة جديدة أو مستعملة مع إمكانية اختيار السيارة من الوكيل الذي تفضله.
+                        </p>
+                    </div>
+                    <div class="loan-footer">
+                        <button class="loan-btn" data-i18n="sendRequest">قدم على القرض</button>
+                        <div class="loan-details" style="color: #d4af37; font-weight: 700;" data-i18n="includesComprehensive">شمل التأمين الشامل</div>
+                    </div>
+                </div>
+                
+                <!-- Real Estate Loan -->
+                <div class="loan-item" data-type="real-estate">
+                    <div class="loan-header">
+                        <div class="loan-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="loan-type" data-i18n="realEstateLoans">قرض عقاري</div>
+                        <div class="loan-name" data-i18n="realEstateLoan">قرض التملك العقاري</div>
+                    </div>
+                    <div class="loan-body">
+                        <ul class="loan-details">
+                            <li>
+                                <span class="loan-detail-label" data-i18n="amount">المبلغ:</span>
+                                <span class="loan-detail-value" data-i18n="realEstateLoanAmount">حتى 5 مليون جنيه</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="term">المدة:</span>
+                                <span class="loan-detail-value" data-i18n="realEstateLoanTerm">حتى 20 سنة</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="interestRate">سعر الفائدة:</span>
+                                <span class="loan-detail-value" data-i18n="realEstateLoanRate">من 12% سنويًا</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="guarantee">الضمان:</span>
+                                <span class="loan-detail-value" data-i18n="realEstateLoanGuarantee">رهن العقار</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="approval">الموافقة:</span>
+                                <span class="loan-detail-value" data-i18n="realEstateLoanApproval">خلال 5 أيام عمل</span>
+                            </li>
+                        </ul>
+                        <p style="color: #a0d2db; font-size: 16px; line-height: 1.6;" data-i18n="realEstateLoanDesc">
+                            تمويل لشراء أو بناء أو تجديد وحدة سكنية مع فترة سماح تصل إلى 6 أشهر قبل بدء السداد.
+                        </p>
+                    </div>
+                    <div class="loan-footer">
+                        <button class="loan-btn" data-i18n="sendRequest">قدم على القرض</button>
+                        <div class="loan-details" style="color: #d4af37; font-weight: 700;" data-i18n="gracePeriod">فترة سماح متاحة</div>
+                    </div>
+                </div>
+                
+                <!-- Education Loan -->
+                <div class="loan-item" data-type="education">
+                    <div class="loan-header">
+                        <div class="loan-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="loan-type" data-i18n="educationLoans">قرض تعليمي</div>
+                        <div class="loan-name" data-i18n="educationLoan">قرض التعليم والدراسة</div>
+                    </div>
+                    <div class="loan-body">
+                        <ul class="loan-details">
+                            <li>
+                                <span class="loan-detail-label" data-i18n="amount">المبلغ:</span>
+                                <span class="loan-detail-value" data-i18n="educationLoanAmount">حتى 300,000 جنيه</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="term">المدة:</span>
+                                <span class="loan-detail-value" data-i18n="educationLoanTerm">حتى 10 سنوات</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="interestRate">سعر الفائدة:</span>
+                                <span class="loan-detail-value" data-i18n="educationLoanRate">من 13% سنويًا</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="guarantee">الضمان:</span>
+                                <span class="loan-detail-value" data-i18n="educationLoanGuarantee">كفالة شخصية</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="approval">الموافقة:</span>
+                                <span class="loan-detail-value" data-i18n="educationLoanApproval">خلال 48 ساعة</span>
+                            </li>
+                        </ul>
+                        <p style="color: #a0d2db; font-size: 16px; line-height: 1.6;" data-i18n="educationLoanDesc">
+                            تمويل مصاريف الدراسة في الجامعات والمعاهد المحلية والدولية، بما في ذلك السفر والإقامة.
+                        </p>
+                    </div>
+                    <div class="loan-footer">
+                        <button class="loan-btn" data-i18n="sendRequest">قدم على القرض</button>
+                        <div class="loan-details" style="color: #d4af37; font-weight: 700;" data-i18n="noInterestDuring">بدون فوائد خلال الدراسة</div>
+                    </div>
+                </div>
+                
+                <!-- Personal Loan 2 -->
+                <div class="loan-item" data-type="personal">
+                    <div class="loan-header">
+                        <div class="loan-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="loan-type" data-i18n="personalLoans">قرض شخصي</div>
+                        <div class="loan-name" data-i18n="medicalLoan">قرض العلاج الطبي</div>
+                    </div>
+                    <div class="loan-body">
+                        <ul class="loan-details">
+                            <li>
+                                <span class="loan-detail-label" data-i18n="amount">المبلغ:</span>
+                                <span class="loan-detail-value" data-i18n="medicalLoanAmount">حتى 200,000 جنيه</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="term">المدة:</span>
+                                <span class="loan-detail-value" data-i18n="medicalLoanTerm">حتى 5 سنوات</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="interestRate">سعر الفائدة:</span>
+                                <span class="loan-detail-value" data-i18n="medicalLoanRate">من 14.5% سنويًا</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="insurance">التأمين:</span>
+                                <span class="loan-detail-value" data-i18n="medicalLoanInsurance">متضمن مجانًا</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="approval">الموافقة:</span>
+                                <span class="loan-detail-value" data-i18n="medicalLoanApproval">خلال 24 ساعة</span>
+                            </li>
+                        </ul>
+                        <p style="color: #a0d2db; font-size: 16px; line-height: 1.6;" data-i18n="medicalLoanDesc">
+                            تمويل متخصص للعمليات الجراحية والعلاجات الطبية في المستشفيات والمراكز الطبية المعتمدة.
+                        </p>
+                    </div>
+                    <div class="loan-footer">
+                        <button class="loan-btn" data-i18n="sendRequest">قدم على القرض</button>
+                        <div class="loan-details" style="color: #d4af37; font-weight: 700;" data-i18n="quickApproval">موافقة سريعة</div>
+                    </div>
+                </div>
+                
+                <!-- Auto Loan 2 -->
+                <div class="loan-item" data-type="auto">
+                    <div class="loan-header">
+                        <div class="loan-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="loan-type" data-i18n="autoLoans">قرض سيارة</div>
+                        <div class="loan-name" data-i18n="autoMaintenance">قرض صيانة السيارات</div>
+                    </div>
+                    <div class="loan-body">
+                        <ul class="loan-details">
+                            <li>
+                                <span class="loan-detail-label" data-i18n="amount">المبلغ:</span>
+                                <span class="loan-detail-value" data-i18n="autoMaintenanceAmount">حتى 50,000 جنيه</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="term">المدة:</span>
+                                <span class="loan-detail-value" data-i18n="autoMaintenanceTerm">حتى 3 سنوات</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="interestRate">سعر الفائدة:</span>
+                                <span class="loan-detail-value" data-i18n="autoMaintenanceRate">من 16% سنويًا</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="guarantee">الضمان:</span>
+                                <span class="loan-detail-value" data-i18n="autoMaintenanceGuarantee">كفالة شخصية</span>
+                            </li>
+                            <li>
+                                <span class="loan-detail-label" data-i18n="approval">الموافقة:</span>
+                                <span class="loan-detail-value" data-i18n="autoMaintenanceApproval">خلال 24 ساعة</span>
+                            </li>
+                        </ul>
+                        <p style="color: #a0d2db; font-size: 16px; line-height: 1.6;" data-i18n="autoMaintenanceDesc">
+                            تمويل لإصلاح وصيانة السيارات في الورش المعتمدة مع إمكانية السداد على أقساط مريحة.
+                        </p>
+                    </div>
+                    <div class="loan-footer">
+                        <button class="loan-btn" data-i18n="sendRequest">قدم على القرض</button>
+                        <div class="loan-details" style="color: #d4af37; font-weight: 700;" data-i18n="oldNewCars">للسيارات القديمة والجديدة</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="calculator-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="calculatorTitle">حاسبة القروض</h2>
+            <p class="section-subtitle" data-i18n="calculatorSubtitle">
+                احسب قسط القرض الشهري ومجموع المبالغ المستحقة بسهولة باستخدام حاسبة القروض الذكية.
+            </p>
+            
+            <div class="calculator-container">
+                <div class="calculator-content">
+                    <h3 data-i18n="flexiblePlans">خطط سداد مرنة تناسب ميزانيتك</h3>
+                    <p data-i18n="calculatorDescription">
+                        استخدم حاسبة القروض التفاعلية لتقدير الأقساط الشهرية ومجموع الفوائد المستحقة على القرض. أدخل المبلغ والمدة المطلوبين وشاهد النتائج فورًا.
+                    </p>
+                    
+                    <div class="calculation-results" id="loanResults">
+                        <div class="result-row">
+                            <span class="result-label" data-i18n="requiredAmount">المبلغ المطلوب:</span>
+                            <span class="result-value" id="resultAmount" data-i18n="defaultAmount">100,000 جنيه</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label" data-i18n="repaymentPeriod">مدة السداد:</span>
+                            <span class="result-value" id="resultTerm" data-i18n="defaultTerm">5 سنوات</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label" data-i18n="annualRate">سعر الفائدة السنوي:</span>
+                            <span class="result-value" id="resultRate" data-i18n="defaultRate">15%</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label" data-i18n="monthlyInstallment">القسط الشهري:</span>
+                            <span class="result-value" id="resultMonthly" data-i18n="defaultMonthly">2,379 جنيه</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label" data-i18n="totalInterest">مجموع الفوائد:</span>
+                            <span class="result-value" id="resultInterest" data-i18n="defaultInterest">42,740 جنيه</span>
+                        </div>
+                        <div class="result-row total-row">
+                            <span class="result-label" data-i18n="totalAmount">المبلغ الإجمالي:</span>
+                            <span class="result-value" id="resultTotal" data-i18n="defaultTotal">142,740 جنيه</span>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 30px; font-size: 16px; color: #a0d2db;" data-i18n="note">
+                        ملاحظة: هذه النتائج تقديرية وقد تختلف حسب الشروط والأحكام الفعلية للقرض والتقييم الائتماني.
+                    </p>
+                </div>
+                
+                <div class="calculator-form">
+                    <h3 class="form-title" data-i18n="calculateYourLoan">احسب قرضك الآن</h3>
+                    <form id="loanCalculatorForm">
+                        <div class="form-group">
+                            <label class="form-label" for="loanAmount" data-i18n="loanAmount">مبلغ القرض (جنيه)</label>
+                            <div class="range-container">
+                                <input type="range" id="loanAmount" min="10000" max="1000000" step="10000" value="100000">
+                                <div class="range-value" id="loanAmountValue">100,000</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="loanTerm" data-i18n="repaymentTerm">مدة السداد (سنوات)</label>
+                            <div class="range-container">
+                                <input type="range" id="loanTerm" min="1" max="20" step="1" value="5">
+                                <div class="range-value" id="loanTermValue">5 سنوات</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="interestRate" data-i18n="annualInterest">سعر الفائدة السنوي (%)</label>
+                            <div class="range-container">
+                                <input type="range" id="interestRate" min="10" max="25" step="0.5" value="15">
+                                <div class="range-value" id="interestRateValue">15%</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="loanType" data-i18n="loanType">نوع القرض</label>
+                            <select id="loanType" class="form-input">
+                                <option value="personal" data-i18n="personalLoanOption">قرض شخصي</option>
+                                <option value="auto" data-i18n="autoLoanOption">قرض سيارة</option>
+                                <option value="real-estate" data-i18n="realEstateOption">قرض عقاري</option>
+                                <option value="education" data-i18n="educationOption">قرض تعليمي</option>
+                                <option value="medical" data-i18n="medicalOption">قرض طبي</option>
+                            </select>
+                        </div>
+                        
+                        <button type="button" class="submit-btn" id="calculateBtn" data-i18n="calculate">احسب القسط الشهري</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Requirements Section -->
+    <section class="requirements-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="requirementsTitle">متطلبات الحصول على القرض</h2>
+            <p class="section-subtitle" data-i18n="requirementsSubtitle">
+                نوفر لك شروطًا ميسرة للحصول على القرض مع وثائق بسيطة وإجراءات سريعة.
+            </p>
+            
+            <div class="requirements-grid">
+                <div class="requirement-item">
+                    <div class="requirement-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h3 class="requirement-title" data-i18n="requiredDocuments">الوثائق المطلوبة</h3>
+                    <p class="requirement-desc" data-i18n="documentsDesc">
+                        المستندات الأساسية اللازمة للتقديم على القرض:
+                    </p>
+                    <ul class="requirement-list">
+                        <li><i class="fas fa-check"></i> <span data-i18n="nationalId">صورة بطاقة الرقم القومي</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="incomeProof">إثبات الدخل (كشف حساب 6 أشهر)</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="residenceProof">إثبات السكن (فاتورة كهرباء أو غاز)</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="personalPhoto">صورة شخصية حديثة</span></li>
+                    </ul>
+                </div>
+                
+                <div class="requirement-item">
+                    <div class="requirement-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3 class="requirement-title" data-i18n="eligibility">شروط الأهلية</h3>
+                    <p class="requirement-desc" data-i18n="eligibilityDesc">
+                        الشروط الأساسية للحصول على الموافقة:
+                    </p>
+                    <ul class="requirement-list">
+                        <li><i class="fas fa-check"></i> <span data-i18n="age">السن من 21 إلى 60 سنة</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="monthlyIncome">دخل شهري ثابت</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="creditHistory">سجل ائتماني جيد</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="stableJob">عمل دائم لمدة سنة على الأقل</span></li>
+                    </ul>
+                </div>
+                
+                <div class="requirement-item">
+                    <div class="requirement-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="requirement-title" data-i18n="protection">الحماية والضمان</h3>
+                    <p class="requirement-desc" data-i18n="protectionDesc">
+                        ضمانات وحماية نقدمها لعملائنا:
+                    </p>
+                    <ul class="requirement-list">
+                        <li><i class="fas fa-check"></i> <span data-i18n="loanInsurance">تأمين على القرض مجانًا</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="noHiddenFees">لا توجد رسوم خفية</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="confidentiality">سرية تامة للمعلومات</span></li>
+                        <li><i class="fas fa-check"></i> <span data-i18n="fraudProtection">حماية من الاحتيال</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Section -->
+    <section class="application-section">
+        <div class="container">
+            <div class="application-container">
+                <div class="application-content">
+                    <h3 data-i18n="applicationTitle">كيفية التقديم على القرض</h3>
+                    <p data-i18n="applicationDescription">
+                        عملية التقديم على القرض بسيطة وسريعة. يمكنك التقديم من خلال عدة قنوات نقدمها لراحتك.
+                    </p>
+                    
+                    <ul class="application-steps">
+                        <li><i class="fas fa-mobile-alt"></i> <span data-i18n="onlineApplication">التقديم عبر الإنترنت (الموقع أو التطبيق)</span></li>
+                        <li><i class="fas fa-phone-alt"></i> <span data-i18n="callCenter">الاتصال بمركز خدمة العملاء 19019</span></li>
+                        <li><i class="fas fa-map-marker-alt"></i> <span data-i18n="visitBranch">زيارة أقرب فرع من فروع بنك مصر</span></li>
+                        <li><i class="fas fa-file-signature"></i> <span data-i18n="submitDocuments">تقديم الوثائق المطلوبة</span></li>
+                        <li><i class="fas fa-check-circle"></i> <span data-i18n="receiveApproval">الحصول على الموافقة واستلام المبلغ</span></li>
+                    </ul>
+                    
+                    <p data-i18n="guaranteeText">
+                        نضمن لك تجربة سلسة وسريعة للحصول على القرض مع فريق متخصص لمساعدتك في كل خطوة.
+                    </p>
+                </div>
+                
+                <div class="application-form">
+                    <h3 class="form-title" data-i18n="newLoanRequest">طلب قرض جديد</h3>
+                    <form id="loanApplicationForm">
+                        <div class="form-group">
+                            <label class="form-label" for="appFullName" data-i18n="fullName">الاسم بالكامل</label>
+                            <input type="text" id="appFullName" class="form-input" data-i18n-placeholder="fullNamePlaceholder" placeholder="الاسم الرباعي كما في البطاقة الشخصية" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="appPhone" data-i18n="phone">رقم الهاتف</label>
+                            <input type="tel" id="appPhone" class="form-input" data-i18n-placeholder="phonePlaceholder" placeholder="01XXXXXXXXX" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="appEmail" data-i18n="email">البريد الإلكتروني</label>
+                            <input type="email" id="appEmail" class="form-input" data-i18n-placeholder="emailPlaceholder" placeholder="name@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="appLoanType" data-i18n="loanTypeRequired">نوع القرض المطلوب</label>
+                            <select id="appLoanType" class="form-input" required>
+                                <option value="" disabled selected data-i18n="selectLoanType">اختر نوع القرض</option>
+                                <option value="personal" data-i18n="personalLoanOption">قرض شخصي</option>
+                                <option value="auto" data-i18n="autoLoanOption">قرض سيارة</option>
+                                <option value="real-estate" data-i18n="realEstateOption">قرض عقاري</option>
+                                <option value="education" data-i18n="educationOption">قرض تعليمي</option>
+                                <option value="medical" data-i18n="medicalOption">قرض طبي</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="appAmount" data-i18n="requiredAmountField">المبلغ المطلوب (جنيه)</label>
+                            <input type="number" id="appAmount" class="form-input" data-i18n-placeholder="exampleAmount" placeholder="مثال: 50000" min="10000" max="1000000" required>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn" data-i18n="sendRequest">إرسال الطلب <i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="footer-container"></div>
+</body>
+</html>

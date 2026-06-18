@@ -1,0 +1,327 @@
+body , html , #w-div {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: black; /* نفس لون الخلفية عندك */
+    overflow: hidden;
+}
+
+body {
+    touch-action: none;
+}
+
+#w-div {
+    height: 100%;
+    font-family: "Montserrat", serif;
+}
+
+#w-div a {
+    text-decoration: none;
+    color: #fff;
+}
+
+#hero {
+    z-index: 10;
+    color: #fff;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* #canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+} */
+
+    /* === CANVAS === */
+    #canvas {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    }
+
+    /* === FORCE LOADER ANIMATION === */
+    #loader {
+    position: fixed;
+    inset: 0;
+    background: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    }
+
+    /* الحلقة */
+    .loader-ring {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 4px solid rgba(160, 210, 219, 0.25);
+    border-top: 4px solid #0ef;
+
+    /* 👇 إجبار الأنيميشن */
+    animation-name: loader-spin !important;
+    animation-duration: 1s !important;
+    animation-iteration-count: infinite !important;
+    animation-timing-function: linear !important;
+
+    will-change: transform;
+    }
+
+
+    .loader-ring {
+    box-shadow:
+    0 0 10px #0ef,
+    0 0 20px rgba(0,238,255,0.5);
+}
+
+
+    /* KEYFRAMES */
+    @keyframes loader-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+    }
+
+.bord {
+    width: 30%;
+    border: 2px solid #0ef;
+    box-shadow:0 0 15px #0ef;
+    border-radius: 25px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+h2 , h1{
+    color: #0ef;
+    text-shadow: 0 0 15px #0ef;
+    cursor: default;
+}
+
+.p1 {
+    cursor: default;
+    border-right: 1px solid #0ef;
+    border-left: 1px solid #0ef;
+    border-radius: 20px;
+    padding: 10px;
+    text-transform: uppercase;
+    color: aqua;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typing 5s steps(15) infinite , blink .6s infinite ;
+    transition-delay: 2s ;
+}
+
+@keyframes typing{
+    0%{
+        width: 0;
+    }
+    50%{
+        width: 150px;
+    }
+    100%{
+        width: 0;
+    }
+}
+
+@keyframes blink {
+    50%{
+        border-color: transparent;
+    }
+}
+
+.p2 , .p3 {
+    color: whitesmoke;
+    cursor: default;
+}
+.p2{
+    padding: 15px;
+    text-shadow: 0 0 10px #0ef;
+}
+
+.p3{
+    padding-right: 160px;
+    text-shadow:0 0 11px #0ef;
+    padding-bottom: 15px;
+}
+span {
+    padding-left: 100px;
+}
+
+.email,.phone {
+    color: #0ef;
+    padding: 15px 0 15px;
+    text-shadow: 0 0 12px #0ef;
+    /* padding-bottom: 15px;
+    padding-right: 160px; */
+}
+.email:hover{
+    padding: 10px;
+    width: auto;
+    transform: scale(1.1, 1.1);
+    border:1.5px solid #0ef;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .7s ease;
+    box-shadow:0 0 12px #0ef;
+}
+
+.phone:hover{
+    padding: 10px;
+    width: auto;
+    transform: scale(1.1, 1.1);
+    border:1.5px solid #0ef;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .7s ease;
+    box-shadow:0 0 12px #0ef;
+}
+
+
+
+
+
+/* Media Queries للـ Responsive Design */
+
+/* موبايل (أقل من 768px) */
+@media (max-width: 767px) {
+    #hero {
+        gap: 15px; /* زيادة الفراغ قليلاً */
+        padding: 10px; /* إضافة padding عشان المحتوى ما يلزق الشاشة */
+    }
+    
+    .bord {
+        width: 90%; /* جعل الإطار يغطي معظم الشاشة */
+        padding: 15px; /* تقليل الـ padding */
+    }
+    
+    h2, h1 {
+        font-size: 1.2em; /* تقليل حجم الخط */
+    }
+    
+    .p1 {
+        padding: 8px; /* تقليل الـ padding */
+        animation: typing-mobile 5s steps(15) infinite, blink .6s infinite;
+    }
+    
+    @keyframes typing-mobile {
+        0% {
+            width: 0;
+        }
+        50% {
+            width: 120px; /* تقليل العرض الأقصى */
+        }
+        100% {
+            width: 0;
+        }
+    }
+    
+    .p2 {
+        padding: 10px; /* تقليل الـ padding */
+        font-size: 0.9em; /* تقليل حجم الخط */
+    }
+    
+    .p3 {
+        padding-right: 20px; /* تقليل الـ padding الثابت */
+        padding-bottom: 10px; /* تقليل الـ padding */
+        font-size: 0.9em; /* تقليل حجم الخط */
+    }
+    
+    span {
+        padding-left: 20px; /* تقليل الـ padding */
+        font-size: 0.9em; /* تقليل حجم الخط */
+    }
+    
+    .email, .phone {
+        padding: 10px 0 10px; /* تقليل الـ padding */
+        font-size: 0.9em; /* تقليل حجم الخط */
+    }
+}
+
+/* تابلت (768px إلى 1024px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    #hero {
+        gap: 12px; /* فراغ متوسط */
+    }
+    
+    .bord {
+        width: 50%; /* عرض متوسط */
+        padding: 18px; /* padding متوسط */
+    }
+    
+    h2, h1 {
+        font-size: 1.4em; /* حجم متوسط */
+    }
+    
+    .p1 {
+        padding: 9px; /* padding متوسط */
+        animation: typing-tablet 5s steps(15) infinite, blink .6s infinite;
+    }
+    
+    @keyframes typing-tablet {
+        0% {
+            width: 0;
+        }
+        50% {
+            width: 140px; /* عرض متوسط */
+        }
+        100% {
+            width: 0;
+        }
+    }
+    
+    .p2 {
+        padding: 12px; /* padding متوسط */
+        font-size: 0.95em; /* حجم متوسط */
+    }
+    
+    .p3 {
+        padding-right: 80px; /* padding متوسط */
+        padding-bottom: 12px; /* padding متوسط */
+        font-size: 0.95em; /* حجم متوسط */
+    }
+    
+    span {
+        padding-left: 50px; /* padding متوسط */
+        font-size: 0.95em; /* حجم متوسط */
+    }
+    
+    .email, .phone {
+        padding: 12px 0 12px; /* padding متوسط */
+        font-size: 0.95em; /* حجم متوسط */
+    }
+}
+
+/* ديسكتوب (أكبر من 1024px) */
+@media (min-width: 1024px) {
+    /* احتفظ بالأحجام الأصلية */
+    .bord {
+        width: 30%; /* كما هو */
+    }
+    
+    .p3 {
+        padding-right: 160px; /* كما هو */
+    }
+    
+    span {
+        padding-left: 100px; /* كما هو */
+    }
+}
+
+

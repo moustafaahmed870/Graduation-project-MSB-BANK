@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.name">MSB BANK - البطاقات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 500px;
+            background: linear-gradient(135deg, #0a2438 0%, #081b29 100%);
+            border-radius: 15px;
+            border: 2px solid rgba(49, 124, 129, 0.3);
+            animation: slideInLeft 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(49, 124, 129, 0.3);
+        }
+        .modal-header h3 {
+            color: #a0d2db;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #a0d2db;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid rgba(49, 124, 129, 0.3);
+        }
+        .credit-card.frozen {
+            opacity: 0.8;
+            filter: grayscale(0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        .credit-card.frozen::before {
+            content: "❄️ مجمدة ❄️";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            z-index: 10;
+            white-space: nowrap;
+            border: 2px solid white;
+        }
+        .credit-card.lost {
+            opacity: 0.6;
+            filter: grayscale(1);
+            position: relative;
+            overflow: hidden;
+        }
+        .credit-card.lost::before {
+            content: "🚫 مفقودة 🚫";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            z-index: 10;
+            white-space: nowrap;
+            border: 2px solid white;
+        }
+        .card-status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        .status-active { background: #d4edda; color: #155724; }
+        .status-frozen { background: #fff3cd; color: #856404; }
+        .status-lost { background: #f8d7da; color: #721c24; }
+        .card-actions { margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        .action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-warning:hover:not(:disabled) { background: #e0a800; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-primary { background: #317c81; color: white; }
+        .btn-sm { padding: 5px 10px; font-size: 12px; }
+        .btn-block { width: 100%; }
+        .form-group { margin-bottom: 15px; }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #a0d2db;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(49, 124, 129, 0.3);
+            border-radius: 8px;
+            color: #a0d2db;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .info-box {
+            background: rgba(79, 195, 247, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-right: 3px solid #4fc3f7;
+        }
+        .text-center { text-align: center; }
+        .p-3 { padding: 15px; }
+        .mt-3 { margin-top: 15px; }
+        .mb-4 { margin-bottom: 20px; }
+        .grid { display: grid; gap: 20px; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+        .card-item {
+            background: linear-gradient(135deg, rgba(10, 36, 56, 0.9) 0%, rgba(8, 27, 41, 0.95) 100%);
+            border-radius: 15px;
+            padding: 1rem;
+            border: 2px solid rgba(49, 124, 129, 0.3);
+        }
+        .credit-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 20px;
+            padding: 1.5rem;
+            color: white;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        .credit-card.gold { background: linear-gradient(135deg, #D4AF37 0%, #FDB931 100%); color: #333; }
+        .credit-card.platinum { background: linear-gradient(135deg, #E5E4E2 0%, #C0C0C0 100%); color: #333; }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-number {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+        }
+        .label { font-size: 0.7rem; opacity: 0.7; margin-bottom: 5px; }
+        .value { font-size: 1rem; font-weight: 600; }
+        .card-info-mini {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(49, 124, 129, 0.2);
+        }
+        .linked-account-info {
+            background: rgba(79, 195, 247, 0.15);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+        .quick-amounts {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        .amount-presets {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .current-balance {
+            background: rgba(79, 195, 247, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .form-text {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 5px;
+            display: block;
+        }
+    </style>
+</head>
+<body class="rtl">
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="https://i.ibb.co/LhY9KjRv/MSB.png" alt="MSB">
+                    <div class="logo-text" data-i18n="app.name">MSB BANK</div>
+                </a>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-info">
+                    <div class="user-welcome">
+                        <div class="user-name" id="userName">
+                            <span data-i18n="hello">مرحباً</span>، <span id="userNameText">---</span>
+                        </div>
+                        <div class="user-account" id="accountNumber"><span data-i18n="accounts.account_number">الحساب</span>: <span id="accountNumberText">---</span></div>
+                        <div class="rewards-badge" onclick="BankApp.openAIAssistant()">
+                            <i class="fas fa-trophy"></i>
+                            <span data-i18n="header.rewards" id="rewardsLevel">---</span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="window.location.href='/pages/currencyconverter-rate/index.html'">
+                            <i class="fas fa-coins"></i>
+                            <span data-i18n="header.currency_rates">اسعار العملات</span>
+                        </button>
+                        <button class="language-btn" id="languageToggle" data-i18n-toggle data-i18n-lang-btn>
+                            <i class="fas fa-language"></i> English
+                        </button>
+                        <div class="notifications">
+                            <button class="notifications-btn" onclick="document.getElementById('notificationDropdown').classList.toggle('active')">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge" id="notificationBadge">0</span>
+                            </button>
+                            <div class="notification-dropdown" id="notificationDropdown">
+                                <div class="notification-header">
+                                    <div class="notification-title" data-i18n="header.notifications">الإشعارات</div>
+                                    <button class="mark-all-read" onclick="BankApp.markAllNotificationsRead()" data-i18n="header.mark_all_read">تعيين الكل كمقروء</button>
+                                </div>
+                                <div class="notification-list" id="notificationList"></div>
+                                <div class="notification-footer">
+                                    <a href="#" class="view-all-notifications" data-i18n="header.view_all">عرض جميع الإشعارات</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-avatar" onclick="BankApp.logout()">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-list" id="navList">
+                <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i><span data-i18n="nav.home">الرئيسية</span></a></li>
+                <li class="nav-item"><a href="accounts.html" class="nav-link"><i class="fas fa-credit-card"></i><span data-i18n="nav.accounts">الحسابات</span></a></li>
+                <li class="nav-item"><a href="transfers.html" class="nav-link"><i class="fas fa-exchange-alt"></i><span data-i18n="nav.transfers">التحويلات</span></a></li>
+                <li class="nav-item"><a href="investments.html" class="nav-link"><i class="fas fa-chart-line"></i><span data-i18n="nav.investments">الاستثمارات</span></a></li>
+                <li class="nav-item"><a href="cards.html" class="nav-link active"><i class="fas fa-credit-card"></i><span data-i18n="nav.cards">البطاقات</span></a></li>
+                <li class="nav-item"><a href="loans.html" class="nav-link"><i class="fas fa-hand-holding-usd"></i><span data-i18n="nav.loans">القروض</span></a></li>
+                <li class="nav-item"><a href="wallet.html" class="nav-link"><i class="fas fa-wallet"></i><span data-i18n="nav.wallet">المحفظة</span></a></li>
+                <li class="nav-item"><a href="government.html" class="nav-link"><i class="fas fa-landmark"></i><span data-i18n="nav.government">الخدمات الحكومية</span></a></li>
+                <li class="nav-item"><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i><span data-i18n="nav.settings">الإعدادات</span></a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="page-section">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="cards.title">البطاقات</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="CardManager.showNewCardOptions()">
+                            <i class="fas fa-plus"></i>
+                            <span data-i18n="cards.new_card">طلب بطاقة جديدة</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- البطاقة الرئيسية -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span data-i18n="cards.my_main_card">بطاقتي الأساسية</span>
+                            <span class="card-status-badge status-active" id="mainCardStatus" data-i18n="active">نشطة</span>
+                        </h2>
+                    </div>
+                    
+                    <div class="main-card-display" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div class="credit-card gold" id="mainCard">
+                            <div class="card-header">
+                                <div class="card-logo"><i class="fab fa-cc-visa"></i></div>
+                                <div class="card-chip"><i class="fas fa-microchip"></i></div>
+                            </div>
+                            <div class="card-number">
+                                <span>****</span><span>****</span><span>****</span>
+                                <span id="mainCardLastFour">----</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="card-holder">
+                                    <div class="label" data-i18n="cards.card_holder">حامل البطاقة</div>
+                                    <div class="value" id="mainCardHolder">---</div>
+                                </div>
+                                <div class="card-expiry">
+                                    <div class="label" data-i18n="cards.expiry_date">تاريخ الانتهاء</div>
+                                    <div class="value" id="mainCardExpiry">--/--</div>
+                                </div>
+                            </div>
+                            <div class="card-type">
+                                <span class="gold-badge" id="mainCardType" data-i18n="cards.gold">ذهبية</span>
+                            </div>
+                        </div>
+
+                        <div class="card-info">
+                            <div class="linked-account-info" id="mainCardLinkedAccount">
+                                <span><i class="fas fa-link"></i> الحساب المرتبط:</span>
+                                <strong id="linkedAccountName">---</strong>
+                            </div>
+                            <div class="info-item"><span class="info-label" data-i18n="available_balance">الرصيد المتاح</span><span class="info-value" id="cardAvailableBalance">---</span></div>
+                            <div class="info-item"><span class="info-label" data-i18n="cards.credit_limit">الحد الائتماني</span><span class="info-value" id="cardCreditLimit">---</span></div>
+                            <div class="info-item"><span class="info-label" data-i18n="cards.used">المستخدم</span><span class="info-value" id="cardUsedAmount">---</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="account-actions" id="mainCardActions">
+                        <button class="btn btn-primary" onclick="CardManager.openPayCardModal()">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span data-i18n="cards.pay_bill">دفع الفاتورة</span>
+                        </button>
+                        <button class="btn btn-warning" id="freezeMainCardBtn" onclick="CardManager.handleFreezeCard()">
+                            <i class="fas fa-snowflake"></i>
+                            <span data-i18n="cards.freeze">تجميد مؤقت</span>
+                        </button>
+                        <button class="btn btn-secondary" onclick="CardManager.handleReportLost()">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span data-i18n="cards.report_lost">الإبلاغ عن ضياع</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- جميع البطاقات -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h2 class="card-title" data-i18n="cards.all_cards">جميع بطاقاتي</h2>
+                    </div>
+                    <div class="cards-grid" id="cardsGrid">
+                        <div class="text-center p-3"><span data-i18n="loading">جاري التحميل...</span></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="app.name">MSB BANK</h3>
+                    <p data-i18n="footer.description">نقدم لكم خدمات مصرفية آمنة وسريعة تلبي جميع احتياجاتكم المالية مع أعلى معايير الأمان والجودة.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3 data-i18n="quick_links">روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.home">الرئيسية</span></a></li>
+                        <li><a href="accounts.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.accounts">الحسابات</span></a></li>
+                        <li><a href="transfers.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.transfers">التحويلات</span></a></li>
+                        <li><a href="payments.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.payments">الدفع</span></a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 data-i18n="customer_service">خدمة العملاء</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> <span data-i18n="settings.faq">الأسئلة الشائعة</span></a></li>
+                        <li><a href="#" data-i18n="footer.complaints"><i class="fas fa-chevron-left"></i> الشكاوى والاقتراحات</a></li>
+                        <li><a href="#" data-i18n="footer.technical_support"><i class="fas fa-chevron-left"></i> الدعم الفني</a></li>
+                        <li><a href="#" data-i18n="settings.contact_us"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright" data-i18n-html="footer.copyright">
+                © <span class="current-year">2025</span> <span data-i18n="app.name">MSB BANK</span>. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <!-- مودال دفع الفاتورة -->
+    <div id="payCardModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-money-bill-wave"></i> <span data-i18n="cards.pay_bill">دفع فاتورة البطاقة</span></h3>
+                <button class="modal-close" onclick="CardManager.closeModal('payCardModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="current-balance" id="cardCurrentBalance">
+                    <span>المستخدم: <span id="currentUsed">---</span> ج.م</span> | 
+                    <span>المتاح: <span id="currentAvailable">---</span> ج.م</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" data-i18n="form.amount">المبلغ (ج.م)</label>
+                    <input type="number" class="form-control" id="cardPaymentAmount" min="10" required>
+                    <small class="form-text">الحد الأدنى: <span id="minAmount">---</span> - الحد الأقصى: <span id="maxAmount">---</span> ج.م</small>
+                </div>
+                <div class="quick-amounts" id="quickAmounts"></div>
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <small>سيتم خصم المبلغ من الحساب المرتبط بهذه البطاقة تلقائياً</small>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="confirmPayment" required>
+                        <span data-i18n="form.confirm_data">أؤكد صحة البيانات المدخلة</span>
+                    </label>
+                </div>
+                <button type="button" class="btn btn-primary btn-block" onclick="CardManager.processCardPayment()">
+                    <i class="fas fa-check-circle"></i> تأكيد الدفع
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال إنشاء بطاقة جديدة -->
+    <div id="newCardModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus-circle"></i> <span data-i18n="cards.new_card">طلب بطاقة جديدة</span></h3>
+                <button class="modal-close" onclick="CardManager.closeModal('newCardModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newCardForm" onsubmit="return false;">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="cards.card_type">نوع البطاقة</label>
+                        <select class="form-control" id="cardType" required>
+                            <option value="silver">💿 فضية</option>
+                            <option value="gold">💿 ذهبية</option>
+                            <option value="platinum">💿 بلاتينية</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="cards.credit_limit">الحد الائتماني (ج.م)</label>
+                        <select class="form-control" id="creditLimit" required>
+                            <option value="5000">5,000 ج.م</option>
+                            <option value="10000">10,000 ج.م</option>
+                            <option value="25000">25,000 ج.م</option>
+                            <option value="50000">50,000 ج.م</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الحساب المرتبط</label>
+                        <select class="form-control" id="linkedAccount" required>
+                            <option value="">جاري التحميل...</option>
+                        </select>
+                        <small class="form-text">⚠️ سيتم ربط البطاقة بهذا الحساب، ولا يمكن تغييره لاحقاً</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="acceptTerms" required>
+                            <span data-i18n="form.accept_terms">أوافق على الشروط والأحكام</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" onclick="CardManager.processNewCard()">
+                        <i class="fas fa-check"></i> تقديم الطلب
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال تفاصيل البطاقة -->
+    <div id="cardDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> <span data-i18n="details">تفاصيل البطاقة</span></h3>
+                <button class="modal-close" onclick="CardManager.closeModal('cardDetailsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="cardDetailsContent"></div>
+                <div class="info-box success">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>جميع بيانات بطاقتك محمية بتقنية التشفير المتقدم</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="CardManager.closeModal('cardDetailsModal')">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال تأكيد التجميد -->
+    <div id="freezeConfirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-snowflake"></i> تأكيد التجميد</h3>
+                <button class="modal-close" onclick="CardManager.closeModal('freezeConfirmModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ffc107; margin-bottom: 15px;"></i>
+                    <p id="freezeConfirmMessage">هل أنت متأكد من تجميد البطاقة؟</p>
+                </div>
+                <div class="info-box warning">
+                    <i class="fas fa-info-circle"></i>
+                    <span>عند تجميد البطاقة، لن تتمكن من استخدامها في أي معاملات حتى تقوم بإلغاء التجميد.</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="CardManager.closeModal('freezeConfirmModal')">إلغاء</button>
+                <button class="btn btn-warning" onclick="CardManager.confirmFreeze()">تأكيد التجميد</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال الإبلاغ عن فقدان -->
+    <div id="lostConfirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> الإبلاغ عن ضياع البطاقة</h3>
+                <button class="modal-close" onclick="CardManager.closeModal('lostConfirmModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #dc3545; margin-bottom: 15px;"></i>
+                    <p>هل أنت متأكد من الإبلاغ عن فقدان البطاقة؟</p>
+                </div>
+                <div class="info-box danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>تحذير: الإبلاغ عن فقدان البطاقة سيؤدي إلى إلغائها نهائياً وإصدار بطاقة بديلة.</span>
+                </div>
+                <div style="padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                    <p style="margin: 0;"><i class="fas fa-clock"></i> مدة استلام البطاقة البديلة: 3-5 أيام عمل</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="CardManager.closeModal('lostConfirmModal')">إلغاء</button>
+                <button class="btn btn-danger" onclick="CardManager.confirmReportLost()">تأكيد الإبلاغ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // حل مشكلة القائمة في الجوال
+        (function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navList = document.getElementById('navList');
+            if (menuToggle && navList) {
+                const newMenuToggle = menuToggle.cloneNode(true);
+                menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
+                newMenuToggle.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    navList.classList.toggle('mobile-active');
+                });
+                document.addEventListener('click', function(event) {
+                    if (navList.classList.contains('mobile-active') && 
+                        !navList.contains(event.target) && 
+                        !newMenuToggle.contains(event.target)) {
+                        navList.classList.remove('mobile-active');
+                    }
+                });
+            }
+        })();
+
+        // ========================================
+        // CardManager - إدارة البطاقات
+        // ========================================
+        const CardManager = {
+            cards: { main: null, secondary: [] },
+            selectedCardId: null,
+            allCardsData: [],
+            accountsWithoutCards: [],
+
+            // تحميل البطاقات من API
+loadCardsFromUser: async function() {
+    try {
+        const result = await BankApp.apiCall('/cards/all-with-accounts', { method: 'GET' });
+        if (result.success) {
+            this.allCardsData = result.cards || [];
+            this.accountsWithoutCards = result.accountsWithoutCards || [];
+            
+            // ✅ جلب البطاقة الأساسية المخزنة أو أول بطاقة نشطة
+            const savedMainCardId = localStorage.getItem('mainCardId');
+            let mainCard = null;
+            
+            if (savedMainCardId) {
+                mainCard = this.allCardsData.find(c => c.id === savedMainCardId);
+            }
+            
+            if (!mainCard) {
+                // لو مفيش بطاقة محفوظة، خد أول بطاقة نشطة
+                const activeCards = this.allCardsData.filter(c => c.status === 'active');
+                mainCard = activeCards.length > 0 ? activeCards[0] : (this.allCardsData[0] || null);
+                if (mainCard) {
+                    localStorage.setItem('mainCardId', mainCard.id);
+                }
+            }
+            
+            this.cards.main = mainCard;
+            this.cards.secondary = this.allCardsData.filter(c => c.id !== this.cards.main?.id);
+            
+            this.updateMainCardUI();
+            this.renderCardsGrid();
+        }
+    } catch (error) {
+        console.error('Error loading cards:', error);
+    }
+},
+
+            // تحديث واجهة البطاقة الرئيسية
+            updateMainCardUI: function() {
+                const mainCard = document.getElementById('mainCard');
+                const statusBadge = document.getElementById('mainCardStatus');
+                const freezeBtn = document.getElementById('freezeMainCardBtn');
+                
+                if (mainCard && this.cards.main) {
+                    const card = this.cards.main;
+                    
+                    document.getElementById('mainCardLastFour').textContent = card.number || '----';
+                    document.getElementById('mainCardHolder').textContent = card.holder || '---';
+                    document.getElementById('mainCardExpiry').textContent = card.expiry || '--/--';
+                    document.getElementById('mainCardType').textContent = card.type === 'gold' ? 'ذهبية' : card.type === 'silver' ? 'فضية' : 'بلاتينية';
+                    document.getElementById('cardAvailableBalance').textContent = (card.available || 0).toLocaleString() + ' ج.م';
+                    document.getElementById('cardCreditLimit').textContent = (card.creditLimit || 0).toLocaleString() + ' ج.م';
+                    document.getElementById('cardUsedAmount').textContent = (card.used || 0).toLocaleString() + ' ج.م';
+                    
+                    // عرض الحساب المرتبط
+                    const linkedAccountEl = document.getElementById('linkedAccountName');
+                    if (linkedAccountEl && card.account) {
+                        linkedAccountEl.innerHTML = `${card.account.name} (${card.account.number})`;
+                    }
+                    
+                    mainCard.classList.remove('frozen', 'lost');
+                    
+                    if (card.status === 'frozen') {
+                        mainCard.classList.add('frozen');
+                        statusBadge.className = 'card-status-badge status-frozen';
+                        statusBadge.textContent = 'مجمدة';
+                        freezeBtn.innerHTML = '<i class="fas fa-play"></i> إلغاء التجميد';
+                        freezeBtn.className = 'btn btn-success';
+                    } else if (card.status === 'lost') {
+                        mainCard.classList.add('lost');
+                        statusBadge.className = 'card-status-badge status-lost';
+                        statusBadge.textContent = 'مفقودة';
+                        freezeBtn.disabled = true;
+                    } else {
+                        statusBadge.className = 'card-status-badge status-active';
+                        statusBadge.textContent = 'نشطة';
+                        freezeBtn.innerHTML = '<i class="fas fa-snowflake"></i> تجميد مؤقت';
+                        freezeBtn.className = 'btn btn-warning';
+                        freezeBtn.disabled = false;
+                    }
+                }
+            },
+
+            // عرض الشبكة
+            renderCardsGrid: function() {
+                const grid = document.getElementById('cardsGrid');
+                if (!grid) return;
+                
+                if (!this.allCardsData || this.allCardsData.length === 0) {
+                    grid.innerHTML = `
+                        <div class="text-center p-3">
+                            <i class="fas fa-credit-card" style="font-size: 48px; opacity: 0.5; margin-bottom: 15px; display: block;"></i>
+                            <span>لا توجد بطاقات</span>
+                            ${this.accountsWithoutCards && this.accountsWithoutCards.length > 0 ? `
+                                <div style="margin-top: 20px; padding: 15px; background: rgba(79,195,247,0.1); border-radius: 12px;">
+                                    <p style="margin-bottom: 10px;">💡 يمكنك إصدار بطاقة للحسابات التالية:</p>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                                        ${this.accountsWithoutCards.map(acc => `
+                                            <button class="btn btn-sm btn-primary" onclick="CardManager.showNewCardForAccount('${acc.id}', '${acc.name}', ${acc.balance})">
+                                                <i class="fas fa-plus"></i> ${acc.name}
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    return;
+                }
+                
+                grid.innerHTML = this.allCardsData.map(card => this.createCardElement(card)).join('');
+            },
+
+            // إنشاء عنصر بطاقة
+createCardElement: function(card) {
+    const statusClass = card.status === 'frozen' ? 'frozen' : card.status === 'lost' ? 'lost' : '';
+    const statusText = card.status === 'frozen' ? 'مجمدة' : card.status === 'lost' ? 'مفقودة' : 'نشطة';
+    const typeText = card.type === 'gold' ? 'ذهبية' : card.type === 'silver' ? 'فضية' : 'بلاتينية';
+    const accountName = card.account ? card.account.name : 'غير مرتبط';
+    const accountNumber = card.account ? card.account.number : '---';
+    const isMain = this.cards.main && this.cards.main.id === card.id;
+    
+    return `
+        <div class="card-item">
+            <div class="credit-card ${card.type} ${statusClass}" style="${isMain ? 'border: 3px solid #ffc107;' : ''}">
+                <div class="card-header">
+                    <div class="card-logo"><i class="fab fa-cc-${card.type === 'platinum' ? 'visa' : 'mastercard'}"></i></div>
+                    <div class="card-chip"><i class="fas fa-microchip"></i></div>
+                </div>
+                <div class="card-number">
+                    <span>****</span><span>****</span><span>****</span>
+                    <span>${card.number}</span>
+                </div>
+                <div class="card-details">
+                    <div class="card-holder">
+                        <div class="label">حامل البطاقة</div>
+                        <div class="value">${card.holder}</div>
+                    </div>
+                    <div class="card-expiry">
+                        <div class="label">تاريخ الانتهاء</div>
+                        <div class="value">${card.expiry}</div>
+                    </div>
+                </div>
+                <div class="card-type"><span class="${card.type}-badge">${typeText}</span></div>
+                ${isMain ? '<div style="position: absolute; top: 10px; right: 10px; background: #ffc107; color: #333; padding: 3px 8px; border-radius: 20px; font-size: 11px;">⭐ أساسية</div>' : ''}
+            </div>
+            
+            <div class="linked-account-info" style="margin-top: 10px;">
+                <span><i class="fas fa-link"></i> حساب مرتبط:</span>
+                <strong>${accountName} (${accountNumber})</strong>
+            </div>
+            
+            <div class="card-info-mini">
+                <span>الحد الائتماني: ${(card.creditLimit || 0).toLocaleString()} ج.م</span>
+                <span>المستخدم: ${(card.used || 0).toLocaleString()} ج.م</span>
+            </div>
+            <div class="card-info-mini" style="border-bottom: none;">
+                <span>المتاح: ${(card.available || 0).toLocaleString()} ج.م</span>
+                <span>الحالة: ${statusText}</span>
+            </div>
+            
+            <div class="card-actions">
+                ${!isMain ? `
+                    <button class="action-btn btn-primary" onclick="CardManager.setAsMainCard('${card.id}')" style="background: #ffc107; color: #333;">
+                        <i class="fas fa-star"></i> تعيين كأساسية
+                    </button>
+                ` : ''}
+                <button class="action-btn ${card.status === 'frozen' ? 'btn-success' : 'btn-warning'}" 
+                        onclick="CardManager.toggleFreeze('${card.id}')"
+                        ${card.status === 'lost' ? 'disabled' : ''}>
+                    <i class="fas ${card.status === 'frozen' ? 'fa-play' : 'fa-snowflake'}"></i>
+                    ${card.status === 'frozen' ? 'إلغاء التجميد' : 'تجميد'}
+                </button>
+                <button class="action-btn btn-secondary" onclick="CardManager.showCardDetails('${card.id}')">
+                    <i class="fas fa-info-circle"></i> تفاصيل
+                </button>
+            </div>
+        </div>
+    `;
+},
+            // عرض مودال إنشاء بطاقة لحساب محدد
+// دالة عرض مودال إنشاء بطاقة جديدة
+showNewCardForAccount: function(accountId, accountName, accountBalance) {
+    const linkedAccountSelect = document.getElementById('linkedAccount');
+    
+    if (accountId) {
+        linkedAccountSelect.innerHTML = `<option value="${accountId}" selected>${accountName} (${(accountBalance || 0).toLocaleString()} ج.م)</option>`;
+        linkedAccountSelect.disabled = true;
+    } else {
+        linkedAccountSelect.disabled = false;
+        linkedAccountSelect.innerHTML = this.accountsWithoutCards.map(acc => 
+            `<option value="${acc.id}">${acc.name} - ${acc.number} (${acc.balance.toLocaleString()} ج.م)</option>`
+        ).join('');
+    }
+    
+    // ✅ إخفاء اختيار الحد الائتماني
+    const creditLimitGroup = document.querySelector('#newCardModal .form-group:has(#creditLimit)');
+    if (creditLimitGroup) creditLimitGroup.style.display = 'none';
+    
+    // ✅ عرض معلومات الحدود حسب نوع البطاقة
+    const cardTypeSelect = document.getElementById('cardType');
+    const limitsInfo = {
+        silver: { limit: '5,000', desc: 'بطاقة فضية - حد ائتماني 5,000 ج.م' },
+        gold: { limit: '15,000', desc: 'بطاقة ذهبية - حد ائتماني 15,000 ج.م' },
+        platinum: { limit: '50,000', desc: 'بطاقة بلاتينية - حد ائتماني 50,000 ج.م' }
+    };
+    
+    if (cardTypeSelect) {
+        // إضافة وصف لكل خيار
+        for (let i = 0; i < cardTypeSelect.options.length; i++) {
+            const opt = cardTypeSelect.options[i];
+            if (limitsInfo[opt.value]) {
+                opt.textContent = `💿 ${limitsInfo[opt.value].desc}`;
+            }
+        }
+    }
+    
+    this.openModal('newCardModal');
+},
+
+showNewCardOptions: function() {
+    console.log('📝 showNewCardOptions called');
+    console.log('accountsWithoutCards:', this.accountsWithoutCards);
+    
+    if (this.accountsWithoutCards && this.accountsWithoutCards.length > 0) {
+        this.showNewCardForAccount(null, null, null);
+    } else {
+        BankUtils.showAlert('⚠️ لا توجد حسابات مؤهلة لإصدار بطاقة جديدة (جميع حساباتك لديها بطاقات بالفعل)', 'warning');
+    }
+},
+// تعيين بطاقة كأساسية
+setAsMainCard: async function(cardId) {
+    const card = this.allCardsData.find(c => c.id === cardId);
+    if (!card) return;
+    
+    // ✅ استخدام مودال مخصص بدلاً من confirm()
+    this.showCardConfirmModal(
+        `هل تريد تعيين بطاقة "<strong style="color: #f59e0b;">${card.name}</strong>" كبطاقتك الأساسية؟`,
+        async () => {
+            // حفظ البطاقة المختارة في localStorage
+            localStorage.setItem('mainCardId', cardId);
+            
+            // تحديث البطاقة الرئيسية
+            this.cards.main = card;
+            this.cards.secondary = this.allCardsData.filter(c => c.id !== cardId);
+            
+            // تحديث الواجهة
+            this.updateMainCardUI();
+            this.renderCardsGrid();
+            
+            BankUtils.showAlert(`✅ تم تعيين ${card.name} كبطاقة أساسية`, 'success');
+        }
+    );
+},
+
+// دالة المودال المخصص
+showCardConfirmModal: function(message, onConfirm) {
+    // إزالة أي مودال موجود
+    const existingModal = document.getElementById('cardConfirmModal');
+    if (existingModal) existingModal.remove();
+    
+    const modalHTML = `
+        <div class="modal" id="cardConfirmModal" style="display: flex; z-index: 10001;">
+            <div class="modal-content" style="max-width: 400px;">
+                <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                    <h3 style="color: #0ef;">
+                        <i class="fas fa-star" style="color: #f59e0b;"></i>
+                        تعيين بطاقة أساسية
+                    </h3>
+                    <button class="modal-close" onclick="CardManager.closeCardConfirmModal()" style="color: #a0d2db;">&times;</button>
+                </div>
+                <div class="modal-body" style="text-align: center;">
+                    <div style="margin-bottom: 20px;">
+                        <i class="fas fa-credit-card" style="font-size: 50px; color: #0ef;"></i>
+                    </div>
+                    <p style="color: #a0d2db; font-size: 16px; margin-bottom: 20px;">
+                        ${message}
+                    </p>
+                </div>
+                <div class="modal-footer" style="display: flex; gap: 10px; justify-content: center; border-top: 1px solid var(--border-color); padding: 15px;">
+                    <button class="btn btn-secondary" id="cardConfirmCancel" style="background: rgba(255,255,255,0.1); color: #a0d2db; padding: 8px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                    <button class="btn btn-primary" id="cardConfirmOk" style="background: linear-gradient(135deg, #0ef 0%, #0a8ba8 100%); color: #081b29; padding: 8px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                        <i class="fas fa-check"></i> تعيين
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    document.getElementById('cardConfirmCancel')?.addEventListener('click', () => {
+        CardManager.closeCardConfirmModal();
+    });
+    
+    document.getElementById('cardConfirmOk')?.addEventListener('click', () => {
+        CardManager.closeCardConfirmModal();
+        if (onConfirm) onConfirm();
+    });
+},
+
+// دالة إغلاق المودال
+closeCardConfirmModal: function() {
+    const modal = document.getElementById('cardConfirmModal');
+    if (modal) modal.remove();
+},
+// دالة معالجة إنشاء بطاقة جديدة
+processNewCard: async function() {
+    const cardType = document.getElementById('cardType').value;
+    const linkedAccountId = document.getElementById('linkedAccount').value;
+    const acceptTerms = document.getElementById('acceptTerms').checked;
+    
+    if (!acceptTerms) {
+        BankUtils.showAlert('يرجى الموافقة على الشروط', 'error');
+        return;
+    }
+    if (!cardType) {
+        BankUtils.showAlert('يرجى اختيار نوع البطاقة', 'error');
+        return;
+    }
+    if (!linkedAccountId) {
+        BankUtils.showAlert('يرجى اختيار الحساب المرتبط بالبطاقة', 'error');
+        return;
+    }
+    
+    BankUtils.showLoading(true, 'جاري إصدار البطاقة...');
+    
+    try {
+        const result = await BankApp.apiCall('/cards', {
+            method: 'POST',
+            body: JSON.stringify({ 
+                type: cardType, 
+                linkedAccountId: linkedAccountId 
+            })
+        });
+        
+        if (result.success) {
+            await BankApp.loadData();
+            await this.loadCardsFromUser();
+            BankUtils.showAlert('✅ تم إصدار البطاقة بنجاح', 'success');
+            this.closeModal('newCardModal');
+            document.getElementById('acceptTerms').checked = false;
+        } else {
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        BankUtils.showAlert(error.message, 'error');
+    } finally {
+        BankUtils.showLoading(false);
+    }
+},
+            // فتح مودال دفع الفاتورة
+            openPayCardModal: function() {
+                if (!this.cards.main) {
+                    BankUtils.showAlert('لا توجد بطاقة رئيسية', 'error');
+                    return;
+                }
+                
+                const used = this.cards.main.used || 0;
+                const available = this.cards.main.available || 0;
+                const minPayment = Math.ceil(used * 0.05);
+                const maxPayment = used;
+                
+                document.getElementById('currentUsed').textContent = used.toLocaleString();
+                document.getElementById('currentAvailable').textContent = available.toLocaleString();
+                document.getElementById('minAmount').textContent = minPayment.toLocaleString();
+                document.getElementById('maxAmount').textContent = maxPayment.toLocaleString();
+                
+                const amountInput = document.getElementById('cardPaymentAmount');
+                amountInput.min = minPayment;
+                amountInput.max = maxPayment;
+                amountInput.value = minPayment;
+                
+                const amounts = [minPayment, Math.floor(maxPayment * 0.25), Math.floor(maxPayment * 0.5), Math.floor(maxPayment * 0.75), maxPayment];
+                document.getElementById('quickAmounts').innerHTML = amounts.map(a => 
+                    `<button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('cardPaymentAmount').value = ${a}">${a.toLocaleString()}</button>`
+                ).join('');
+                
+                this.openModal('payCardModal');
+            },
+
+            // معالجة دفع الفاتورة
+            processCardPayment: async function() {
+                const amount = parseFloat(document.getElementById('cardPaymentAmount').value);
+                const confirmCheck = document.getElementById('confirmPayment').checked;
+                
+                if (!confirmCheck) {
+                    BankUtils.showAlert('يرجى تأكيد البيانات', 'error');
+                    return;
+                }
+                if (!amount || amount <= 0) {
+                    BankUtils.showAlert('يرجى إدخال مبلغ صحيح', 'error');
+                    return;
+                }
+                if (amount > (this.cards.main?.used || 0)) {
+                    BankUtils.showAlert('المبلغ أكبر من المستحق', 'error');
+                    return;
+                }
+                
+                BankUtils.showLoading(true, 'جاري معالجة الدفع...');
+                
+                try {
+                    const result = await BankApp.apiCall(`/cards/${this.cards.main.id}/pay-bill`, {
+                        method: 'POST',
+                        body: JSON.stringify({ amount })
+                    });
+                    
+                    if (result.success) {
+                        await BankApp.loadData();
+                        await this.loadCardsFromUser();
+                        BankUtils.showAlert(`✅ تم دفع ${amount.toLocaleString()} ج.م بنجاح`, 'success');
+                        this.closeModal('payCardModal');
+                        document.getElementById('confirmPayment').checked = false;
+                    } else {
+                        throw new Error(result.message);
+                    }
+                } catch (error) {
+                    BankUtils.showAlert(error.message, 'error');
+                } finally {
+                    BankUtils.showLoading(false);
+                }
+            },
+
+            // تبديل حالة التجميد
+toggleFreeze: async function(cardId) {
+    const card = this.allCardsData.find(c => c.id === cardId);
+    if (!card) return;
+    
+    const newStatus = card.status === 'frozen' ? 'active' : 'frozen';
+    const action = newStatus === 'active' ? 'unfreeze' : 'freeze';
+    
+    BankUtils.showLoading(true, `جاري ${action === 'freeze' ? 'تجميد' : 'إلغاء تجميد'} البطاقة...`);
+    
+    try {
+        await BankApp.apiCall(`/cards/${cardId}/${action}`, { method: 'PUT' });
+        await BankApp.loadData();
+        await this.loadCardsFromUser();
+        
+        // ✅ لو كانت البطاقة الرئيسية هي اللي اتغيرت، نحدثها
+        if (this.cards.main && this.cards.main.id === cardId) {
+            this.cards.main.status = newStatus;
+            this.updateMainCardUI();
+        }
+        
+        BankUtils.showAlert(`✅ تم ${action === 'freeze' ? 'تجميد' : 'إلغاء تجميد'} البطاقة بنجاح`, 'success');
+    } catch (error) {
+        BankUtils.showAlert(error.message, 'error');
+    } finally {
+        BankUtils.showLoading(false);
+    }
+},
+            // فتح مودال تأكيد التجميد للبطاقة الرئيسية
+            handleFreezeCard: function() {
+                if (!this.cards.main) return;
+                if (this.cards.main.status === 'lost') {
+                    BankUtils.showAlert('لا يمكن تجميد بطاقة مفقودة', 'error');
+                    return;
+                }
+                this.selectedCardId = 'main';
+                const message = this.cards.main.status === 'frozen' ? 'هل أنت متأكد من إلغاء تجميد البطاقة؟' : 'هل أنت متأكد من تجميد البطاقة؟';
+                document.getElementById('freezeConfirmMessage').textContent = message;
+                this.openModal('freezeConfirmModal');
+            },
+
+            // تأكيد التجميد
+            confirmFreeze: async function() {
+                if (this.selectedCardId === 'main' && this.cards.main) {
+                    const newStatus = this.cards.main.status === 'frozen' ? 'active' : 'frozen';
+                    const action = newStatus === 'active' ? 'unfreeze' : 'freeze';
+                    
+                    BankUtils.showLoading(true, `جاري ${action === 'freeze' ? 'تجميد' : 'إلغاء تجميد'} البطاقة...`);
+                    
+                    try {
+                        await BankApp.apiCall(`/cards/${this.cards.main.id}/${action}`, { method: 'PUT' });
+                        await BankApp.loadData();
+                        await this.loadCardsFromUser();
+                        BankUtils.showAlert(`✅ تم ${action === 'freeze' ? 'تجميد' : 'إلغاء تجميد'} البطاقة بنجاح`, 'success');
+                    } catch (error) {
+                        BankUtils.showAlert(error.message, 'error');
+                    } finally {
+                        BankUtils.showLoading(false);
+                    }
+                }
+                this.closeModal('freezeConfirmModal');
+            },
+
+            // الإبلاغ عن فقدان البطاقة
+            handleReportLost: function() {
+                if (!this.cards.main) return;
+                if (this.cards.main.status === 'lost') {
+                    BankUtils.showAlert('تم الإبلاغ عن فقدان هذه البطاقة مسبقاً', 'error');
+                    return;
+                }
+                this.selectedCardId = 'main';
+                this.openModal('lostConfirmModal');
+            },
+
+            confirmReportLost: async function() {
+                if (this.selectedCardId === 'main' && this.cards.main) {
+                    BankUtils.showLoading(true, 'جاري الإبلاغ عن فقدان البطاقة...');
+                    
+                    try {
+                        await BankApp.apiCall(`/cards/${this.cards.main.id}/report-lost`, { method: 'PUT' });
+                        await BankApp.loadData();
+                        await this.loadCardsFromUser();
+                        BankUtils.showAlert('⚠️ تم الإبلاغ عن فقدان البطاقة بنجاح، سيتم إصدار بطاقة بديلة', 'warning');
+                    } catch (error) {
+                        BankUtils.showAlert(error.message, 'error');
+                    } finally {
+                        BankUtils.showLoading(false);
+                    }
+                }
+                this.closeModal('lostConfirmModal');
+            },
+
+            // عرض تفاصيل البطاقة
+            showCardDetails: function(cardId) {
+                const card = this.allCardsData.find(c => c.id === cardId);
+                if (!card) return;
+                
+                const statusText = card.status === 'frozen' ? '❄️ مجمدة' : card.status === 'lost' ? '🚫 مفقودة' : '✅ نشطة';
+                const accountInfo = card.account ? `<p><strong>الحساب المرتبط:</strong> ${card.account.name} (${card.account.number})</p>` : '';
+                
+                document.getElementById('cardDetailsContent').innerHTML = `
+                    <p><strong>رقم البطاقة:</strong> **** **** **** ${card.number}</p>
+                    <p><strong>حامل البطاقة:</strong> ${card.holder}</p>
+                    <p><strong>تاريخ الانتهاء:</strong> ${card.expiry}</p>
+                    <p><strong>الحد الائتماني:</strong> ${(card.creditLimit || 0).toLocaleString()} ج.م</p>
+                    <p><strong>المستخدم:</strong> ${(card.used || 0).toLocaleString()} ج.م</p>
+                    <p><strong>المتاح:</strong> ${(card.available || 0).toLocaleString()} ج.م</p>
+                    <p><strong>الحالة:</strong> ${statusText}</p>
+                    ${accountInfo}
+                `;
+                this.openModal('cardDetailsModal');
+            },
+
+            // دوال مساعدة للنوافذ
+            openModal: function(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.style.display = 'flex';
+            },
+            
+            closeModal: function(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.style.display = 'none';
+            }
+        };
+
+        window.CardManager = CardManager;
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', async function() {
+            const checkBankApp = setInterval(async () => {
+                if (window.BankApp && BankApp.user && BankApp.user.uid) {
+                    clearInterval(checkBankApp);
+                    await CardManager.loadCardsFromUser();
+                }
+            }, 100);
+            
+            setTimeout(() => {
+                clearInterval(checkBankApp);
+                if (window.BankApp && BankApp.user && BankApp.user.uid) {
+                    CardManager.loadCardsFromUser();
+                }
+            }, 5000);
+        });
+        // ========================================
+// override - منع تحديث البطاقات من main.js
+// ========================================
+
+// حفظ الدالة الأصلية
+const originalUpdateUI = window.BankApp?.updateUI;
+
+if (window.BankApp) {
+    // تجاوز دالة updateUI لمنع تغيير البطاقات
+    BankApp.updateUI = function() {
+        console.log('⚠️ updateUI called - cards update blocked');
+        
+        // استدعاء الدوال الأصلية ما عدا البطاقات
+        if (this.updateUserInfo) this.updateUserInfo();
+        if (this.updateBalances) this.updateBalances();
+        if (this.updateTransactionsList) this.updateTransactionsList();
+        if (this.updateAccountsGrid) this.updateAccountsGrid();
+        if (this.updateBillsList) this.updateBillsList();
+        if (this.updateNotifications) this.updateNotifications();
+        if (this.updateSavingsGoals) this.updateSavingsGoals();
+        
+        // ❌ لا نحدث البطاقات هنا - البطاقات تبقى زي ما هي من CardManager
+        // if (this.updateCardsList) this.updateCardsList();  // commented
+        
+        console.log('✅ UI updated (cards unchanged)');
+    };
+    
+    // منع دالة updateCardsList إذا وجدت
+    if (BankApp.updateCardsList) {
+        BankApp.updateCardsList = function() {
+            console.log('⚠️ updateCardsList blocked - cards unchanged');
+        };
+    }
+    
+    console.log('✅ Cards protection activated - cards will not be changed by main.js');
+}
+    </script>
+</body>
+</html>

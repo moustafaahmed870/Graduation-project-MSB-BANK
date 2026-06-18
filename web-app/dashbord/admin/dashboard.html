@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - MSB Bank</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Cairo', sans-serif; background: #081b29; }
+        .admin-container { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #0a2438 0%, #081b29 100%);
+            border-left: 1px solid rgba(0, 238, 255, 0.2);
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .sidebar-header { padding: 25px 20px; text-align: center; border-bottom: 1px solid rgba(0, 238, 255, 0.2); }
+        .sidebar-header img { width: 70px; margin-bottom: 10px; }
+        .sidebar-header h3 { color: #0ef; font-size: 20px; }
+        .sidebar-header p { color: #a0d2db; font-size: 12px; opacity: 0.7; }
+        .sidebar-menu { padding: 20px 0; }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 25px;
+            color: #a0d2db;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-right: 3px solid transparent;
+        }
+        .menu-item i { width: 22px; font-size: 18px; }
+        .menu-item:hover { background: rgba(0, 238, 255, 0.1); color: #0ef; }
+        .menu-item.active { background: rgba(0, 238, 255, 0.15); border-right-color: #0ef; color: #0ef; }
+        .main-content { flex: 1; margin-right: 280px; padding: 20px; }
+        .top-header {
+            background: linear-gradient(135deg, rgba(10, 36, 56, 0.95) 0%, rgba(8, 27, 41, 0.98) 100%);
+            border-radius: 15px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(0, 238, 255, 0.2);
+        }
+        .page-title { color: #0ef; font-size: 24px; font-weight: 600; }
+        .admin-info { display: flex; align-items: center; gap: 15px; }
+        .admin-name { color: #a0d2db; }
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .logout-btn:hover { background: #ef4444; color: white; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, rgba(10, 36, 56, 0.95) 0%, rgba(8, 27, 41, 0.98) 100%);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(0, 238, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: #0ef; }
+        .stat-icon { width: 50px; height: 50px; background: rgba(0, 238, 255, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+        .stat-icon i { font-size: 24px; color: #0ef; }
+        .stat-value { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+        .stat-label { color: #a0d2db; font-size: 14px; }
+        .card {
+            background: linear-gradient(135deg, rgba(10, 36, 56, 0.95) 0%, rgba(8, 27, 41, 0.98) 100%);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 238, 255, 0.2);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+        .card-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0, 238, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header h3 { color: #0ef; font-size: 18px; }
+        .view-all { color: #0ef; text-decoration: none; font-size: 14px; }
+        .card-body { padding: 20px; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid rgba(0, 238, 255, 0.1);
+            color: #a0d2db;
+        }
+        .data-table th { color: #0ef; font-weight: 600; }
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .btn-sm { padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; border: none; margin: 0 3px; transition: all 0.3s ease; }
+        .btn-sm:hover { transform: translateY(-1px); }
+        .btn-success { background: #10b981; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-primary { background: #0ef; color: #081b29; }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: #a0d2db; }
+        .menu-toggle {
+            display: none;
+            background: rgba(0, 238, 255, 0.2);
+            border: none;
+            color: #0ef;
+            font-size: 24px;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: linear-gradient(135deg, #0a2438 0%, #081b29 100%);
+            border-radius: 20px;
+            border: 2px solid rgba(0, 238, 255, 0.3);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 238, 255, 0.2);
+            position: sticky;
+            top: 0;
+            background: #0a2438;
+            z-index: 10;
+        }
+        .modal-header h3 { color: #0ef; margin: 0; }
+        .modal-close {
+            background: none;
+            border: none;
+            color: #a0d2db;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .modal-close:hover { color: #ef4444; transform: rotate(90deg); }
+        .modal-body { padding: 20px; }
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding: 15px;
+            border-top: 1px solid rgba(0, 238, 255, 0.2);
+            position: sticky;
+            bottom: 0;
+            background: #0a2438;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .detail-label { color: #0ef; font-weight: 500; }
+        .detail-value { color: #a0d2db; }
+        .image-container {
+            background: #fff;
+            padding: 15px;
+            border-radius: 0 0 8px 8px;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+        .image-header {
+            background: #0ef;
+            color: #081b29;
+            padding: 10px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        .no-image {
+            background: #ef4444;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-label {
+            display: block;
+            color: #a0d2db;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 238, 255, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Cairo', sans-serif;
+        }
+        .form-control:focus { outline: none; border-color: #0ef; }
+        textarea.form-control { resize: vertical; min-height: 100px; }
+        @media (max-width: 992px) {
+            .sidebar { right: -280px; }
+            .main-content { margin-right: 0; }
+            .sidebar.mobile-open { right: 0; }
+            .menu-toggle { display: block; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 576px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .top-header { flex-direction: column; gap: 10px; }
+        }
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+            color: #a0d2db;
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="https://i.ibb.co/LhY9KjRv/MSB.png" alt="MSB Bank">
+                <h3>MSB Bank</h3>
+                <p>منصة المشرفين</p>
+            </div>
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>لوحة التحكم</span>
+                </a>
+                <a href="users.html" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>إدارة المستخدمين</span>
+                </a>
+                <a href="analytics.html" class="menu-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>التحليلات</span>
+                </a>
+                <a href="settings.html" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>إعدادات النظام</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-header">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">لوحة التحكم</h1>
+                <div class="admin-info">
+                    <span class="admin-name" id="adminName">admin@msbbank.com</span>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> خروج
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-value" id="totalUsers">0</div>
+                    <div class="stat-label">إجمالي المستخدمين</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-value" id="pendingUsers">0</div>
+                    <div class="stat-label">بانتظار الموافقة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-value" id="activeUsers">0</div>
+                    <div class="stat-label">حسابات نشطة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-ban"></i></div>
+                    <div class="stat-value" id="suspendedUsers">0</div>
+                    <div class="stat-label">حسابات معلقة</div>
+                </div>
+            </div>
+<!-- طلبات المستخدمين الجدد -->
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-users"></i> طلبات التسجيل الجديدة</h3>
+        <button class="btn-sm btn-primary" onclick="loadDashboardData()">
+            <i class="fas fa-sync-alt"></i> تحديث
+        </button>
+    </div>
+    <div class="card-body">
+        <div id="pendingContainer">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i> جاري التحميل...
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- طلبات القروض المعلقة -->
+<div class="card">
+    <div class="card-header">
+        <h3><i class="fas fa-hand-holding-usd"></i> طلبات القروض المعلقة</h3>
+        <button class="btn-sm btn-primary" onclick="loadPendingLoans()">
+            <i class="fas fa-sync-alt"></i> تحديث
+        </button>
+    </div>
+    <div class="card-body">
+        <div id="pendingLoansContainer">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i> جاري التحميل...
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="admin-auth.js"></script>
+    <script src="admin-api.js"></script>
+    <script>
+        let pendingUsers = [];
+
+        // تحميل البيانات
+        async function loadDashboardData() {
+            try {
+                const stats = await AdminAPI.getSystemStats();
+                if (stats.success) {
+                    document.getElementById('totalUsers').textContent = stats.stats.totalUsers || 0;
+                    document.getElementById('pendingUsers').textContent = stats.stats.pendingUsers || 0;
+                    document.getElementById('activeUsers').textContent = stats.stats.activeUsers || 0;
+                    document.getElementById('suspendedUsers').textContent = stats.stats.suspendedUsers || 0;
+                }
+                
+                const pending = await AdminAPI.getPendingUsers();
+                if (pending.success) {
+                    pendingUsers = pending.users || [];
+                    renderPendingUsers();
+                }
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('pendingContainer').innerHTML = `
+                    <div class="loading-spinner" style="color: #ef4444;">
+                        <i class="fas fa-exclamation-triangle"></i> خطأ في تحميل البيانات
+                    </div>
+                `;
+            }
+        }
+
+        function renderPendingUsers() {
+            const container = document.getElementById('pendingContainer');
+            
+            if (pendingUsers.length === 0) {
+                container.innerHTML = `
+                    <div class="loading-spinner">
+                        <i class="fas fa-check-circle"></i> ✨ لا توجد طلبات معلقة
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>البريد الإلكتروني</th>
+                            <th>رقم الهاتف</th>
+                            <th>نوع الحساب</th>
+                            <th>الرقم القومي</th>
+                            <th>صورة البطاقة</th>
+                            <th>تاريخ التسجيل</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${pendingUsers.map(user => `
+                            <tr>
+                                <td>${user.fullName || '---'}</td>
+                                <td>${user.email || '---'}</td>
+                                <td>${user.phone || '---'}</td>
+                                <td>${user.accountType === 'current' ? 'حساب جاري' : 'حساب توفير'}</td>
+                                <td>${user.nationalId || '---'}</td>
+                                <td>
+                                    <button class="btn-sm btn-primary" onclick="showIdImages('${user.uid}')">
+                                        <i class="fas fa-id-card"></i> عرض الصور
+                                    </button>
+                                </td>
+                                <td>${user.createdAt ? new Date(user.createdAt).toLocaleDateString('ar-EG') : '---'}</td>
+                                <td>
+                                    <button class="btn-sm btn-success" onclick="approveUser('${user.uid}')">
+                                        <i class="fas fa-check"></i> موافقة
+                                    </button>
+                                    <button class="btn-sm btn-danger" onclick="showRejectModal('${user.uid}', '${user.fullName}', '${user.email}')">
+                                        <i class="fas fa-times"></i> رفض
+                                    </button>
+                                    <button class="btn-sm btn-secondary" onclick="viewUserDetails('${user.uid}')">
+                                        <i class="fas fa-info-circle"></i> تفاصيل
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // ============= مودال الرفض مع سبب الرفض =============
+        let currentRejectUser = null;
+
+        function showRejectModal(userId, userName, userEmail) {
+            currentRejectUser = { userId, userName, userEmail };
+            
+            const existingModal = document.getElementById('rejectModal');
+            if (existingModal) existingModal.remove();
+            
+            const modalHTML = `
+                <div class="modal" id="rejectModal" style="display: flex;">
+                    <div class="modal-content" style="max-width: 500px;">
+                        <div class="modal-header">
+                            <h3>
+                                <i class="fas fa-times-circle" style="color: #ef4444;"></i>
+                                رفض طلب التسجيل
+                                <span style="font-size: 14px; display: block; color: #a0d2db; margin-top: 5px;">${userName}</span>
+                            </h3>
+                            <button class="modal-close" onclick="closeRejectModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div style="background: rgba(239, 68, 68, 0.1); border-radius: 12px; padding: 15px; margin-bottom: 20px; border-right: 3px solid #ef4444;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-info-circle" style="color: #ef4444;"></i>
+                                    <span style="color: #a0d2db; font-size: 13px;">
+                                        سيتم إرسال إيميل للمستخدم يوضح سبب الرفض
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <form id="rejectForm" onsubmit="processRejectWithReason(event)">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-envelope"></i>
+                                        البريد الإلكتروني للمستخدم
+                                    </label>
+                                    <input type="email" class="form-control" id="rejectEmail" value="${userEmail}" readonly style="opacity: 0.7;">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        سبب الرفض
+                                    </label>
+                                    <textarea class="form-control" id="rejectReason" 
+                                              placeholder="اكتب سبب رفض طلب التسجيل..."
+                                              required></textarea>
+                                    <small style="color: #a0d2db; opacity: 0.7; display: block; margin-top: 5px;">
+                                        سيتم إرسال هذا السبب في الإيميل للمستخدم
+                                    </small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                        <input type="checkbox" id="confirmReject" required style="width: 18px; height: 18px; cursor: pointer;">
+                                        <span style="color: #a0d2db;">أؤكد رفض هذا المستخدم وإرسال إيميل له</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="modal-footer" style="margin-top: 20px;">
+                                    <button type="button" class="btn-sm btn-secondary" onclick="closeRejectModal()">
+                                        <i class="fas fa-times"></i> إلغاء
+                                    </button>
+                                    <button type="submit" class="btn-sm btn-danger">
+                                        <i class="fas fa-paper-plane"></i> رفض وإرسال إيميل
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeRejectModal() {
+            const modal = document.getElementById('rejectModal');
+            if (modal) modal.remove();
+            currentRejectUser = null;
+        }
+
+async function processRejectWithReason(event) {
+    event.preventDefault();
+    
+    const reason = document.getElementById('rejectReason').value.trim();
+    const email = document.getElementById('rejectEmail').value;
+    
+    console.log('📧 Sending rejection to:', email);
+    
+    if (!reason) {
+        showErrorMessage('❌ يرجى كتابة سبب الرفض');
+        return;
+    }
+    
+    if (!currentRejectUser) {
+        showErrorMessage('❌ حدث خطأ، يرجى المحاولة مرة أخرى');
+        return;
+    }
+    
+    showLoading(true, 'جاري حذف المستخدم وإرسال الإيميل...');
+    
+    try {
+        const token = localStorage.getItem('adminToken');
+        
+        // 1. رفض وحذف المستخدم نهائياً
+        console.log('🗑️ Deleting user:', currentRejectUser.userId);
+        
+        const rejectResponse = await fetch(`http://localhost:3000/api/admin/users/${currentRejectUser.userId}/reject`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        
+        const rejectResult = await rejectResponse.json();
+        
+        if (!rejectResult.success) {
+            throw new Error(rejectResult.message || 'فشل في حذف المستخدم');
+        }
+        
+        console.log('✅ User deleted successfully:', rejectResult);
+        
+        // 2. إرسال إيميل الرفض للمستخدم (اختياري)
+        try {
+            const emailResponse = await fetch('http://localhost:3000/api/dashboard/send-rejection-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({
+                    email: email,
+                    userName: currentRejectUser.userName,
+                    reason: reason
+                })
+            });
+            
+            if (emailResponse.ok) {
+                showSuccessMessage(`✅ تم حذف المستخدم وإرسال إيميل إلى ${email}`);
+            } else {
+                showWarningMessage(`⚠️ تم حذف المستخدم ولكن فشل إرسال الإيميل`);
+            }
+        } catch (emailError) {
+            console.warn('Email error:', emailError);
+            showWarningMessage(`⚠️ تم حذف المستخدم ولكن فشل إرسال الإيميل`);
+        }
+        
+        closeRejectModal();
+        
+        // تحديث القائمة
+        await loadDashboardData();
+        
+    } catch (error) {
+        console.error('Rejection error:', error);
+        showErrorMessage('❌ ' + error.message);
+    } finally {
+        showLoading(false);
+    }
+}
+        // ============= دوال الموافقة =============
+async function approveUser(userId) {
+    const user = pendingUsers.find(u => u.uid === userId);
+    if (!user) return;
+    
+    showConfirmModal({
+        title: "✅ قبول المستخدم",
+        message: `هل تريد قبول طلب تسجيل "<strong style="color: #f59e0b;">${user.fullName}</strong>"؟`,
+        confirmText: "قبول",
+        onConfirm: async () => {
+            showLoading(true, 'جاري قبول المستخدم...');
+            try {
+                const result = await AdminAPI.approveUser(userId);
+                if (result.success) {
+                    // إرسال إيميل القبول
+                    try {
+                        await fetch('http://localhost:3000/api/admin/send-approval-email', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                            },
+                            body: JSON.stringify({
+                                email: user.email,
+                                userName: user.fullName
+                            })
+                        });
+                    } catch(e) { console.warn('Email error:', e); }
+                    
+                    showSuccessMessage(`✅ تم قبول المستخدم "${user.fullName}" بنجاح`);
+                    loadDashboardData();
+                }
+            } catch (error) {
+                showErrorMessage('❌ ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+    });
+}
+        // ============= دوال مساعدة =============
+        let loadingOverlay = null;
+        
+        function showLoading(show, message = 'جاري المعالجة...') {
+            if (show) {
+                if (!loadingOverlay) {
+                    loadingOverlay = document.createElement('div');
+                    loadingOverlay.id = 'loadingOverlay';
+                    loadingOverlay.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0, 0, 0, 0.8);
+                        z-index: 20000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        flex-direction: column;
+                        backdrop-filter: blur(5px);
+                    `;
+                    loadingOverlay.innerHTML = `
+                        <div style="background: #0a2438; padding: 30px; border-radius: 15px; text-align: center; border: 2px solid #0ef;">
+                            <div style="width: 50px; height: 50px; border: 3px solid rgba(0,238,255,0.3); border-top: 3px solid #0ef; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px;"></div>
+                            <div style="color: #a0d2db;" id="loadingMessage">${message}</div>
+                        </div>
+                        <style>
+                            @keyframes spin {
+                                0% { transform: rotate(0deg); }
+                                100% { transform: rotate(360deg); }
+                            }
+                        </style>
+                    `;
+                    document.body.appendChild(loadingOverlay);
+                } else {
+                    const msgEl = document.getElementById('loadingMessage');
+                    if (msgEl) msgEl.textContent = message;
+                    loadingOverlay.style.display = 'flex';
+                }
+            } else {
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+            }
+        }
+
+        function showSuccessMessage(message) {
+            const alert = document.createElement('div');
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 10px;
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                font-weight: 500;
+            `;
+            alert.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 4000);
+        }
+
+        function showErrorMessage(message) {
+            const alert = document.createElement('div');
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 10px;
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                font-weight: 500;
+            `;
+            alert.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 4000);
+        }
+
+        function showWarningMessage(message) {
+            const alert = document.createElement('div');
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+                color: #081b29;
+                padding: 12px 20px;
+                border-radius: 10px;
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                font-weight: 500;
+            `;
+            alert.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        // ============= عرض صور البطاقة =============
+        function showIdImages(userId) {
+            const user = pendingUsers.find(u => u.uid === userId);
+            if (!user) {
+                showErrorMessage('❌ المستخدم غير موجود');
+                return;
+            }
+            
+            console.log('📸 عرض صور البطاقة للمستخدم:', user.fullName);
+            
+            const hasFrontImage = user.frontImage && user.frontImage.startsWith('data:image');
+            const hasBackImage = user.backImage && user.backImage.startsWith('data:image');
+            
+            if (!hasFrontImage && !hasBackImage) {
+                showErrorMessage('⚠️ لا توجد صور مرفوعة لهذا المستخدم');
+                return;
+            }
+            
+            const existingModal = document.getElementById('idImagesModal');
+            if (existingModal) existingModal.remove();
+            
+            const modalHTML = `
+                <div class="modal" id="idImagesModal" style="display: flex;">
+                    <div class="modal-content" style="max-width: 700px;">
+                        <div class="modal-header">
+                            <h3>
+                                <i class="fas fa-id-card"></i>
+                                صور بطاقة الرقم القومي
+                                <span style="font-size: 14px; display: block; color: #a0d2db; margin-top: 5px;">${user.fullName || user.email}</span>
+                            </h3>
+                            <button class="modal-close" onclick="closeImagesModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                ${hasFrontImage ? `
+                                    <div>
+                                        <div class="image-header">
+                                            <i class="fas fa-id-card"></i> الوجه الأمامي
+                                        </div>
+                                        <div class="image-container">
+                                            <img src="${user.frontImage}" alt="Front ID" 
+                                                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23ef4444\' stroke-width=\'2\'%3E%3Crect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'%3E%3C/rect%3E%3Cline x1=\'3\' y1=\'9\' x2=\'21\' y2=\'9\'%3E%3C/line%3E%3Cline x1=\'9\' y1=\'21\' x2=\'9\' y2=\'9\'%3E%3C/line%3E%3C/svg%3E';">
+                                        </div>
+                                    </div>
+                                ` : `
+                                    <div>
+                                        <div class="no-image">
+                                            <i class="fas fa-times-circle"></i> لا توجد صورة للوجه الأمامي
+                                        </div>
+                                    </div>
+                                `}
+                                
+                                ${hasBackImage ? `
+                                    <div>
+                                        <div class="image-header">
+                                            <i class="fas fa-id-card"></i> الوجه الخلفي
+                                        </div>
+                                        <div class="image-container">
+                                            <img src="${user.backImage}" alt="Back ID"
+                                                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23ef4444\' stroke-width=\'2\'%3E%3Crect x=\'3\' y=\'3\' width=\'18\' height=\'18\' rx=\'2\'%3E%3C/rect%3E%3Cline x1=\'3\' y1=\'9\' x2=\'21\' y2=\'9\'%3E%3C/line%3E%3Cline x1=\'9\' y1=\'21\' x2=\'9\' y2=\'9\'%3E%3C/line%3E%3C/svg%3E';">
+                                        </div>
+                                    </div>
+                                ` : `
+                                    <div>
+                                        <div class="no-image">
+                                            <i class="fas fa-times-circle"></i> لا توجد صورة للوجه الخلفي
+                                        </div>
+                                    </div>
+                                `}
+                            </div>
+                            
+                            <div style="margin-top: 20px; padding: 15px; background: rgba(79, 195, 247, 0.1); border-radius: 12px; border-right: 3px solid #0ef;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-info-circle" style="color: #0ef;"></i>
+                                    <span style="color: #a0d2db; font-size: 13px;">
+                                        يرجى التأكد من أن الصورة واضحة وأن البيانات مطابقة للبيانات المدخلة
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px;">
+                                <h4 style="color: #0ef; margin-bottom: 15px;">بيانات المستخدم</h4>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">الاسم:</span>
+                                        <span class="detail-value">${user.fullName || '---'}</span>
+                                    </div>
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">الرقم القومي:</span>
+                                        <span class="detail-value">${user.nationalId || '---'}</span>
+                                    </div>
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">البريد الإلكتروني:</span>
+                                        <span class="detail-value">${user.email || '---'}</span>
+                                    </div>
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">رقم الهاتف:</span>
+                                        <span class="detail-value">${user.phone || '---'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-sm btn-secondary" onclick="closeImagesModal()">
+                                <i class="fas fa-times"></i> إغلاق
+                            </button>
+                            <button class="btn-sm btn-success" onclick="approveAndCloseModal('${user.uid}')">
+                                <i class="fas fa-check"></i> قبول المستخدم
+                            </button>
+                            <button class="btn-sm btn-danger" onclick="showRejectModal('${user.uid}', '${user.fullName}', '${user.email}')">
+                                <i class="fas fa-times"></i> رفض المستخدم
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeImagesModal() {
+            const modal = document.getElementById('idImagesModal');
+            if (modal) modal.remove();
+        }
+
+        async function approveAndCloseModal(userId) {
+            closeImagesModal();
+            await approveUser(userId);
+        }
+
+        // ============= عرض تفاصيل المستخدم =============
+        async function viewUserDetails(userId) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/admin/users`, {
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
+                });
+                const data = await response.json();
+                const user = data.users?.find(u => u.id === userId);
+                
+                if (!user) {
+                    showErrorMessage('المستخدم غير موجود');
+                    return;
+                }
+                
+                const accountTypeText = user.accountType === 'current' ? 'حساب جاري' : 'حساب توفير';
+                const statusText = user.status === 'active' ? 'نشط' : (user.status === 'pending' ? 'قيد الانتظار' : 'معلق');
+                const statusColor = user.status === 'active' ? '#10b981' : (user.status === 'pending' ? '#f59e0b' : '#ef4444');
+                
+                const existingModal = document.getElementById('userDetailsModal');
+                if (existingModal) existingModal.remove();
+                
+                const modalHTML = `
+                    <div class="modal" id="userDetailsModal" style="display: flex;">
+                        <div class="modal-content" style="max-width: 600px;">
+                            <div class="modal-header">
+                                <h3>
+                                    <i class="fas fa-user-circle"></i>
+                                    تفاصيل المستخدم: ${user.fullName || '---'}
+                                </h3>
+                                <button class="modal-close" onclick="closeUserDetailsModal()">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">الاسم الكامل:</span>
+                                        <span class="detail-value">${user.fullName || '---'}</span>
+                                    </div>
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">البريد الإلكتروني:</span>
+                                        <span class="detail-value">${user.email || '---'}</span>
+                                    </div>
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">رقم الهاتف:</span>
+                                        <span class="detail-value">${user.phone || '---'}</span>
+                                    </div>
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">الرقم القومي:</span>
+                                        <span class="detail-value">${user.nationalId || '---'}</span>
+                                    </div>
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">تاريخ الميلاد:</span>
+                                        <span class="detail-value">${user.dateOfBirth ? new Date(user.dateOfBirth).toLocaleDateString('ar-EG') : '---'}</span>
+                                    </div>
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">نوع الحساب:</span>
+                                        <span class="detail-value">${accountTypeText}</span>
+                                    </div>
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">الحالة:</span>
+                                        <span class="detail-value" style="color: ${statusColor};">${statusText}</span>
+                                    </div>
+                                    <div class="detail-row" style="flex-direction: column;">
+                                        <span class="detail-label">تاريخ التسجيل:</span>
+                                        <span class="detail-value">${user.createdAt ? new Date(user.createdAt).toLocaleDateString('ar-EG') : '---'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn-sm btn-secondary" onclick="closeUserDetailsModal()">
+                                    <i class="fas fa-times"></i> إغلاق
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                
+            } catch (error) {
+                console.error('Error fetching user details:', error);
+                showErrorMessage('خطأ في تحميل بيانات المستخدم');
+            }
+        }
+
+        function closeUserDetailsModal() {
+            const modal = document.getElementById('userDetailsModal');
+            if (modal) modal.remove();
+        }
+        // ============= تحميل طلبات القروض المعلقة =============
+async function loadPendingLoans() {
+    const container = document.getElementById('pendingLoansContainer');
+    try {
+        const token = localStorage.getItem('adminToken');
+        const response = await fetch('http://localhost:3000/api/dashboard/loans/pending', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await response.json();
+        
+        console.log('📋 Pending loans:', data);
+        
+        if (data.success && data.loans.length > 0) {
+            container.innerHTML = data.loans.map(loan => {
+                const typeNames = { personal: 'شخصي', car: 'سيارة', mortgage: 'عقاري' };
+                
+                // حساب القسط الشهري
+                let interestRate = 8.5;
+                if (loan.type === 'car') interestRate = 6.5;
+                if (loan.type === 'mortgage') interestRate = 5.5;
+                const monthlyRate = interestRate / 100 / 12;
+                const monthlyPayment = Math.round(loan.amount * monthlyRate * Math.pow(1 + monthlyRate, loan.term) / 
+                    (Math.pow(1 + monthlyRate, loan.term) - 1));
+                const debtToIncomeRatio = Math.round((monthlyPayment / loan.monthlyIncome) * 100);
+                
+                return `
+                <div class="card mb-3" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(0, 238, 255, 0.2);">
+                    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <h4 style="color: #0ef;">${loan.userName || 'مستخدم'}</h4>
+                            <p style="color: #a0d2db;"><strong>البريد:</strong> ${loan.userEmail || '---'}</p>
+                            <p style="color: #a0d2db;"><strong>الهاتف:</strong> ${loan.userPhone || '---'}</p>
+                            <p style="color: #a0d2db;"><strong>نوع القرض:</strong> ${typeNames[loan.type] || loan.type}</p>
+                            <p style="color: #a0d2db;"><strong>المبلغ:</strong> <span style="color: #f59e0b;">${(loan.amount || 0).toLocaleString()} ج.م</span></p>
+                            <p style="color: #a0d2db;"><strong>المدة:</strong> ${loan.term || 0} شهر</p>
+                            <p style="color: #a0d2db;"><strong>الدخل الشهري:</strong> ${(loan.monthlyIncome || 0).toLocaleString()} ج.م</p>
+                            <p style="color: #a0d2db;"><strong>💰 القسط الشهري المقدر:</strong> <span style="color: #10b981; font-weight: bold;">${monthlyPayment.toLocaleString()} ج.م</span></p>
+                            <p style="color: #a0d2db;"><strong>نسبة القسط من الدخل:</strong> 
+                                <span style="color: ${debtToIncomeRatio > 40 ? '#ef4444' : '#10b981'}; font-weight: bold;">
+                                    ${debtToIncomeRatio}%
+                                </span>
+                                ${debtToIncomeRatio > 40 ? '⚠️ يتجاوز النسبة الآمنة (40%)' : '✓ ضمن النسبة الآمنة'}
+                            </p>
+                        </div>
+                        <div style="min-width: 200px;">
+                            ${loan.salarySlipImage ? `
+                                <button class="btn-sm btn-secondary" onclick="viewSalarySlip('${loan.salarySlipImage}')" style="width:100%; margin-bottom: 10px;">
+                                    <i class="fas fa-file-image"></i> عرض إيصال الراتب
+                                </button>
+                            ` : `
+                                <div style="background: rgba(239,68,68,0.1); padding: 8px; border-radius: 8px; text-align: center; margin-bottom: 10px;">
+                                    <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> لا يوجد إيصال راتب
+                                </div>
+                            `}
+                            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <button class="btn-sm btn-success" onclick="approveLoan('${loan.id}')" style="flex:1;">
+                                    <i class="fas fa-check"></i> موافقة
+                                </button>
+                                <button class="btn-sm btn-danger" onclick="showRejectLoanModal('${loan.id}', '${loan.userName}')" style="flex:1;">
+                                    <i class="fas fa-times"></i> رفض
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        } else {
+            container.innerHTML = '<div class="loading-spinner"><i class="fas fa-check-circle"></i> ✨ لا توجد طلبات قروض معلقة</div>';
+        }
+    } catch (error) {
+        console.error('Error loading loans:', error);
+        container.innerHTML = '<div class="loading-spinner" style="color: #ef4444;"><i class="fas fa-exclamation-triangle"></i> خطأ في تحميل الطلبات</div>';
+    }
+}
+// عرض صورة إيصال الراتب
+function viewSalarySlip(imageData) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:10000;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width:700px;background:#0a2438;border-radius:15px;padding:20px;border:2px solid rgba(0,238,255,0.3);">
+            <div class="modal-header" style="display:flex;justify-content:space-between;align-items:center;">
+                <h3 style="color:#0ef;"><i class="fas fa-file-image"></i> إيصال الراتب</h3>
+                <button onclick="this.closest('.modal').remove()" style="background:none;border:none;color:#a0d2db;font-size:24px;cursor:pointer;">&times;</button>
+            </div>
+            <div class="modal-body"><img src="${imageData}" alt="إيصال الراتب" style="max-width:100%;border-radius:8px;"></div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// الموافقة على القرض
+async function approveLoan(loanId) {
+    if (!confirm('هل أنت متأكد من الموافقة على هذا القرض؟')) return;
+    const token = localStorage.getItem('adminToken');
+    try {
+        const res = await fetch(`http://localhost:3000/api/dashboard/loans/${loanId}/approve`, {
+            method: 'PUT',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (data.success) {
+            showSuccessMessage('✅ تمت الموافقة على القرض');
+            loadPendingLoans();
+        } else {
+            showErrorMessage('❌ ' + (data.message || 'فشلت الموافقة'));
+        }
+    } catch (e) {
+        showErrorMessage('❌ ' + e.message);
+    }
+}
+
+// مودال رفض القرض
+function showRejectLoanModal(loanId, userName) {
+    const existingModal = document.getElementById('rejectLoanModal');
+    if (existingModal) existingModal.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'rejectLoanModal';
+    modal.className = 'modal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:10000;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width:500px;background:#0a2438;border-radius:15px;padding:20px;border:2px solid rgba(0,238,255,0.3);">
+            <div class="modal-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                <h3 style="color:#0ef;"><i class="fas fa-times-circle" style="color:#ef4444;"></i> رفض طلب القرض</h3>
+                <button onclick="document.getElementById('rejectLoanModal').remove()" style="background:none;border:none;color:#a0d2db;font-size:24px;cursor:pointer;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color:#a0d2db;">المستخدم: <strong>${userName}</strong></p>
+                <div class="form-group">
+                    <label style="color:#a0d2db;">سبب الرفض</label>
+                    <textarea id="rejectReason" class="form-control" rows="3" style="width:100%;background:rgba(255,255,255,0.08);border:1px solid rgba(0,238,255,0.3);border-radius:10px;color:#fff;padding:10px;"></textarea>
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:15px;">
+                <button class="btn-sm btn-secondary" onclick="document.getElementById('rejectLoanModal').remove()">إلغاء</button>
+                <button class="btn-sm btn-danger" onclick="rejectLoan('${loanId}')">تأكيد الرفض</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+async function rejectLoan(loanId) {
+    const reason = document.getElementById('rejectReason')?.value || '';
+    const token = localStorage.getItem('adminToken');
+    try {
+        const res = await fetch(`http://localhost:3000/api/dashboard/loans/${loanId}/reject`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ reason })
+        });
+        const data = await res.json();
+        if (data.success) {
+            document.getElementById('rejectLoanModal')?.remove();
+            showSuccessMessage('✅ تم رفض القرض');
+            loadPendingLoans();
+        } else {
+            showErrorMessage('❌ ' + (data.message || 'فشل الرفض'));
+        }
+    } catch (e) {
+        showErrorMessage('❌ ' + e.message);
+    }
+}
+function showConfirmModal(options) {
+    // حذف أي مودال موجود
+    const existingModal = document.getElementById('easyConfirmModal');
+    if (existingModal) existingModal.remove();
+    
+    const {
+        title = 'تأكيد',
+        message = 'هل أنت متأكد؟',
+        confirmText = 'تأكيد',
+        cancelText = 'إلغاء',
+        onConfirm = null,
+        onCancel = null
+    } = options;
+    
+    const modalHTML = `
+        <div id="easyConfirmModal" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        ">
+            <div style="
+                background: linear-gradient(135deg, #0a2438 0%, #081b29 100%);
+                border-radius: 20px;
+                border: 2px solid #0ef;
+                max-width: 450px;
+                width: 90%;
+                padding: 25px;
+                text-align: center;
+                box-shadow: 0 0 30px rgba(0, 238, 255, 0.3);
+            ">
+                <div style="margin-bottom: 20px;">
+                    <div style="
+                        width: 70px;
+                        height: 70px;
+                        background: rgba(0, 238, 255, 0.15);
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin: 0 auto;
+                    ">
+                        <i class="fas fa-question-circle" style="font-size: 35px; color: #0ef;"></i>
+                    </div>
+                </div>
+                
+                <h3 style="color: #0ef; margin-bottom: 15px;">${title}</h3>
+                
+                <p style="color: #a0d2db; margin-bottom: 20px; line-height: 1.6;">
+                    ${message}
+                </p>
+                
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button id="confirmNoBtn" style="
+                        padding: 10px 25px;
+                        background: rgba(255, 255, 255, 0.1);
+                        border: 1px solid rgba(0, 238, 255, 0.3);
+                        border-radius: 10px;
+                        color: #a0d2db;
+                        cursor: pointer;
+                        font-size: 14px;
+                        transition: all 0.3s ease;
+                    ">
+                        <i class="fas fa-times"></i> ${cancelText}
+                    </button>
+                    <button id="confirmYesBtn" style="
+                        padding: 10px 25px;
+                        background: linear-gradient(135deg, #0ef 0%, #0a8ba8 100%);
+                        border: none;
+                        border-radius: 10px;
+                        color: #081b29;
+                        cursor: pointer;
+                        font-size: 14px;
+                        font-weight: bold;
+                        transition: all 0.3s ease;
+                    ">
+                        <i class="fas fa-check"></i> ${confirmText}
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    document.getElementById('confirmYesBtn').onclick = () => {
+        document.getElementById('easyConfirmModal').remove();
+        if (onConfirm) onConfirm();
+    };
+    
+    document.getElementById('confirmNoBtn').onclick = () => {
+        document.getElementById('easyConfirmModal').remove();
+        if (onCancel) onCancel();
+    };
+}
+
+// تحميل الطلبات المعلقة عند فتح الصفحة
+loadPendingLoans();
+
+        // إعدادات الصفحة
+        document.getElementById('menuToggle')?.addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('mobile-open');
+        });
+
+        document.getElementById('logoutBtn')?.addEventListener('click', function() {
+            adminLogout();
+        });
+
+        document.getElementById('adminName').textContent = localStorage.getItem('adminEmail') || 'admin@msbbank.com';
+        
+        // تحميل البيانات
+        loadDashboardData();
+
+        // جعل الدوال متاحة عالمياً
+        window.approveUser = approveUser;
+        window.showRejectModal = showRejectModal;
+        window.closeRejectModal = closeRejectModal;
+        window.showIdImages = showIdImages;
+        window.closeImagesModal = closeImagesModal;
+        window.approveAndCloseModal = approveAndCloseModal;
+        window.viewUserDetails = viewUserDetails;
+        window.closeUserDetailsModal = closeUserDetailsModal;
+        window.processRejectWithReason = processRejectWithReason;
+    </script>
+</body>
+</html>

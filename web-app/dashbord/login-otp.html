@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/login-signup pages/dashbord/css/login-otp.css">
+    <title>MSB Bank - Two-Factor Authentication</title>
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="otp-container">
+            <div class="logo">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2>Two-Factor Authentication</h2>
+            <p>Enter the 6-digit code sent to your email to complete your login</p>
+            
+            <div class="email-display">
+                <i class="fa-solid fa-envelope"></i> <span id="userEmail">loading...</span>
+            </div>
+            
+            <div id="messageContainer"></div>
+            
+            <div class="otp-inputs">
+                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" id="otp1">
+                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" id="otp2">
+                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" id="otp3">
+                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" id="otp4">
+                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" id="otp5">
+                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" id="otp6">
+            </div>
+            
+            <div class="timer">
+                Code expires in <span id="timer">5:00</span>
+            </div>
+            
+            <button type="button" class="submit-btn" id="verifyBtn" disabled>Verify Code</button>
+            
+            <div class="resend-link">
+                Didn't receive the code? <a id="resendLink" onclick="resendOTP()">Resend Code</a>
+            </div>
+            
+            <div class="biometric-section" id="biometricSection" style="display: none;">
+                <p>Or use biometric authentication:</p>
+                <div class="biometric-btns">
+                    <button class="biometric-btn" onclick="useBiometric('fingerprint')">
+                        <i class="fa-solid fa-fingerprint"></i>
+                        <span>Fingerprint</span>
+                    </button>
+                    <button class="biometric-btn" onclick="useBiometric('face')">
+                        <i class="fa-solid fa-face-smile"></i>
+                        <span>Face ID</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        
+        // Get stored email from login
+        const userEmail = localStorage.getItem('pendingLoginEmail');
+        const userPassword = localStorage.getItem('pendingLoginPassword');
+        
+        if (!userEmail) {
+            window.location.href = 'login.html';
+        }
+        
+        document.getElementById('userEmail').textContent = userEmail;
+        
+        // OTP inputs handling
+        const inputs = document.querySelectorAll('.otp-input');
+        const verifyBtn = document.getElementById('verifyBtn');
+        
+        function getOTP() {
+            return Array.from(inputs).map(input => input.value).join('');
+        }
+        
+        function checkAllFilled() {
+            const allFilled = Array.from(inputs).every(input => input.value.length === 1);
+            verifyBtn.disabled = !allFilled;
+            if (allFilled) {
+                verifyBtn.classList.add('enabled');
+            } else {
+                verifyBtn.classList.remove('enabled');
+            }
+        }
+        
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (!/^\d$/.test(e.target.value)) {
+                    e.target.value = '';
+                    return;
+                }
+                if (index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+                checkAllFilled();
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+        
+        // Timer
+        let timeLeft = 300;
+        const timerEl = document.getElementById('timer');
+        const resendLink = document.getElementById('resendLink');
+        
+        const timer = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                resendLink.classList.remove('disabled');
+                resendLink.style.color = '#0ef';
+            }
+        }, 1000);
+        
+        // Show resend link after 30 seconds
+        setTimeout(() => {
+            resendLink.classList.remove('disabled');
+            resendLink.style.color = '#0ef';
+        }, 30000);
+        
+        // Resend OTP
+        async function resendOTP() {
+            if (timeLeft > 0) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/send-login-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userEmail })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('New OTP sent to your email!', 'success');
+                    timeLeft = 300;
+                    resendLink.classList.add('disabled');
+                    resendLink.style.color = 'rgba(255,255,255,0.3)';
+                    
+                    const newTimer = setInterval(() => {
+                        timeLeft--;
+                        const minutes = Math.floor(timeLeft / 60);
+                        const seconds = timeLeft % 60;
+                        timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        if (timeLeft <= 0) {
+                            clearInterval(newTimer);
+                            resendLink.classList.remove('disabled');
+                            resendLink.style.color = '#0ef';
+                        }
+                    }, 1000);
+                } else {
+                    showMessage(data.message || 'Failed to resend OTP', 'error');
+                }
+            } catch (error) {
+                showMessage('Network error. Please try again.', 'error');
+            }
+        }
+        
+        // Verify OTP
+        verifyBtn.addEventListener('click', async () => {
+            const otp = getOTP();
+            const btn = verifyBtn;
+            const originalText = btn.textContent;
+            btn.textContent = 'Verifying...';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/verify-login-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userEmail, otp })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.token) {
+                    // Clear pending login data
+                    localStorage.removeItem('pendingLoginEmail');
+                    localStorage.removeItem('pendingLoginPassword');
+                    
+                    // Save token and user data
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('userName', data.user.fullName);
+                    
+                    showMessage('Login successful! Redirecting...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showMessage(data.message || 'Invalid OTP', 'error');
+                    inputs.forEach(input => input.value = '');
+                    inputs[0].focus();
+                    verifyBtn.disabled = true;
+                    verifyBtn.classList.remove('enabled');
+                }
+            } catch (error) {
+                showMessage('Network error. Please try again.', 'error');
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        });
+        
+        // Show message
+        function showMessage(msg, type) {
+            const container = document.getElementById('messageContainer');
+            container.innerHTML = `<div class="${type}-message">${msg}</div>`;
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+        
+        // Check if biometric is enabled for this user
+        async function checkBiometricStatus() {
+            try {
+                const response = await fetch(`${API_URL}/auth/2fa-status`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.biometricEnabled) {
+                        document.getElementById('biometricSection').style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.log('Biometric status check failed');
+            }
+        }
+        
+        // Use biometric (placeholder - WebAuthn requires server-side challenge)
+        async function useBiometric(type) {
+            showMessage(`Please use your ${type === 'fingerprint' ? 'fingerprint scanner' : 'Face ID'} to authenticate`, 'success');
+            
+            if (typeof navigator !== 'undefined' && navigator.credentials) {
+                try {
+                    const credential = await navigator.credentials.get({
+                        publicKey: {
+                            challenge: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]),
+                            timeout: 60000,
+                            rp: { name: "MSB Bank" },
+                            userVerification: "preferred"
+                        }
+                    });
+                    
+                    if (credential) {
+                        const response = await fetch(`${API_URL}/auth/biometric-login`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                email: userEmail, 
+                                credentialId: credential.id 
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok && data.token) {
+                            localStorage.removeItem('pendingLoginEmail');
+                            localStorage.removeItem('pendingLoginPassword');
+                            localStorage.setItem('token', data.token);
+                            localStorage.setItem('user', JSON.stringify(data.user));
+                            localStorage.setItem('userName', data.user.fullName);
+                            
+                            showMessage('Biometric login successful!', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'index.html';
+                            }, 1500);
+                        }
+                    }
+                } catch (err) {
+                    console.log('Biometric authentication not available or cancelled');
+                }
+            }
+        }
+        
+        // Check if user has biometric registered
+        checkBiometricStatus();
+    </script>
+</body>
+</html>

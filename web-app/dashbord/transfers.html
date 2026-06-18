@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.name">MSB BANK - التحويلات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="rtl">
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="https://i.ibb.co/LhY9KjRv/MSB.png" alt="MSB">
+                    <div class="logo-text" data-i18n="app.name">MSB BANK</div>
+                </a>
+                
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="user-info">
+                    <div class="user-welcome">
+                        <div class="user-name" id="userName">
+                            <span data-i18n="hello">مرحباً</span>، <span id="userNameText">---</span>
+                        </div>
+                        <div class="user-account" id="accountNumber"><span data-i18n="accounts.account_number">الحساب</span>: <span id="accountNumberText">---</span></div>
+                        <div class="rewards-badge" onclick="BankApp.openAIAssistant()">
+                            <i class="fas fa-trophy"></i>
+                            <span data-i18n="header.rewards" id="rewardsLevel">---</span>
+                        </div>
+                    </div>
+                    
+                    <div class="header-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="window.location.href='/pages/currencyconverter-rate/index.html'">
+                            <i class="fas fa-coins"></i>
+                            <span data-i18n="header.currency_rates">اسعار العملات</span>
+                        </button>
+                        
+                        <button class="language-btn" id="languageToggle" data-i18n-toggle data-i18n-lang-btn>
+                            <i class="fas fa-language"></i> English
+                        </button>
+                        
+                        <div class="notifications">
+                            <button class="notifications-btn" onclick="document.getElementById('notificationDropdown').classList.toggle('active')">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge" id="notificationBadge">0</span>
+                            </button>
+                            <div class="notification-dropdown" id="notificationDropdown">
+                                <div class="notification-header">
+                                    <div class="notification-title" data-i18n="header.notifications">الإشعارات</div>
+                                    <button class="mark-all-read" onclick="BankApp.markAllNotificationsRead()" data-i18n="header.mark_all_read">تعيين الكل كمقروء</button>
+                                </div>
+                                <div class="notification-list" id="notificationList"></div>
+                                <div class="notification-footer">
+                                    <a href="#" class="view-all-notifications" data-i18n="header.view_all">عرض جميع الإشعارات</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="user-avatar" onclick="BankApp.logout()">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-list" id="navList">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span data-i18n="nav.home">الرئيسية</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="accounts.html" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span data-i18n="nav.accounts">الحسابات</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="transfers.html" class="nav-link active">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span data-i18n="nav.transfers">التحويلات</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="investments.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span data-i18n="nav.investments">الاستثمارات</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="cards.html" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span data-i18n="nav.cards">البطاقات</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="loans.html" class="nav-link">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <span data-i18n="nav.loans">القروض</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="wallet.html" class="nav-link">
+                        <i class="fas fa-wallet"></i>
+                        <span data-i18n="nav.wallet">المحفظة</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="government.html" class="nav-link">
+                        <i class="fas fa-landmark"></i>
+                        <span data-i18n="nav.government">الخدمات الحكومية</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span data-i18n="nav.settings">الإعدادات</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="page-section">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="transfers.title">التحويلات</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="openQuickTransfer()">
+                            <i class="fas fa-bolt"></i>
+                            <span data-i18n="transfers.quick_transfer">تحويل سريع</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-3 gap-4 mb-4">
+                    <div class="card transfer-card internal" onclick="openTransferForm('internal')">
+                        <div class="transfer-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h3 data-i18n="transfers.internal">تحويل داخلي</h3>
+                        <p data-i18n="transfers.internal_desc">تحويل بين حساباتك في نفس البنك</p>
+                        <button class="btn btn-primary" data-i18n="transfer_now">تحويل الآن</button>
+                    </div>
+                    
+                    <div class="card transfer-card external" onclick="openTransferForm('external')">
+                        <div class="transfer-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h3 data-i18n="transfers.external">تحويل خارجي</h3>
+                        <p data-i18n="transfers.external_desc">تحويل إلى بنوك أخرى في مصر</p>
+                        <button class="btn btn-primary" data-i18n="transfer_now">تحويل الآن</button>
+                    </div>
+                    
+                    <div class="card transfer-card international" onclick="openTransferForm('international')">
+                        <div class="transfer-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3 data-i18n="transfers.international">تحويل دولي</h3>
+                        <p data-i18n="transfers.international_desc">تحويل إلى حسابات خارج مصر</p>
+                        <button class="btn btn-primary" data-i18n="transfer_now">تحويل الآن</button>
+                    </div>
+                </div>
+                
+                <div class="card mb-4" id="transferForm">
+                    <div class="card-header">
+                        <h2 class="card-title" id="transferFormTitle" data-i18n="transfers.internal">تحويل داخلي</h2>
+                    </div>
+                    
+                    <form id="transferFormElement" class="transfer-form" onsubmit="processTransfer(event)">
+                        <div class="grid grid-2 gap-4">
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="transfers.from_account">من حساب</label>
+                                <select class="form-control" id="fromAccount" required>
+                                    <option value=""><span data-i18n="loading">جاري التحميل...</span></option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="transfers.to">إلى</label>
+                                <select class="form-control" id="toAccount" required>
+                                    <option value=""><span data-i18n="loading">جاري التحميل...</span></option>
+                                </select>
+                                <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="addBeneficiary()">
+                                    <i class="fas fa-plus"></i> <span data-i18n="transfers.add_beneficiary">إضافة مستفيد جديد</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="transfers.amount">المبلغ (ج.م)</label>
+                            <input type="number" class="form-control" id="transferAmount" 
+                                   placeholder="0.00" min="1" required>
+                            <div class="amount-helper">
+                                <span><span data-i18n="transfers.daily_limit">الحد اليومي</span>: <span id="dailyLimit">50,000</span> <span data-i18n="currency.egp">ج.م</span></span>
+                                <button type="button" class="btn btn-sm" onclick="setMaxAmount()">
+                                    <span data-i18n="transfers.use_max">استخدام الحد الأقصى</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="transfers.description">وصف التحويل</label>
+                            <input type="text" class="form-control" id="transferDescription" 
+                                   placeholder="أدخل وصف التحويل" maxlength="50">
+                        </div>
+                        
+                        <div class="transfer-summary">
+    <div class="summary-item total">
+        <span data-i18n="total">المبلغ</span>
+        <span id="transferTotal">0 <span data-i18n="currency.egp">ج.م</span></span>
+    </div>
+</div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-paper-plane"></i>
+                            <span data-i18n="execute_transfer">إجراء التحويل</span>
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-i18n="transfers.recent">آخر التحويلات</h2>
+                    </div>
+                    
+                    <div class="transfers-list" id="transfersList">
+                        <div class="text-center p-3"><span data-i18n="loading">جاري التحميل...</span></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="app.name">MSB BANK</h3>
+                    <p data-i18n="footer.description">نقدم لكم خدمات مصرفية آمنة وسريعة تلبي جميع احتياجاتكم المالية مع أعلى معايير الأمان والجودة.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="quick_links">روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.home">الرئيسية</span></a></li>
+                        <li><a href="accounts.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.accounts">الحسابات</span></a></li>
+                        <li><a href="transfers.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.transfers">التحويلات</span></a></li>
+                        <li><a href="payments.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.payments">الدفع</span></a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="customer_service">خدمة العملاء</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> <span data-i18n="settings.faq">الأسئلة الشائعة</span></a></li>
+                        <li><a href="#" data-i18n="footer.complaints"><i class="fas fa-chevron-left"></i> الشكاوى والاقتراحات</a></li>
+                        <li><a href="#" data-i18n="footer.technical_support"><i class="fas fa-chevron-left"></i> الدعم الفني</a></li>
+                        <li><a href="#" data-i18n="settings.contact_us"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright" data-i18n-html="footer.copyright">
+                © <span class="current-year">2025</span> <span data-i18n="app.name">MSB BANK</span>. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        (function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navList = document.getElementById('navList');
+            
+            if (menuToggle && navList) {
+                const newMenuToggle = menuToggle.cloneNode(true);
+                menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
+                
+                newMenuToggle.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    navList.classList.toggle('mobile-active');
+                });
+
+                document.addEventListener('click', function(event) {
+                    if (navList.classList.contains('mobile-active') && 
+                        !navList.contains(event.target) && 
+                        !newMenuToggle.contains(event.target)) {
+                        navList.classList.remove('mobile-active');
+                    }
+                });
+
+                const navLinks = navList.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        navList.classList.remove('mobile-active');
+                    });
+                });
+            }
+        })();
+        
+        let currentTransferType = 'internal';
+        
+// في transfers.html - استبدل دالة updateAccountsAndBeneficiaries بالكامل
+
+async function updateAccountsAndBeneficiaries() {
+    console.log('🔄 تحديث الحسابات والمستفيدين...');
+    
+    const fromAccountSelect = document.getElementById('fromAccount');
+    const toAccountSelect = document.getElementById('toAccount');
+    
+    // 1. تحديث حساب المرسل (جميع حسابات المستخدم)
+    if (fromAccountSelect && BankApp.user.accounts) {
+        fromAccountSelect.innerHTML = BankApp.user.accounts.map(acc => 
+            `<option value="${acc.id}">${acc.name} - ${acc.number} (${(acc.balance || 0).toLocaleString()} ${I18n.t('currency.egp')})</option>`
+        ).join('');
+        
+        // إضافة مستمع الحدث لتحديث قائمة المستلمين عند تغيير حساب المرسل
+        fromAccountSelect.onchange = function() {
+            if (currentTransferType === 'internal') {
+                updateToAccountsList();
+            }
+        };
+    }
+    
+    // 2. تحديث قائمة المستلمين
+    if (toAccountSelect) {
+        if (currentTransferType === 'internal') {
+            updateToAccountsList();
+        } else {
+            // التحويل الخارجي: مستفيدين مسجلين
+            const beneficiaries = BankApp.user.beneficiaries || [];
+            if (beneficiaries.length > 0) {
+                toAccountSelect.innerHTML = beneficiaries.map(ben => 
+                    `<option value="${ben.id}">${ben.name} - ${ben.accountNumber} (${ben.bank || 'بنك آخر'})</option>`
+                ).join('');
+            } else {
+                toAccountSelect.innerHTML = '<option value="">⚠️ لا يوجد مستفيدين. أضف مستفيد أولاً</option>';
+            }
+            toAccountSelect.innerHTML += '<option value="new">➕ إضافة مستفيد جديد</option>';
+            
+            toAccountSelect.onchange = function() {
+                if (this.value === 'new') {
+                    this.value = '';
+                    addBeneficiary();
+                }
+            };
+        }
+    }
+}
+
+// دالة مساعدة لتحديث قائمة الحسابات المستلمة (للتحويل الداخلي)
+function updateToAccountsList() {
+    const toAccountSelect = document.getElementById('toAccount');
+    const fromAccountId = document.getElementById('fromAccount')?.value;
+    
+    if (toAccountSelect && BankApp.user.accounts && fromAccountId) {
+        const otherAccounts = BankApp.user.accounts.filter(acc => acc.id !== fromAccountId);
+        
+        if (otherAccounts.length > 0) {
+            toAccountSelect.innerHTML = otherAccounts.map(acc => 
+                `<option value="${acc.number}">${acc.name} - ${acc.number} (${(acc.balance || 0).toLocaleString()} ${I18n.t('currency.egp')})</option>`
+            ).join('');
+        } else {
+            toAccountSelect.innerHTML = '<option value="">⚠️ لا توجد حسابات أخرى للتحويل</option>';
+        }
+    }
+}
+
+// ============= دوال إدارة المستفيدين =============
+
+// دالة فتح نافذة إضافة مستفيد جديد
+function addBeneficiary() {
+    BankUtils.closeAllModals();
+    
+    const modalHTML = `
+        <div class="modal" id="beneficiaryModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-user-plus"></i> إضافة مستفيد جديد</h3>
+                    <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="beneficiaryForm" onsubmit="processBeneficiary(event)">
+                        <div class="form-group">
+                            <label class="form-label">اسم المستفيد</label>
+                            <input type="text" class="form-control" id="beneficiaryName" required placeholder="أدخل الاسم الكامل">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">رقم الحساب</label>
+                            <input type="text" class="form-control" id="beneficiaryAccount" required placeholder="أدخل رقم حساب المستفيد">
+                            <small class="form-text">يجب أن يكون رقم حساب موجود في نظام البنك</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">اسم البنك</label>
+                            <input type="text" class="form-control" id="beneficiaryBank" required placeholder="أدخل اسم البنك">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="confirmBeneficiary" required>
+                                <span>أؤكد صحة بيانات المستفيد</span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-save"></i>
+                            حفظ المستفيد
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    const modal = document.getElementById('beneficiaryModal');
+    if (modal) modal.style.display = 'block';
+}
+
+// دالة معالجة إضافة مستفيد جديد (بدون التحقق المسبق - نسخة مبسطة)
+async function processBeneficiary(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('beneficiaryName').value.trim();
+    const accountNumber = document.getElementById('beneficiaryAccount').value.trim();
+    const bankName = document.getElementById('beneficiaryBank').value.trim();
+    const confirmCheck = document.getElementById('confirmBeneficiary').checked;
+    
+    // التحقق من الحقول
+    if (!name || !accountNumber || !bankName) {
+        BankUtils.showAlert('❌ يرجى إدخال جميع البيانات', 'error');
+        return;
+    }
+    
+    if (!confirmCheck) {
+        BankUtils.showAlert('❌ يرجى تأكيد صحة البيانات', 'error');
+        return;
+    }
+    
+    BankUtils.showLoading(true, 'جاري إضافة المستفيد...');
+    
+    try {
+        // ✅ إرسال طلب إضافة مستفيد
+        const result = await BankApp.apiCall('/beneficiaries', {
+            method: 'POST',
+            body: JSON.stringify({ 
+                name: name, 
+                accountNumber: accountNumber, 
+                bankName: bankName 
+            })
+        });
+        
+        console.log('✅ Beneficiary added:', result);
+        
+        if (result.success) {
+            // ✅ إعادة تحميل بيانات المستخدم
+            await BankApp.loadData();
+            
+            // ✅ تحديث قائمة المستفيدين في الواجهة
+            await updateAccountsAndBeneficiaries();
+            
+            BankUtils.showLoading(false);
+            BankUtils.closeAllModals();
+            BankUtils.showAlert(`✅ تم إضافة ${name} كمستفيد جديد بنجاح`, 'success');
+            
+            // ✅ تفريغ النموذج
+            document.getElementById('beneficiaryForm').reset();
+        } else {
+            throw new Error(result.message || 'فشل في إضافة المستفيد');
+        }
+        
+    } catch (error) {
+        BankUtils.showLoading(false);
+        console.error('❌ Add beneficiary error:', error);
+        BankUtils.showAlert(`❌ ${error.message || 'فشل في إضافة المستفيد'}`, 'error');
+    }
+}
+
+// في transfers.html - استبدل دالة openTransferForm بالكامل
+
+function openTransferForm(type) {
+    currentTransferType = type;
+    const titles = {
+        internal: 'تحويل داخلي (بين حساباتك)',
+        external: 'تحويل خارجي (لمستخدم آخر)',
+        international: 'تحويل دولي'
+    };
+    
+    document.getElementById('transferFormTitle').textContent = titles[type];
+    
+    // إظهار/إخفاء حقل رقم الحساب أو اختيار المستفيد حسب النوع
+    const toAccountLabel = document.getElementById('toAccountLabel');
+    const toAccountHint = document.getElementById('toAccountHint');
+    
+    if (type === 'internal') {
+        if (toAccountLabel) toAccountLabel.textContent = 'إلى حساب (حساباتك الأخرى)';
+        if (toAccountHint) toAccountHint.textContent = 'اختر حساباً آخر من حساباتك';
+    } else {
+        if (toAccountLabel) toAccountLabel.textContent = 'إلى مستفيد';
+        if (toAccountHint) toAccountHint.textContent = 'اختر مستفيداً من قائمة المستفيدين المسجلين';
+    }
+    
+    updateAccountsAndBeneficiaries();
+    document.getElementById('transferForm').scrollIntoView({ behavior: 'smooth' });
+}
+        
+        function openQuickTransfer() {
+            openTransferForm('internal');
+        }
+        
+        function setMaxAmount() {
+            const fromAccountId = document.getElementById('fromAccount').value;
+            const account = BankApp.user.accounts?.find(acc => acc.id === fromAccountId);
+            if (account) {
+                const maxAmount = Math.min(account.balance, 50000);
+                document.getElementById('transferAmount').value = maxAmount;
+                updateTransferSummary();
+            } else {
+                document.getElementById('transferAmount').value = 50000;
+                updateTransferSummary();
+            }
+        }
+        
+       function updateTransferSummary() {
+    const amount = parseFloat(document.getElementById('transferAmount').value) || 0;
+    document.getElementById('transferTotal').textContent = amount.toLocaleString(I18n.currentLang === 'ar' ? 'ar-EG' : 'en-US') + ' ' + I18n.t('currency.egp');
+}
+        
+// في transfers.html - استبدل دالة processTransfer بالكامل
+
+async function processTransfer(event) {
+    event.preventDefault();
+    
+    const fromAccountId = document.getElementById('fromAccount').value;
+    const toAccountNumber = document.getElementById('toAccount').value;  // هذا الآن رقم الحساب
+    const amount = parseFloat(document.getElementById('transferAmount').value);
+    const description = document.getElementById('transferDescription').value;
+    
+    console.log('📝 Transfer data:', { fromAccountId, toAccountNumber, amount, currentTransferType });
+    
+    if (!fromAccountId || !toAccountNumber || !amount || amount <= 0) {
+        BankUtils.showAlert('يرجى إدخال جميع البيانات', 'error');
+        return;
+    }
+    
+    const fromAccount = BankApp.user.accounts?.find(acc => acc.id === fromAccountId);
+    if (!fromAccount || fromAccount.balance < amount) {
+        BankUtils.showAlert('الرصيد غير كافٍ', 'error');
+        return;
+    }
+    
+    // التحقق من أن المستلم ليس نفس المرسل (للمستخدم نفسه)
+    if (currentTransferType === 'internal') {
+        // البحث عن الحساب المستلم للتأكد أنه ليس نفس الحساب
+        const toAccount = BankApp.user.accounts.find(acc => acc.number === toAccountNumber);
+        if (toAccount && toAccount.id === fromAccountId) {
+            BankUtils.showAlert('لا يمكن التحويل إلى نفس الحساب', 'error');
+            return;
+        }
+    }
+    
+    BankUtils.showLoading(true, 'جاري إجراء التحويل...');
+    
+    try {
+        let endpoint = '/transfers/internal';
+        let body = {};
+        
+        if (currentTransferType === 'internal') {
+            // التحويل الداخلي: نرسل رقم الحساب مباشرة
+            body = {
+                fromAccountId: fromAccountId,
+                toAccountNumber: toAccountNumber,  // رقم الحساب مباشرة
+                amount: amount,
+                description: description || `تحويل إلى حساب ${toAccountNumber}`
+            };
+        } else {
+            // التحويل الخارجي لمستخدم آخر
+            endpoint = '/transfers/external';
+            const beneficiary = BankApp.user.beneficiaries?.find(b => b.id === toAccountNumber);
+            if (!beneficiary) {
+                BankUtils.showLoading(false);
+                BankUtils.showAlert('المستفيد غير موجود', 'error');
+                return;
+            }
+            
+            body = {
+                fromAccountId: fromAccountId,
+                toAccountNumber: beneficiary.accountNumber,
+                toAccountName: beneficiary.name,
+                bankName: beneficiary.bank,
+                amount: amount,
+                description: description || `تحويل إلى ${beneficiary.name}`
+            };
+        }
+        
+        console.log('📤 Sending transfer:', { endpoint, body });
+        
+        const result = await BankApp.apiCall(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(body)
+        });
+        
+        if (result.success) {
+            // تحديث البيانات محلياً
+            const fromAcc = BankApp.user.accounts.find(acc => acc.id === fromAccountId);
+            if (fromAcc) fromAcc.balance -= amount;
+            
+            const newTransaction = {
+                id: `trans_${Date.now()}`,
+                description: description || `تحويل بمبلغ ${amount.toLocaleString()} ج.م`,
+                amount: -amount,
+                category: 'transfer',
+                icon: 'paper-plane',
+                status: 'completed',
+                date: new Date().toISOString()
+            };
+            BankApp.user.transactions = [newTransaction, ...(BankApp.user.transactions || [])];
+            
+            // تحديث الواجهة
+            await updateAccountsAndBeneficiaries();
+            updateTransfersList();
+            
+            // إعادة تعيين النموذج
+            document.getElementById('transferFormElement').reset();
+            updateTransferSummary();
+            
+            BankUtils.showAlert(result.message || 'تم التحويل بنجاح', 'success');
+        } else {
+            throw new Error(result.message || 'فشل في التحويل');
+        }
+        
+        BankUtils.showLoading(false);
+        
+    } catch (error) {
+        BankUtils.showLoading(false);
+        console.error('Transfer error:', error);
+        BankUtils.showAlert(error.message || 'فشل في عملية التحويل', 'error');
+    }
+}
+
+
+async function processBeneficiary(event) {
+    event.preventDefault();
+    
+    const name = document.getElementById('beneficiaryName').value.trim();
+    const accountNumber = document.getElementById('beneficiaryAccount').value.trim();
+    const bankName = document.getElementById('beneficiaryBank').value.trim();
+    const confirmCheck = document.getElementById('confirmBeneficiary').checked;
+    
+    // التحقق من الحقول
+    if (!name || !accountNumber || !bankName) {
+        BankUtils.showAlert('❌ يرجى إدخال جميع البيانات', 'error');
+        return;
+    }
+    
+    if (!confirmCheck) {
+        BankUtils.showAlert('❌ يرجى تأكيد صحة البيانات', 'error');
+        return;
+    }
+    
+    BankUtils.showLoading(true, 'جاري التحقق من رقم الحساب...');
+    
+    try {
+        // ✅ الخطوة 1: التحقق من وجود رقم الحساب في قاعدة البيانات
+        console.log('🔍 Checking account:', accountNumber);
+        
+        const checkResult = await BankApp.apiCall('/beneficiaries/verify', {
+            method: 'POST',
+            body: JSON.stringify({ accountNumber: accountNumber })
+        });
+        
+        console.log('📦 Verification result:', checkResult);
+        
+        // ✅ التحقق من النتيجة
+        if (!checkResult.exists) {
+            BankUtils.showLoading(false);
+            BankUtils.showAlert(`❌ لا يوجد حساب برقم ${accountNumber} في نظام البنك. يرجى التأكد من رقم الحساب.`, 'error');
+            return;
+        }
+        
+        // ✅ إذا كان الحساب موجود، نعرض معلومات صاحبه للتأكيد
+        const accountOwner = checkResult.accountOwner;
+        const confirmMessage = `✅ تم العثور على الحساب!\n\n` +
+                              `صاحب الحساب: ${accountOwner.name}\n` +
+                              `نوع الحساب: ${accountOwner.accountType === 'current' ? 'جاري' : accountOwner.accountType === 'saving' ? 'توفير' : 'استثمار'}\n` +
+                              `البنك: ${accountOwner.bank || 'MSB BANK'}\n\n` +
+                              `هل تريد إضافة "${name}" كمستفيد لهذا الحساب؟`;
+        
+        if (!confirm(confirmMessage)) {
+            BankUtils.showLoading(false);
+            return;
+        }
+        
+        // ✅ الخطوة 2: إضافة المستفيد
+        BankUtils.showLoading(true, 'جاري إضافة المستفيد...');
+        
+        const result = await BankApp.apiCall('/beneficiaries', {
+            method: 'POST',
+            body: JSON.stringify({ 
+                name: name, 
+                accountNumber: accountNumber, 
+                bankName: bankName 
+            })
+        });
+        
+        console.log('✅ Beneficiary added:', result);
+        
+        if (result.success) {
+            // ✅ إعادة تحميل بيانات المستخدم
+            await BankApp.loadData();
+            
+            // ✅ تحديث قائمة المستفيدين في الواجهة
+            await updateAccountsAndBeneficiaries();
+            
+            BankUtils.showLoading(false);
+            BankUtils.closeAllModals();
+            BankUtils.showAlert(`✅ تم إضافة ${name} كمستفيد جديد بنجاح`, 'success');
+            
+            // ✅ تفريغ النموذج
+            document.getElementById('beneficiaryForm').reset();
+        } else {
+            throw new Error(result.message || 'فشل في إضافة المستفيد');
+        }
+        
+    } catch (error) {
+        BankUtils.showLoading(false);
+        console.error('❌ Add beneficiary error:', error);
+        
+        // ✅ رسالة خطأ مفهومة
+        let errorMsg = error.message;
+        if (error.message.includes('404')) {
+            errorMsg = 'خدمة التحقق غير متاحة حالياً. يرجى المحاولة لاحقاً.';
+        } else if (error.message.includes('Network')) {
+            errorMsg = 'خطأ في الاتصال بالخادم. تأكد من تشغيل الخادم الخلفي.';
+        }
+        
+        BankUtils.showAlert(`❌ ${errorMsg}`, 'error');
+    }
+}
+        // ✅ استبدل دالة حفظ المستفيد (متطابقة مع سابقتها ولكنها تستخدم updateAccountsAndBeneficiaries الجديدة)
+        async function processBeneficiary(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('beneficiaryName').value;
+            const accountNumber = document.getElementById('beneficiaryAccount').value;
+            const bankName = document.getElementById('beneficiaryBank').value;
+            
+            if (!name || !accountNumber || !bankName) {
+                BankUtils.showAlert('يرجى إدخال جميع البيانات', 'error');
+                return;
+            }
+            
+            BankUtils.showLoading(true, I18n.t('saving_beneficiary'));
+            
+            try {
+                if (BankApp && BankApp.apiCall) {
+                    await BankApp.apiCall('/beneficiaries', {
+                        method: 'POST',
+                        body: JSON.stringify({ name, accountNumber, bankName })
+                    });
+                    
+                    // ✅ إعادة تحميل بيانات المستخدم لتحديث قائمة المستفيدين
+                    await BankApp.loadData();
+                    
+                    // ✅ تحديث القائمة المنسدلة للمستفيدين
+                    await updateAccountsAndBeneficiaries();
+                    
+                    BankUtils.showAlert(I18n.t('beneficiary_saved').replace('{name}', name), 'success');
+                } else {
+                    throw new Error('API not available');
+                }
+                
+                BankUtils.showLoading(false);
+                BankUtils.closeAllModals();
+                
+            } catch (error) {
+                BankUtils.showLoading(false);
+                BankUtils.showAlert(error.message || 'فشل في حفظ المستفيد', 'error');
+            }
+        }
+
+        function updateTransfersList() {
+            const transfersList = document.getElementById('transfersList');
+            if (!transfersList) return;
+            
+            const transfers = BankApp.user.transactions?.filter(t => t.category === 'transfer' || t.category === 'transfer-external') || [];
+            
+            if (transfers.length === 0) {
+                transfersList.innerHTML = '<div class="text-center p-3"><span data-i18n="no_transactions">لا توجد تحويلات</span></div>';
+                return;
+            }
+            
+            transfersList.innerHTML = transfers.slice(0, 10).map(t => `
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon outgoing">
+                            <i class="fas fa-${t.icon || 'exchange-alt'}"></i>
+                        </div>
+                        <div>
+                            <h4>${t.description}</h4>
+                            <p>${BankUtils.formatDate(t.date)}</p>
+                        </div>
+                    </div>
+                    <div class="transaction-amount negative">
+                        ${Math.abs(t.amount).toLocaleString()} ${I18n.t('currency.egp')}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        document.getElementById('transferAmount').addEventListener('input', updateTransferSummary);
+        document.getElementById('fromAccount').addEventListener('change', function() {
+            if (currentTransferType === 'internal') {
+                const currentId = this.value;
+                const toSelect = document.getElementById('toAccount');
+                if (toSelect && BankApp.user.accounts) {
+                    toSelect.innerHTML = BankApp.user.accounts
+                        .filter(acc => acc.id !== currentId)
+                        .map(acc => 
+                            `<option value="${acc.id}">${acc.name} - ${acc.number} (${(acc.balance || 0).toLocaleString()} ${I18n.t('currency.egp')})</option>`
+                        ).join('');
+                    if (toSelect.innerHTML === '') {
+                        toSelect.innerHTML = '<option value="">لا توجد حسابات أخرى</option>';
+                    }
+                }
+            }
+            updateTransferSummary();
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTransferSummary();
+            
+            const checkBankApp = setInterval(async () => {
+                if (window.BankApp && BankApp.user) {
+                    clearInterval(checkBankApp);
+                    await updateAccountsAndBeneficiaries();  // ✅ added await
+                    updateTransfersList();
+                    openTransferForm('internal');
+                }
+            }, 100);
+            
+            setTimeout(() => {
+                clearInterval(checkBankApp);
+                if (window.BankApp && BankApp.user) {
+                    updateAccountsAndBeneficiaries();
+                    updateTransfersList();
+                }
+            }, 5000);
+        });
+        </script>
+</body>
+</html>

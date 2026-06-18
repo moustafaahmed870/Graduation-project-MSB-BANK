@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 المساعد الذكي - MSB Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* =========================
+           Global
+        ========================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #081b29;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* =========================
+           الخلفية المبلورة (Blur)
+        ========================= */
+        .blur-background {
+            position: fixed;
+            top: -50px;
+            left: -50px;
+            right: -50px;
+            bottom: -50px;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(0, 238, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(100, 50, 255, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 100%, rgba(0, 238, 255, 0.04) 0%, transparent 40%),
+                #081b29;
+            z-index: 0;
+            filter: blur(3px);
+            transform: scale(1.1);
+        }
+
+        .blur-background::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 238, 255, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: floatBlob 20s ease-in-out infinite;
+        }
+
+        .blur-background::after {
+            content: '';
+            position: absolute;
+            bottom: 20%;
+            right: 15%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(100, 50, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: floatBlob 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes floatBlob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -30px) scale(1.1); }
+            66% { transform: translate(-30px, 40px) scale(0.9); }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 238, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 238, 255, 0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* =========================
+           Chat Container - في النص
+        ========================= */
+        .chat-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 600px;
+            height: 85vh;
+            max-height: 750px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: linear-gradient(145deg, rgba(10, 36, 56, 0.92) 0%, rgba(8, 27, 41, 0.96) 100%);
+            border-radius: 28px;
+            border: 1px solid rgba(0, 238, 255, 0.15);
+            box-shadow: 
+                0 40px 100px rgba(0, 0, 0, 0.6),
+                0 0 60px rgba(0, 238, 255, 0.03),
+                inset 0 0 100px rgba(0, 238, 255, 0.02);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+        }
+
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 29px;
+            padding: 1px;
+            background: linear-gradient(135deg, 
+                rgba(0, 238, 255, 0.15), 
+                transparent 40%, 
+                transparent 60%, 
+                rgba(0, 238, 255, 0.08));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        /* =========================
+           Header
+        ========================= */
+        .chat-header {
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 0;
+            background: rgba(10, 36, 56, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 238, 255, 0.08);
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 50%;
+            font-size: 24px;
+            background: linear-gradient(135deg, #0ef 0%, #0a8ba8 100%);
+            color: #081b29;
+            box-shadow: 0 0 40px rgba(0, 238, 255, 0.1);
+        }
+
+        .info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .info h2 {
+            color: #0ef;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .info p {
+            color: #a0d2db;
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        .close-btn {
+            padding: 6px 14px;
+            flex-shrink: 0;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 8px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* =========================
+           User Info
+        ========================= */
+        #userInfoBar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-height: 48px;
+            padding: 10px 25px;
+            flex-shrink: 0;
+            background: rgba(16, 185, 129, 0.05);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.08);
+        }
+
+        .user-info-left,
+        .user-info-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info-left i {
+            color: #10b981;
+            font-size: 16px;
+        }
+
+        .user-info-right i {
+            color: #0ef;
+            font-size: 13px;
+            opacity: 0.6;
+        }
+
+        .current-user-name {
+            color: #10b981;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .current-user-email {
+            color: #a0d2db;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .login-required {
+            display: none;
+            text-align: center;
+            flex-shrink: 0;
+            padding: 10px 25px;
+            background: rgba(239, 68, 68, 0.05);
+            border-bottom: 1px solid rgba(239, 68, 68, 0.08);
+        }
+
+        .login-required p {
+            color: #ef4444;
+            font-size: 13px;
+        }
+
+        .login-required a {
+            color: #0ef;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* =========================
+           Messages
+        ========================= */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px 25px;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.7;
+            animation: messageIn 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.user {
+            align-self: flex-end;
+            color: #081b29;
+            background: linear-gradient(135deg, #0ef 0%, #0a8ba8 100%);
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 4px 20px rgba(0, 238, 255, 0.08);
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            color: #a0d2db;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 238, 255, 0.06);
+            border-bottom-right-radius: 5px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .message .time {
+            display: block;
+            margin-top: 5px;
+            font-size: 10px;
+            opacity: 0.4;
+        }
+
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(12px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* =========================
+           Typing Indicator
+        ========================= */
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 5px 0;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0ef;
+            animation: typingDot 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingDot {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* =========================
+           Input
+        ========================= */
+        .chat-input {
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+            padding: 14px 25px;
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(0, 238, 255, 0.05);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 30px;
+            outline: none;
+            color: #a0d2db;
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(0, 238, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .chat-input input:focus {
+            border-color: rgba(0, 238, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 238, 255, 0.03);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .chat-input input::placeholder {
+            color: #a0d2db;
+            opacity: 0.3;
+            font-size: 13px;
+        }
+
+        .chat-input button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: #081b29;
+            background: linear-gradient(135deg, #0ef 0%, #0a8ba8 100%);
+            box-shadow: 0 4px 20px rgba(0, 238, 255, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 30px rgba(0, 238, 255, 0.12);
+        }
+
+        /* =========================
+           Quick Replies
+        ========================= */
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            flex-shrink: 0;
+            padding: 10px 25px;
+            background: rgba(0, 0, 0, 0.05);
+            border-top: 1px solid rgba(0, 238, 255, 0.03);
+        }
+
+        .quick-reply-btn {
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            color: #a0d2db;
+            font-size: 12px;
+            font-family: 'Cairo', sans-serif;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 238, 255, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .quick-reply-btn:hover {
+            background: rgba(0, 238, 255, 0.05);
+            border-color: rgba(0, 238, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        /* =========================
+           Scrollbar
+        ========================= */
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(0, 238, 255, 0.15);
+            border-radius: 2px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 238, 255, 0.3);
+        }
+
+        /* =========================
+           Responsive
+        ========================= */
+        @media (max-width: 640px) {
+            body { padding: 10px; }
+            .chat-container {
+                max-width: 100%;
+                height: 95vh;
+                max-height: none;
+                border-radius: 20px;
+            }
+            .chat-header { padding: 14px 18px; }
+            .chat-header .avatar { width: 42px; height: 42px; font-size: 20px; }
+            .chat-header .info h2 { font-size: 16px; }
+            .chat-header .info p { font-size: 11px; }
+            .chat-messages { padding: 16px 18px; }
+            .message { max-width: 90%; padding: 10px 14px; font-size: 13px; }
+            .chat-input { padding: 12px 18px; }
+            .chat-input input { padding: 10px 16px; font-size: 13px; }
+            .chat-input button { padding: 10px 16px; font-size: 13px; }
+            .quick-replies { padding: 8px 18px; gap: 6px; }
+            .quick-reply-btn { padding: 5px 12px; font-size: 11px; }
+            #userInfoBar { padding: 8px 18px; }
+            #userInfoBar .current-user-name { font-size: 13px; }
+            #userInfoBar .current-user-email { font-size: 11px; }
+        }
+
+        @media (max-width: 400px) {
+            .chat-header .info p { display: none; }
+            .chat-header .close-btn { padding: 4px 10px; font-size: 12px; }
+            .quick-reply-btn { padding: 4px 10px; font-size: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- =========================
+         الخلفية المبلورة
+    ========================= -->
+    <div class="blur-background"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- =========================
+         الشات بوت
+    ========================= -->
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="avatar"><i class="fas fa-robot"></i></div>
+            <div class="info">
+                <h2>🤖 المساعد الذكي</h2>
+                <p>متاح 24/7 - MSB Bank</p>
+            </div>
+            <button class="close-btn" onclick="closeChat()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- معلومات المستخدم -->
+        <div id="userInfoBar">
+            <div class="user-info-left">
+                <i class="fas fa-user-circle"></i>
+                <span class="current-user-name" id="currentUserName">جاري التحميل...</span>
+            </div>
+            <div class="user-info-right">
+                <i class="fas fa-envelope"></i>
+                <span class="current-user-email" id="currentUserEmail">جاري التحميل...</span>
+            </div>
+        </div>
+
+        <div class="login-required" id="loginRequired">
+            <p><i class="fas fa-exclamation-triangle"></i> يرجى <a href="#" onclick="window.parent.location.href='../login.html'">تسجيل الدخول</a> أولاً</p>
+        </div>
+
+        <!-- الرسائل -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot" id="welcomeMessage">
+                👋 مرحباً! أنا المساعد الذكي لـ MSB Bank.<br>
+                كيف يمكنني مساعدتك اليوم؟
+                <span class="time">الآن</span>
+            </div>
+        </div>
+
+        <!-- الأزرار السريعة -->
+        <div class="quick-replies">
+            <button class="quick-reply-btn" onclick="sendQuickReply('فتح حساب')">📋 فتح حساب</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('قرض')">💰 قرض</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('بطاقة')">💳 بطاقة</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('تحويل')">🔄 تحويل</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('محفظة')">📱 محفظة</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('استثمار')">📈 استثمار</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('مساعدة')">🆘 مساعدة</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('رصيدي')">💵 رصيدي</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('قروضي')">📋 قروضي</button>
+        </div>
+
+        <!-- الإدخال -->
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="اكتب رسالتك هنا..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i> إرسال</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // جلب البيانات مباشرة من الـ URL
+        // ============================================
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                email: params.get('email') || '',
+                name: params.get('name') ? decodeURIComponent(params.get('name')) : '',
+                uid: params.get('uid') || ''
+            };
+        }
+
+        const urlParams = getUrlParams();
+        const userEmailFromUrl = urlParams.email;
+        const userNameFromUrl = urlParams.name;
+
+        console.log('📧 Email from URL:', userEmailFromUrl);
+        console.log('👤 Name from URL:', userNameFromUrl);
+
+        // عرض البيانات
+        const nameEl = document.getElementById('currentUserName');
+        const emailEl = document.getElementById('currentUserEmail');
+        const loginRequired = document.getElementById('loginRequired');
+        const welcomeMsg = document.getElementById('welcomeMessage');
+
+        if (userEmailFromUrl) {
+            nameEl.textContent = userNameFromUrl || 'مستخدم';
+            emailEl.textContent = userEmailFromUrl;
+            loginRequired.style.display = 'none';
+
+            if (welcomeMsg) {
+                welcomeMsg.innerHTML = `
+                    👋 مرحباً ${userNameFromUrl || 'مستخدم'}! أنا المساعد الذكي لـ MSB Bank.<br>
+                    كيف يمكنني مساعدتك اليوم؟
+                    <span class="time">الآن</span>
+                `;
+            }
+            console.log('✅ User displayed:', userNameFromUrl, userEmailFromUrl);
+        } else {
+            nameEl.textContent = 'زائر';
+            emailEl.textContent = 'غير مسجل';
+            loginRequired.style.display = 'block';
+            console.log('⚠️ Guest mode');
+        }
+
+        // ============================================
+        // متغيرات الشات بوت
+        // ============================================
+        const API_URL = '/api/chat';
+        let isTyping = false;
+        let userEmail = userEmailFromUrl;
+
+        // ============================================
+        // دوال الشات بوت
+        // ============================================
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendQuickReply(text) {
+            document.getElementById('userInput').value = text;
+            sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+
+            if (!message || isTyping) return;
+
+            input.value = '';
+            addMessage(message, 'user');
+
+            showTypingIndicator();
+            isTyping = true;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message, email: userEmail })
+                });
+
+                const data = await response.json();
+                hideTypingIndicator();
+                isTyping = false;
+
+                if (data.error) {
+                    addMessage('❌ عذراً، حدث خطأ: ' + data.error, 'bot');
+                } else {
+                    addMessage(data.response, 'bot');
+                }
+            } catch (error) {
+                hideTypingIndicator();
+                isTyping = false;
+                addMessage('❌ عذراً، لا يمكن الاتصال بالخادم. تأكد من تشغيل الخادم.', 'bot');
+                console.error('Error:', error);
+            }
+        }
+
+        function addMessage(text, sender) {
+            const container = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            const formattedText = text.replace(/\n/g, '<br>');
+            messageDiv.innerHTML = `${formattedText}<span class="time">${getTime()}</span>`;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const container = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="typing-indicator"><span></span><span></span><span></span></div>
+                <span class="time">${getTime()}</span>
+            `;
+            container.appendChild(typingDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        function getTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function closeChat() {
+            if (confirm('هل تريد إغلاق المحادثة؟')) {
+                window.close();
+            }
+        }
+
+        console.log('🤖 ChatBot loaded with user:', userEmail || 'Guest');
+    </script>
+</body>
+</html>

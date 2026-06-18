@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html rtl="ar" lang="en">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/c3.css">
+    <script type="module" src="js/c3.js"></script>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>    
+    <script src="/language.js"></script>  
+    <script src="/load-components.js"></script> 
+    <title>BMVIP Branches</title>
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+</head>
+<body>
+    <div id="navbar-container"></div>   
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title" data-i18n="hero-title">فروع بنك مصر لخدمة BMVIP</h1>
+            <p class="hero-subtitle" data-i18n="hero-subtitle">اكتشف أقرب فرع لخدمة BMVIP في محافظتك. نقدم لعملائنا المميزين صالات خاصة وخدمات متميزة في فروعنا المنتشرة في جميع أنحاء جمهورية مصر العربية.</p>
+            <div class="vip-badge" data-i18n="vip-badge">BMVIP خدمة حصرية</div>
+        </div>
+    </section>
+
+    <!-- Search & Filter Section -->
+    <section class="search-section">
+        <div class="container search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" id="branchSearch" placeholder="ابحث عن فرع بالاسم أو العنوان أو المحافظة..." data-i18n-placeholder="search-placeholder">
+                <div class="search-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+            
+            <select class="filter-select" id="governateFilter">
+                <option value="all" data-i18n="all-governorates">جميع المحافظات</option>
+                <option value="Cairo" data-i18n="cairo">القاهرة</option>
+                <option value="Giza" data-i18n="giza">الجيزة</option>
+                <option value="alex" data-i18n="alexandria">الإسكندرية</option>
+                <option value="Al Qalyubia" data-i18n="qalyubia">القليوبية</option>
+                <option value="Beni Suef" data-i18n="beni-suef">بني سويف</option>
+                <option value="Albuhaira" data-i18n="beheira">البحيرة</option>
+                <option value="AL-Dakahlia" data-i18n="dakahlia">الدقهلية</option>
+                <option value="Al-Fayoum" data-i18n="fayoum">الفيوم</option>
+                <option value="Al-gharbia" data-i18n="gharbia">الغربية</option>
+                <option value="AL-Ismalia" data-i18n="ismailia">الإسماعيلية</option>
+                <option value="Al-Menia" data-i18n="minya">المنيا</option>
+                <option value="Al-Monofia" data-i18n="monufia">المنوفية</option>
+                <option value="Al-sharkia" data-i18n="sharkia">الشرقية</option>
+                <option value="Assiut" data-i18n="assiut">أسيوط</option>
+                <option value="Domiatta" data-i18n="damietta">دمياط</option>
+                <option value="Kafr al-shik" data-i18n="kafr-el-sheikh">كفر الشيخ</option>
+                <option value="Luxor" data-i18n="luxor">الأقصر</option>
+                <option value="Port-Saaid" data-i18n="port-said">بورسعيد</option>
+                <option value="Qena" data-i18n="qena">قنا</option>
+                <option value="Red Sea" data-i18n="red-sea">البحر الأحمر</option>
+                <option value="Sinai" data-i18n="sinai">سيناء</option>
+                <option value="Sohag" data-i18n="sohag">سوهاج</option>
+            </select>
+            
+            <div class="branch-count">
+                <span id="totalBranches">135</span> <span data-i18n="branches-available">فرع متاح</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Branches Table Section -->
+    <section class="branches-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="branches-title">فروع خدمة BMVIP</h2>
+            <p class="section-subtitle" data-i18n="branches-subtitle">تصفح قائمة فروع بنك مصر المقدمة لخدمة كبار العملاء BMVIP مع عناوينها التفصيلية في جميع محافظات مصر</p>
+            
+            <div class="table-container">
+                <table class="branches-table" id="branchesTable">
+                    <thead>
+                        <tr>
+                            <th data-i18n="table-branch">الفرع</th>
+                            <th data-i18n="table-governorate">المحافظة</th>
+                            <th data-i18n="table-address">العنوان</th>
+                        </tr>
+                    </thead>
+                    <tbody id="branchesTableBody">
+                        <!-- سيتم ملؤه ديناميكياً -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="no-results" id="noResults" style="display: none;">
+                <div class="no-results-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <h3 data-i18n="no-results-title">لم يتم العثور على فروع</h3>
+                <p data-i18n="no-results-description">عذراً، لم نتمكن من العثور على فروع تطابق بحثك. حاول استخدام مصطلحات بحث مختلفة أو قم بتغيير فلتر المحافظة.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section">
+        <div class="container map-container">
+            <div class="map-content">
+                <h3 data-i18n="map-title">اعثر على أقرب فرع لك</h3>
+                <p data-i18n="map-description1">نعمل على توسيع شبكة فروعنا باستمرار لتقديم خدمة BMVIP لعملائنا المميزين في جميع أنحاء الجمهورية. استخدم خريطة الفروع التفاعلية أو محرك البحث للعثور على أقرب فرع إليك والاستمتاع بخدماتنا المتميزة في صالات VIP الخاصة.</p>
+                <p data-i18n="map-description2">جميع فروع BMVIP مجهزة بأحدث التقنيات وتوفر مدير علاقات خاص لخدمتك وتلبية احتياجاتك المالية والمصرفية.</p>
+            </div>
+            
+            <div class="map-visual">
+                <div class="map-placeholder">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h4 data-i18n="map-visual-title">خريطة فروع BMVIP</h4>
+                    <p data-i18n="map-visual-description">خريطة تفاعلية توضح جميع فروع بنك MSB المقدمة لخدمة كبار العملاء BMVIP في جميع محافظات مصر</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="contact-title">تواصل مع خدمة BMVIP</h2>
+            <p class="section-subtitle" data-i18n="contact-subtitle">فريق خدمة العملاء المخصص لخدمة BMVIP جاهز لمساعدتك على مدار الساعة</p>
+            
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone-volume"></i>
+                    </div>
+                    <h3 class="contact-title" data-i18n="customer-service">مركز خدمة العملاء</h3>
+                    <div class="phone-number">19019</div>
+                    <p class="contact-details" data-i18n="customer-service-desc">الخط الساخن المخصص لعملاء BMVIP</p>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="contact-title" data-i18n="technical-support">الدعم الفني</h3>
+                    <div class="phone-number">19019</div>
+                    <p class="contact-details" data-i18n="technical-support-desc">للاستفسارات الفنية والدعم التقني</p>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3 class="contact-title" data-i18n="email-title">البريد الإلكتروني</h3>
+                    <div class="email-address">bmvip@banquMSB.com</div>
+                    <p class="contact-details" data-i18n="email-desc">للاستفسارات ومراسلات العملاء</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div id="footer-container"></div>
+</body>
+</html>

@@ -1,0 +1,379 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background-color: #081b29;
+    line-height: 1.6;
+    direction: rtl;
+}
+
+[dir="ltr"] body {
+    direction: ltr;
+}
+
+.container-1 {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    color: #3b82f6;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1rem;
+    border: 2px solid #3b82f6;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #081b29;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #0ef;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #3b82f6;
+    transform: translateY(-2px);
+}
+
+.btn-1 {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1rem;
+    border: 2px solid #3b82f6;
+}
+
+.btn-1 {
+    background-color: #081b29;
+    color: #a0d2db;
+}
+
+.btn-1-primary:hover {
+    background-color: #081b29;
+    transform: translateY(-2px);
+}
+
+.btn-1-secondary {
+    background-color: #0ef;
+    color: white;
+}
+
+.btn-1-secondary:hover {
+    background-color: #3b82f6;
+    transform: translateY(-2px);
+}
+
+.heroo {
+    color: white;
+    padding: 60px 0;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.heroo h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.heroo p {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto 30px;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 60px;
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+.features {
+    background-color: #081b29;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 10px #0ef;
+}
+
+.features h2 {
+    color: #a0d2db;
+}
+
+.section-title {
+    color: #3b82f6;
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #a0d2db;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    color: #0ef;
+}
+
+.features-list {
+    list-style: none;
+}
+
+.features-list li {
+    color: #a0d2db;
+    padding: 15px 0;
+    border-bottom: 1px solid #a0d2db;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.features-list li:last-child {
+    border-bottom: none;
+}
+
+.feature-icon {
+    background-color: #a0d2db;
+    color: #0ef;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.feature-text h4 {
+    color: #0ef;
+    margin-bottom: 5px;
+}
+
+.requirements {
+    background-color: #081b29;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 10px #0ef;
+}
+
+.requirements h2 {
+    color: #a0d2db;
+}
+
+.requirements-list {
+    list-style: none;
+}
+
+.requirements-list li {
+    color: #a0d2db;
+    padding: 15px 0;
+    border-bottom: 1px solid #a0d2db;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.requirements-list li:last-child {
+    border-bottom: none;
+}
+
+.req-icon {
+    background-color: #0ef;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.steps-section {
+    margin-bottom: 60px;
+}
+
+.steps-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+    .steps-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.step-card {
+    background-color: #081b29;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 10px #0ef;
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.step-card:hover {
+    transform: translateY(-10px);
+}
+
+.step-number {
+    background-color: #3b82f6;
+    color: #a0d2db;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 10px #0ef;
+}
+
+.step-card h3 {
+    color: #0ef;
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+}
+
+.step-card p {
+    color: #a0d2db;
+    margin-bottom: 25px;
+}
+
+.step-arrow {
+    position: absolute;
+    top: 50%;
+    right: -20px;
+    color: #3b82f6;
+    font-size: 2rem;
+    opacity: 0.5;
+}
+
+[dir="ltr"] .step-arrow {
+    right: auto;
+    left: -20px;
+}
+
+@media (max-width: 768px) {
+    .step-arrow {
+        display: none;
+    }
+}
+
+.form-section {
+    background-color: #081b29;
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 0 5px #0ef;
+    margin-bottom: 60px;
+    margin: 50px;
+}
+
+.form-title {
+    text-align: center;
+    color: #a0d2db;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #0ef;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #0ef;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border 0.3s ease;
+    background-color: #081b29;
+    color: #a0d2db;
+}
+
+select option {
+    background-color: #081b29;
+    color: #a0d2db;
+}
+
+.form-group input:focus, .form-group select:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.form-actions .btn {
+    padding: 15px 40px;
+    font-size: 1.1rem;
+}
+
+.step-card img {
+    height: 500px;
+}

@@ -1,0 +1,292 @@
+body , html , #w-div {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: black; /* نفس لون الخلفية عندك */
+    overflow: hidden;
+}
+
+
+/* #canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+#bg-loader {
+  position: fixed;
+  inset: 0;
+  background: black;
+  z-index: -1;
+}
+
+#canvas {
+  position: fixed;
+  inset: 0;
+} */
+
+    /* === CANVAS === */
+    #canvas {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    }
+
+    /* === FORCE LOADER ANIMATION === */
+    #loader {
+    position: fixed;
+    inset: 0;
+    background: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    }
+
+    /* الحلقة */
+    .loader-ring {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 4px solid rgba(160, 210, 219, 0.25);
+    border-top: 4px solid #0ef;
+
+    /* 👇 إجبار الأنيميشن */
+    animation-name: loader-spin !important;
+    animation-duration: 1s !important;
+    animation-iteration-count: infinite !important;
+    animation-timing-function: linear !important;
+
+    will-change: transform;
+    }
+
+
+    .loader-ring {
+    box-shadow:
+    0 0 10px #0ef,
+    0 0 20px rgba(0,238,255,0.5);
+}
+
+
+    /* KEYFRAMES */
+    @keyframes loader-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+    }
+
+
+
+
+body {
+    touch-action: none;
+}
+
+#w-div {
+    height: 100%;
+    font-family: "Montserrat", serif;
+}
+
+#w-div a {
+    text-decoration: none;
+    color: #fff;
+}
+
+
+#hero {
+    z-index: 10;
+    color: #fff;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.h2 {
+    margin-bottom: 5px;
+}
+
+    .fa-arrow-right{
+    color: #0ef;
+    animation: row 3s infinite;
+    transition: 2s ease;
+}
+
+@keyframes row{
+    0% {
+        margin-right: 3px;
+    }
+    50% {
+        margin-right: 5px;
+    }
+    75%{
+        margin-right: 10px;
+    }
+    100% {
+        margin-right: 3px;
+    }
+}
+
+.fa-arrow-left {
+    color: #0ef;
+    animation: left 3s infinite;
+    transition: 2s ease;
+}
+
+@keyframes left{
+    0% {
+        margin-left: 3px;
+    }
+    25%{
+        margin-left: 5px;
+    }
+    50% {
+        margin-left: 10px;
+    }
+    75%{
+        margin-left: 15px;
+    }
+    100% {
+        margin-left: 3px;
+    }
+}
+
+.h2 {
+    display: inline-flex;
+}
+
+.h2 span{
+    display: inline-block;
+    animation: rotateLetter 5s ease-in-out 4s infinite;
+    margin: 0 2px;
+    transform-style: preserve-3d;
+}
+
+.h2 span:nth-child(1) { animation-delay: 4s; }
+.h2 span:nth-child(2) { animation-delay: 4.1s; }
+.h2 span:nth-child(3) { animation-delay: 4.2s; }
+.h2 span:nth-child(4) { animation-delay: 4.3s; }
+.h2 span:nth-child(5) { animation-delay: 4.4s; }
+.h2 span:nth-child(6) { animation-delay: 4.5s; }
+
+        @keyframes rotateLetter {
+    0% {
+        transform: rotateY(0deg);
+        opacity: 1;
+    }
+    50% {
+        text-shadow: 0 10px 10px #0ef;
+    }
+    100% {
+        transform: rotateY(360deg);
+        opacity: 1;
+        text-shadow: 0 5px 5px #0ef;
+    }
+    }
+
+h1,h2,p {
+    margin: 0;
+    padding: 0;
+    color: white;
+    text-shadow: 0 0 20px rgb(0, 0, 0, 1);
+    line-height: 100%;
+    user-select:none;
+}
+
+.h1 {
+    color: #fff;
+    font-size: 80px;
+    font-weight: 700;
+    text-transform: uppercase;
+    /*  */
+    background: linear-gradient(90deg,#fff,#0ef,#fff,#0ef,#fff,#0ef,#fff,#0ef );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rain 3s  linear infinite;
+}
+
+@keyframes rain {
+    0%{
+        background-position: 200% 0;
+    }
+}
+
+.bank-title {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo {
+    width: 110px;
+    height: auto;
+}
+
+
+@media (max-width: 767px) {
+    #hero {
+        gap: 10px; 
+        padding: 20px; 
+    }
+    
+    .h1 {
+        font-size: 40px; 
+    }
+    
+    .bank-title {
+        gap: 10px; 
+    }
+    
+    .logo {
+        width: 80px; 
+    }
+    
+    .h2 {
+        font-size: 18px; 
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    #hero {
+        gap: 15px;
+    }
+    
+    .h1 {
+        font-size: 60px; 
+    }
+    
+    .bank-title {
+        gap: 8px;
+    }
+    
+    .logo {
+        width: 100px; 
+    }
+}
+
+@media (min-width: 1024px) {
+    .h1 {
+        font-size: 80px;
+    }
+    
+    .logo {
+        width: 110px; 
+    }
+}

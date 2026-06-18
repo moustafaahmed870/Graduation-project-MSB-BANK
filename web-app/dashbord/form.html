@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/login-signup pages/dashbord/css/form.css">
+    <style>
+        /* ========== English Layout Styles ========== */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Montserrat', sans-serif;
+            background: #081b29;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .container {
+            direction: ltr;
+        }
+        
+        .form-card {
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .input-group {
+            text-align: left;
+            direction: ltr;
+        }
+        
+        .input-group label {
+            text-align: left;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .input-icon {
+            position: relative;
+            direction: ltr;
+        }
+        
+        .input-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            right: auto;
+        }
+        
+        input, select, textarea {
+            text-align: left;
+            padding: 12px 15px 12px 45px !important;
+            direction: ltr;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Phone and number fields - keep LTR */
+        input[type="tel"], input[type="number"] {
+            text-align: left;
+            direction: ltr;
+        }
+        
+        /* ========== Image Upload Styles ========== */
+        .upload-section {
+            margin-bottom: 20px;
+            border: 2px dashed rgba(49, 124, 129, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+        }
+        
+        .upload-section:hover {
+            border-color: #0ef;
+            background: rgba(79, 195, 247, 0.05);
+        }
+        
+        .upload-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #0ef;
+            font-weight: 600;
+        }
+        
+        .upload-title i {
+            font-size: 20px;
+        }
+        
+        .upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed rgba(79, 195, 247, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .upload-area:hover {
+            border-color: #0ef;
+            background: rgba(79, 195, 247, 0.05);
+        }
+        
+        .upload-area i {
+            font-size: 40px;
+            color: #0ef;
+            margin-bottom: 10px;
+        }
+        
+        .upload-area p {
+            color: #a0d2db;
+            font-size: 14px;
+            margin: 5px 0;
+            text-align: center;
+        }
+        
+        .upload-area small {
+            color: #a0d2db;
+            opacity: 0.7;
+            font-size: 11px;
+            text-align: center;
+        }
+        
+        .image-preview-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            justify-content: flex-start;
+        }
+        
+        .image-preview {
+            position: relative;
+            width: 120px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #0ef;
+            background: #081b29;
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .image-preview .remove-image {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 22px;
+            height: 22px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .image-preview .remove-image:hover {
+            transform: scale(1.1);
+            background: #dc2626;
+        }
+        
+        .image-preview .label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 10px;
+            text-align: center;
+            padding: 2px;
+        }
+        
+        .file-input-hidden {
+            display: none;
+        }
+        
+        .upload-status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #10b981;
+            text-align: left;
+        }
+        
+        .required-star {
+            color: #ef4444;
+            margin-left: 5px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        
+        .checkbox-label input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .checkbox-label span {
+            flex: 1;
+        }
+        
+        .strength {
+            margin-top: 5px;
+            font-size: 13px;
+        }
+        
+        .strength.weak { color: #ff4d4d; }
+        .strength.medium { color: #ffaa00; }
+        .strength.strong { color: #33ff66; }
+        
+        small {
+            display: block;
+            margin-top: 5px;
+            color: #a0d2db;
+            opacity: 0.7;
+            font-size: 12px;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #0ef;
+        }
+        
+        .submit-btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #081b29, #00AEEF, #0ef, #00AEEF, #081b29);
+            background-size: 200% auto;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 17px;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+        }
+        
+        /* Fix icon position for LTR */
+        .input-icon i {
+            left: 15px;
+            right: auto;
+        }
+        
+        input, select, textarea {
+            padding-left: 45px !important;
+            padding-right: 15px !important;
+        }
+    </style>
+    <script type="module" src="/login-signup pages/dashbord/js/api.js"></script>
+    <script type="module" src="/login-signup pages/dashbord/js/form.js"></script>
+    <title>Sign Up - MSB BANK</title>
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+</head>
+<body> 
+    <div class="container">
+        <form class="form-card fade-in" id="bankForm">
+            <h2><i class="fa-solid fa-building-columns"></i> Open a Bank Account</h2>
+
+            <!-- Full Name -->
+            <div class="input-group">
+                <label>Full Name <span class="required-star">*</span></label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-user"></i>
+                    <input id="fullName" type="text" placeholder="Enter your full name" required>
+                </div>
+            </div>
+
+            <!-- National ID -->
+            <div class="input-group">
+                <label>National ID <span class="required-star">*</span></label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-id-card"></i>
+                    <input id="nationalId" type="text" maxlength="14" placeholder="Enter 14-digit National ID" required>
+                </div>
+                <small>National ID must be 14 digits</small>
+            </div>
+
+            <!-- Birth Date -->
+            <div class="input-group">
+                <label>Date of Birth <span class="required-star">*</span></label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-calendar"></i>
+                    <input id="birthDate" type="date" required>
+                </div>
+            </div>
+
+            <!-- Gender -->
+            <div class="input-group">
+                <label>Gender <span class="required-star">*</span></label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-venus-mars"></i>
+                    <select id="gender" required>
+                        <option value="">Select gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="input-group">
+                <label>Phone Number <span class="required-star">*</span></label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-phone"></i>
+                    <input id="phone" type="tel" maxlength="11" placeholder="01XXXXXXXXX" required>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="input-group">
+                <label>Email Address <span class="required-star">*</span></label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input id="email" type="email" placeholder="example@gmail.com" required>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="input-group">
+                <label>Password <span class="required-star">*</span></label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-lock"></i>
+                    <input id="password" type="password" placeholder="Enter password" required>
+                </div>
+                <div id="passStrength" class="strength">Password Strength: —</div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="input-group">
+                <label>Confirm Password <span class="required-star">*</span></label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-lock"></i>
+                    <input id="confirmPassword" type="password" placeholder="Re-enter password" required>
+                </div>
+            </div>
+
+            <!-- ========== ID Card Image Upload Section ========== -->
+            <div class="upload-section">
+                <div class="upload-title">
+                    <i class="fa-solid fa-id-card"></i>
+                    <span>ID Card Images</span>
+                </div>
+                
+                <!-- Front Image -->
+                <div class="input-group">
+                    <label>Front Side (Face) <span class="required-star">*</span></label>
+                    <div class="upload-area" id="uploadFrontArea">
+                        <i class="fa-solid fa-cloud-upload-alt"></i>
+                        <p>Click to upload front side of ID card</p>
+                        <small>Allowed: JPG, PNG, JPEG - Max 5MB</small>
+                    </div>
+                    <input type="file" id="frontImage" class="file-input-hidden" accept="image/jpeg,image/png,image/jpg">
+                    <div id="frontPreview" class="image-preview-container"></div>
+                    <div id="frontStatus" class="upload-status"></div>
+                </div>
+                
+                <!-- Back Image -->
+                <div class="input-group">
+                    <label>Back Side <span class="required-star">*</span></label>
+                    <div class="upload-area" id="uploadBackArea">
+                        <i class="fa-solid fa-cloud-upload-alt"></i>
+                        <p>Click to upload back side of ID card</p>
+                        <small>Allowed: JPG, PNG, JPEG - Max 5MB</small>
+                    </div>
+                    <input type="file" id="backImage" class="file-input-hidden" accept="image/jpeg,image/png,image/jpg">
+                    <div id="backPreview" class="image-preview-container"></div>
+                    <div id="backStatus" class="upload-status"></div>
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="input-group">
+                <label>Address</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <textarea id="address" placeholder="Enter your address" rows="2"></textarea>
+                </div>
+            </div>
+
+            <!-- City -->
+            <div class="input-group">
+                <label>City</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-city"></i>
+                    <input id="city" type="text" placeholder="Enter your city">
+                </div>
+            </div>
+
+            <!-- Postal Code -->
+            <div class="input-group">
+                <label>Postal Code</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-mailbox"></i>
+                    <input id="postalCode" type="text" placeholder="Enter postal code">
+                </div>
+            </div>
+
+            <!-- Country -->
+            <div class="input-group">
+                <label>Country</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-flag"></i>
+                    <select id="country">
+                        <option value="">Select country</option>
+                        <option>Egypt</option>
+                        <option>Saudi Arabia</option>
+                        <option>United Arab Emirates</option>
+                        <option>Kuwait</option>
+                        <option>Jordan</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Account Type -->
+            <div class="input-group">
+                <label>Account Type <span class="required-star">*</span></label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                    <select id="accountType" required>
+                        <option value="">Select account type</option>
+                        <option value="savings">Savings Account</option>
+                        <option value="current">Current Account</option>
+                        <option value="business">Business Account</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Initial Deposit -->
+            <div class="input-group">
+                <label>Initial Deposit (EGP) <span class="required-star">*</span></label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-money-bill"></i>
+                    <input id="initialDeposit" type="number" step="0.01" placeholder="Enter amount" required>
+                </div>
+                <small>Minimum: 1,000 EGP</small>
+            </div>
+
+            <!-- Terms Agreement -->
+            <div class="input-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="acceptTerms" required>
+                    <span>I agree to the Terms and Conditions <span class="required-star">*</span></span>
+                </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <i class="fas fa-check"></i>
+                Submit Application
+            </button>
+        </form>
+    </div>
+</body>
+</html>

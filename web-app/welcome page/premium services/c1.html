@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html rtl="ar" lang="ar">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/c1.css">
+    <script type="module" src="js/c1.js"></script>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>    
+    <script src="/language.js"></script>  
+    <script src="/load-components.js"></script> 
+    <title data-i18n="concierge_pageTitle">Les Concierge Membership</title>
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+</head>
+<body>
+    <div id="navbar-container"></div>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 data-i18n="concierge_title">عضوية Les Concierge</h1>
+            <p data-i18n="concierge_subtitle">خدمة حصرية لعملاء بنك مصر VIP</p>
+            <div class="vip-badge">BMVIP</div>
+        </div>
+
+        <!-- Membership Information -->
+        <div class="membership-info">
+            <div class="membership-card">
+                <h2 data-i18n="concierge_membership_info">معلومات العضوية</h2>
+                <div class="membership-details">
+                    <div class="detail-item">
+                        <div class="detail-title" data-i18n="concierge_membership_type">نوع العضوية:</div>
+                        <div class="detail-value" data-i18n="concierge_membership_type_value">عضوية مجانية مدى الحياة</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-title" data-i18n="concierge_for_customers">للعملاء:</div>
+                        <div class="detail-value">BMVIP و BMVIP PLUS</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-title" data-i18n="concierge_service_scope">نطاق الخدمة:</div>
+                        <div class="detail-value" data-i18n="concierge_service_scope_value">محلية للـ BMVIP / محلية ودولية للـ BMVIP PLUS</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-title" data-i18n="concierge_activation">تفعيل العضوية:</div>
+                        <div class="detail-value" data-i18n="concierge_activation_value">تلقائي بعد الانضمام لشريحة كبار العملاء</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="membership-card">
+                <h2 data-i18n="concierge_how_to_get">تفاصيل الحصول على العضوية</h2>
+                <p data-i18n="concierge_membership_sms">يتم إرسال رقم العضوية الخاص ببطاقتكم في رسالة نصية فور الحصول على العضوية للتواصل مع خدمة Les Concierge.</p>
+                <p><strong data-i18n="concierge_automatic_activation">الحصول على العضوية يتم بشكل تلقائي بعد الانضمام لشريحة كبار العملاء.</strong></p>
+            </div>
+        </div>
+
+        <!-- Services Section -->
+        <div class="services-section">
+            <h2 class="section-title" data-i18n="concierge_services_title">خدمات Les Concierge المتاحة</h2>
+            <p data-i18n="concierge_services_desc">خدمة تساعدك على إنجاز مهامك اليومية بكل سهولة ورفاهية</p>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <h3 data-i18n="concierge_travel_services">خدمات السفر</h3>
+                    <p data-i18n="concierge_travel_desc">حجوزات الرحلات الجوية، حجز الفنادق، وتأمين وسائل النقل المحلية والدولية.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h3 data-i18n="concierge_gov_documents">الوثائق الحكومية</h3>
+                    <p data-i18n="concierge_gov_desc">تسهيل وتجديد الوثائق الحكومية المختلفة وتقديم الاستشارات القانونية.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3 data-i18n="concierge_tourism_entertainment">السياحة والترفيه</h3>
+                    <p data-i18n="concierge_tourism_desc">حجوزات المطاعم، السينما، المسرح، وتنظيم الحفلات والفعاليات الخاصة.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3 data-i18n="concierge_personal_services">الخدمات الشخصية</h3>
+                    <p data-i18n="concierge_personal_desc">خدمات متنوعة تلبي احتياجاتك الشخصية اليومية بكل خصوصية وكفاءة.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3 data-i18n="concierge_delivery_shipping">التوصيل والشحن</h3>
+                    <p data-i18n="concierge_delivery_desc">خدمات التوصيل السريع والشحن المحلي والدولي مع أفضل شركات الشحن.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 data-i18n="concierge_maintenance_cleaning">الصيانة والتنظيف</h3>
+                    <p data-i18n="concierge_maintenance_desc">خدمات الصيانة المنزلية والتنظيف الاحترافي مع فنيين ومعالجين معتمدين.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3 data-i18n="concierge_bill_payment">دفع الفواتير</h3>
+                    <p data-i18n="concierge_bill_desc">دفع فواتير الخدمات والمرافق المختلفة نيابة عنك بكل أمان وسرعة.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-concierge-bell"></i>
+                    </div>
+                    <h3 data-i18n="concierge_additional_services">خدمات إضافية</h3>
+                    <p data-i18n="concierge_additional_desc">خدمات حصرية أخرى مخصصة حسب احتياجاتك الشخصية والمهنية.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <div class="contact-box">
+                <h2 class="contact-title" data-i18n="concierge_contact_title">للتواصل مع خدمة Les Concierge</h2>
+                <p data-i18n="concierge_contact_desc">يمكنكم التواصل مباشرة مع فريق Les Concierge عبر الرقم التالي:</p>
+                <div class="contact-phone">01552233751</div>
+                <p class="contact-note" data-i18n="concierge_contact_note">رقم العضوية سيصلكم في رسالة نصية بعد تفعيل خدمة BMVIP أو BMVIP PLUS</p>
+            </div>
+        </div>
+    </div>
+    <div id="footer-container"></div>
+</body>
+</html>

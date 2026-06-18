@@ -1,0 +1,437 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    direction: rtl;
+    background-color: #081b29;
+    line-height: 1.6;
+}
+
+[dir="ltr"] body {
+    direction: ltr;
+}
+
+/* تصميم المحتوى الرئيسي */
+.main-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.page-header {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.page-header h2 {
+    color: #3b82f6;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 15px;
+}
+
+.page-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 50%;
+    transform: translateX(50%);
+    width: 100px;
+    height: 4px;
+    background-color: #a0d2db;
+    border-radius: 8px;
+}
+
+[dir="ltr"] .page-header h2::after {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.page-header p {
+    color: #b8d4f0;
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+}
+
+/* تصميم قسم مركز الاتصال */
+.call-center-section {
+    background-color: #081b29;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 0 10px #0ef;
+    margin-bottom: 40px;
+}
+
+.section-title {
+    color: #3b82f6;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+[dir="ltr"] .section-title {
+    flex-direction: row; /* تصحيح: للإنجليزية، نتركه row (الافتراضي) */
+}
+
+.section-title i {
+    background-color: #3b82f6;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: #a0d2db;
+}
+
+.highlight-box {
+    background-color: #ffffff1a;
+    border-right: 5px solid #0ef;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+[dir="ltr"] .highlight-box {
+    border-left: 5px solid #0ef;
+    border-right: none;
+}
+
+.highlight-box h3 {
+    color: #3b82f6;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+[dir="ltr"] .highlight-box h3 {
+    flex-direction: row; /* تصحيح: للإنجليزية، row */
+}
+
+.phone-number-large {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #3b82f6;
+    text-align: center;
+    margin: 20px 0;
+    direction: ltr;
+}
+
+.phone-subtitle {
+    text-align: center;
+    color: #a0d2db;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.services-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.service-category {
+    background-color: #ffffff1a;
+    border-radius: 10px;
+    padding: 25px;
+    border-top: 5px solid #0ef;
+}
+
+.service-category h4 {
+    color: #3b82f6;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+[dir="ltr"] .service-category h4 {
+    flex-direction: row; /* تصحيح: للإنجليزية، row */
+}
+
+.service-list {
+    list-style: none;
+}
+
+.service-list li {
+    padding: 12px 0;
+    border-bottom: 1px dashed #0ef;
+    position: relative;
+    padding-right: 30px;
+    color: #a0d2db;
+}
+
+[dir="ltr"] .service-list li {
+    padding-left: 30px;
+    padding-right: 0;
+}
+
+h3 {
+    color: #3b82f6;
+}
+
+p {
+    color: #a0d2db;
+}
+
+.service-list li:last-child {
+    border-bottom: none;
+}
+
+.service-list li::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: #0ef;
+    position: absolute;
+    right: 0;
+    top: 12px;
+}
+
+[dir="ltr"] .service-list li::before {
+    right: auto;
+    left: 0;
+}
+
+/* تصميم قسم الخدمة الصوتية IVR */
+.ivr-section {
+    background-color: #081b29;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 0 10px #0ef;
+    margin-bottom: 40px;
+}
+
+.ivr-intro {
+    background: #ffffff1a;
+    color: #2395a9;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.ivr-intro h3 {
+    color: #3b82f6;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.ivr-intro p {
+    color: #a0d2db;
+}
+
+.ivr-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.ivr-feature {
+    background-color: #ffffff1a;
+    border-radius: 10px;
+    padding: 25px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.ivr-feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 10px #0ef;
+}
+
+.ivr-feature i {
+    font-size: 2.5rem;
+    color: #a0d2db;
+    margin-bottom: 15px;
+    background-color: #3b82f6;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.ivr-feature h4 {
+    color: #3b82f6;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+/* تصميم جدول IVR */
+.ivr-table-container {
+    overflow-x: auto;
+    margin-top: 30px;
+}
+
+.ivr-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: 1px solid #2395a9;
+}
+
+.ivr-table th {
+    background-color: #2395a9;
+    color: #b8d4f0;
+    padding: 15px;
+    text-align: right;
+}
+
+[dir="ltr"] .ivr-table th {
+    text-align: left;
+}
+
+.ivr-table td {
+    padding: 15px;
+    border-bottom: 1px solid #a0d2db;
+    border-left: 1px solid #a0d2db;
+    color: #b8d4f0;
+}
+
+[dir="ltr"] .ivr-table td {
+    border-left: none;
+    border-right: 1px solid #a0d2db;
+}
+
+.ivr-table tr:nth-child(even) {
+    background-color: #081b29;
+}
+
+.ivr-table tr:hover {
+    background-color: #081b29;
+}
+
+.key {
+    background-color: #3b82f6;
+    color: #a0d2db;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+[dir="ltr"] .key {
+    margin-left: 0;
+    margin-right: 5px;
+}
+
+/* تصميم متجاوب للجوال */
+@media (max-width: 992px) {
+    .header-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    nav ul {
+        gap: 15px;
+    }
+    
+    .phone-number-large {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: block;
+        position: absolute;
+        top: 25px;
+        right: 20px;
+    }
+    
+    [dir="ltr"] .mobile-menu-btn {
+        right: auto;
+        left: 20px;
+    }
+    
+    .page-header h2 {
+        font-size: 2rem;
+    }
+    
+    .services-container, .ivr-features {
+        grid-template-columns: 1fr;
+    }
+    
+    .call-center-section, .ivr-section {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header h2 {
+        font-size: 1.7rem;
+    }
+    
+    .section-title {
+        font-size: 1.6rem;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .phone-number-large {
+        font-size: 1.8rem;
+    }
+    
+    .footer-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 77, 153, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 77, 153, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 77, 153, 0);
+    }
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #0066cc;
+    color: #b8d4f0;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 72, 255, 0.536);
+}
+
+.center-text {
+    text-align: center;
+}

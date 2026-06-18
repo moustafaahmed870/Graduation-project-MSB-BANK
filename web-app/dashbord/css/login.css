@@ -1,0 +1,516 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #081b29;
+            padding: 20px;   /* gives safe breathing space on very small devices */
+        }
+
+        /* ----- MAIN WRAPPER (dimensions refined) ----- */
+        .wrapper {
+            position: relative;
+            width: 850px;          /* slightly wider for better balance on tablets */
+            max-width: 90vw;       /* never exceed viewport width */
+            height: 520px;         /* increased height for spacious layout */
+            max-height: 90vh;      /* prevents overflow on short screens */
+            background: transparent;
+            border: 2px solid #0ef;
+            box-shadow: 0 0 25px #0ef;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* FORM BOXES (left/right split) */
+        .wrapper .form-box {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .wrapper .form-box.login {
+            left: 0;
+            padding: 0 60px 0 40px;
+        }
+
+        .wrapper .form-box.login .animation {
+            transform: translateX(0);
+            opacity: 1;
+            filter: blur(0);
+            transition: .7s ease;
+            transition-delay: calc(.1s * var(--j));
+        }
+
+        .wrapper.active .form-box.login .animation {
+            transform: translateX(-120%);
+            opacity: 0;
+            filter: blur(10px);
+            transition-delay: calc(.1s * var(--i));
+        }
+
+        .wrapper .form-box.register {
+            right: 0;
+            padding: 0 40px 0 60px;
+            pointer-events: none;
+        }
+
+        .wrapper.active .form-box.register {
+            pointer-events: auto;
+        }
+
+        .wrapper .form-box.register .animation {
+            transform: translateX(120%);
+            opacity: 0;
+            filter: blur(10px);
+            transition: .7s ease;
+            transition-delay: calc(.1s * var(--j));
+        }
+
+        .wrapper.active .form-box.register .animation {
+            transform: translateX(0);
+            opacity: 1;
+            filter: blur(0);
+            transition-delay: calc(.1s * var(--i));
+        }
+
+        /* ----- form typography & inputs ----- */
+        .form-box h2 {
+            font-size: 32px;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .form-box .input-box {
+            position: relative;
+            width: 100%;
+            height: 50px;
+            margin: 25px 0;
+        }
+
+        .input-box input {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            border-bottom: 2px solid #fff;
+            font-size: 16px;
+            color: #fff;
+            font-weight: 500;
+            padding-right: 30px;
+            transition: .5s;
+        }
+
+        .input-box input:focus,
+        .input-box input:valid {
+            border-bottom-color: #0ef;
+        }
+
+        .input-box label {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #fff;
+            pointer-events: none;
+            transition: .5s;
+        }
+
+        .input-box input:focus~label,
+        .input-box input:valid~label {
+            top: -5px;
+            color: #0ef;
+        }
+
+        .input-box i {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #fff;
+            transition: .5s;
+        }
+
+        .input-box input:focus~i,
+        .input-box input:valid~i {
+            color: #0ef;
+        }
+
+        /* ----- BUTTON stylish effect ----- */
+        .btn {
+            position: relative;
+            width: 100%;
+            height: 45px;
+            background: transparent;
+            border: 2px solid #0ef;
+            outline: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #fff;
+            font-weight: 600;
+            z-index: 1;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 300%;
+            background: linear-gradient(#081b29, #0ef, #081b29, #0ef);
+            z-index: -1;
+            transition: .5s;
+        }
+
+        .btn:hover:before {
+            top: 0;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .form-box .logreg-link {
+            font-size: 14.5px;
+            color: #fff;
+            text-align: center;
+            margin: 20px 0 10px;
+        }
+
+        .logreg-link p a,
+        .forget-link {
+            color: #0ef;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .logreg-link p a:hover,
+        .forget-link:hover {
+            text-decoration: underline;
+            opacity: 0.9;
+        }
+
+        /* ----- INFO TEXT PANELS (right/left description) ----- */
+        .wrapper .info-text {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .wrapper .info-text.login {
+            right: 0;
+            text-align: right;
+            padding: 0 40px 60px 150px;
+        }
+
+        .wrapper .info-text.login .animation {
+            transform: translateX(0);
+            opacity: 1;
+            filter: blur(0);
+            transition: .7s ease;
+            transition-delay: calc(.1s * var(--j));
+        }
+
+        .wrapper.active .info-text.login .animation {
+            transform: translateX(120%);
+            opacity: 0;
+            filter: blur(10px);
+            transition-delay: calc(.1s * var(--i));
+        }
+
+        .wrapper .info-text.register {
+            left: 0;
+            text-align: left;
+            padding: 0 150px 60px 40px;
+            pointer-events: none;
+        }
+
+        .wrapper.active .info-text.register {
+            pointer-events: auto;
+        }
+
+        .wrapper .info-text.register .animation {
+            transform: translateX(-120%);
+            opacity: 0;
+            filter: blur(10px);
+            transition: .7s ease;
+            transition-delay: calc(.1s * var(--j));
+        }
+
+        .wrapper.active .info-text.register .animation {
+            transform: translateX(0);
+            opacity: 1;
+            filter: blur(0);
+            transition-delay: calc(.1s * var(--i));
+        }
+
+        .info-text h2 {
+            font-size: 36px;
+            color: #fff;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-text p {
+            font-size: 16px;
+            padding-left: 17px;
+            color: #fff;
+            margin-top: 15px;
+            opacity: 0.9;
+        }
+
+        /* ----- BACKGROUND ANIMATIONS (rotating / skew) ----- */
+        .wrapper .bg-animate {
+            position: absolute;
+            top: -4px;
+            right: 0;
+            width: 850px;
+            height: 600px;
+            background: linear-gradient(45deg, #081b29, #0ef);
+            border-bottom: 3px solid #0ef;
+            transform: rotate(10deg) skewY(40deg);
+            transform-origin: bottom right;
+            transition: 1.5s ease;
+            transition-delay: 1.6s;
+        }
+
+        .wrapper.active .bg-animate {
+            transform: rotate(0) skewY(0);
+            transition-delay: .5s;
+        }
+
+        .wrapper .bg-animate2 {
+            position: absolute;
+            top: 100%;
+            left: 250px;
+            width: 850px;
+            height: 700px;
+            background: #081b29;
+            border-top: 3px solid #0ef;
+            transform: rotate(0) skewY(0);
+            transform-origin: bottom left;
+            transition: 1.5s ease;
+            transition-delay: .5s;
+        }
+
+        .wrapper.active .bg-animate2 {
+            transform: rotate(-11deg) skewY(-41deg);
+            transition-delay: 1.2s;
+        }
+
+        /* ========== RESPONSIVE DIMENSIONS FIX ========== */
+        /* Large tablets / small laptops */
+        @media (max-width: 850px) {
+            .wrapper {
+                width: 95vw;
+                height: 520px;
+                max-height: 90vh;
+            }
+            .wrapper .form-box.login {
+                padding: 0 30px 0 30px;
+            }
+            .wrapper .form-box.register {
+                padding: 0 30px 0 30px;
+            }
+            .info-text h2 {
+                font-size: 28px;
+            }
+            .info-text p {
+                font-size: 14px;
+            }
+            .wrapper .info-text.login {
+                padding: 0 30px 60px 80px;
+            }
+            .wrapper .info-text.register {
+                padding: 0 80px 60px 30px;
+            }
+        }
+
+        /* Tablets and below (landscape) */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            .wrapper {
+                width: 100%;
+                height: auto;
+                min-height: 560px;
+                max-width: 100%;
+            }
+            /* make both info-text panels slightly smaller */
+            .wrapper .info-text.login {
+                padding: 0 20px 40px 60px;
+            }
+            .wrapper .info-text.register {
+                padding: 0 60px 40px 20px;
+            }
+            .info-text h2 {
+                font-size: 26px;
+            }
+        }
+
+        /* MOBILE (≤ 650px) -> hide info text completely, full-width forms */
+        @media (max-width: 650px) {
+            .wrapper .info-text {
+                display: none;   /* info panels vanish on narrow screens */
+            }
+            .wrapper .form-box {
+                width: 100%;       /* form takes full width */
+                padding: 20px 30px !important;
+            }
+            .wrapper .form-box.login {
+                left: 0;
+                padding: 20px 25px !important;
+            }
+            .wrapper .form-box.register {
+                right: 0;
+                padding: 20px 25px !important;
+            }
+            .wrapper {
+                height: auto;
+                min-height: 520px;
+                border-width: 2px;
+            }
+            .form-box h2 {
+                font-size: 28px;
+            }
+            .input-box input {
+                font-size: 15px;
+            }
+            .btn {
+                height: 42px;
+                font-size: 15px;
+            }
+            /* adjust background shapes a bit so they don't overlap forms awkwardly */
+            .wrapper .bg-animate,
+            .wrapper .bg-animate2 {
+                opacity: 0.7;
+            }
+        }
+
+        /* very small devices (<=480px) */
+        @media (max-width: 480px) {
+            .wrapper .form-box.login,
+            .wrapper .form-box.register {
+                padding: 15px 20px !important;
+            }
+            .form-box h2 {
+                font-size: 24px;
+            }
+            .input-box {
+                margin: 20px 0;
+            }
+            .input-box label,
+            .input-box input {
+                font-size: 14px;
+            }
+            .btn {
+                height: 40px;
+                font-size: 14px;
+            }
+            .logreg-link {
+                font-size: 13px;
+            }
+        }
+
+        /* ----- ADMIN & BIOMETRIC LINKS (enhanced) ----- */
+        .admin-link {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            /* border-top: 1px solid rgba(255, 255, 255, 0.1); */
+        }
+
+        .admin-btn {
+            color: #0ef !important;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(0, 238, 255, 0.1);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .admin-btn:hover {
+            background: rgba(0, 238, 255, 0.2);
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .biometric-login {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .biometric-btn {
+            color: #0ef !important;
+            font-size: 14px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(0, 238, 255, 0.1);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+
+        .biometric-btn:hover {
+            background: rgba(0, 238, 255, 0.2);
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .biometric-btn i {
+            font-size: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .biometric-login .biometric-btn {
+                font-size: 12px;
+                padding: 10px 15px;
+            }
+            .admin-btn {
+                font-size: 12px;
+                padding: 6px 16px;
+            }
+        }
+
+        /* small transition for smooth active toggle */
+        button, .btn, .biometric-btn, .admin-btn {
+            cursor: pointer;
+        }

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - MSB Bank</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #081b29;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .admin-login-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: linear-gradient(135deg, #0a2438 0%, #081b29 100%);
+            border-radius: 20px;
+            padding: 40px 35px;
+            border: 2px solid rgba(0, 238, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 238, 255, 0.1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .login-header img {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+
+        .login-header h2 {
+            color: #0ef;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .login-header p {
+            color: #a0d2db;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .security-badge {
+            display: inline-block;
+            background: rgba(0, 238, 255, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #0ef;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #a0d2db;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0ef;
+            font-size: 18px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 45px 14px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 238, 255, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #0ef;
+            box-shadow: 0 0 10px rgba(0, 238, 255, 0.2);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #0ef, #0a8ba8);
+            border: none;
+            border-radius: 12px;
+            color: #081b29;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 238, 255, 0.2);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border-right: 3px solid #ef4444;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #ef4444;
+            font-size: 14px;
+            display: none;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-link a {
+            color: #a0d2db;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link a:hover {
+            color: #0ef;
+        }
+
+        .back-link i {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="https://i.ibb.co/LhY9KjRv/MSB.png" alt="MSB Bank">
+                <h2>Admin Portal</h2>
+                <p>تسجيل دخول المشرفين</p>
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i> منطقة آمنة
+                </div>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" class="form-control" id="adminEmail" placeholder="admin@msbbank.com" autocomplete="off" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-control" id="adminPassword" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
+            </form>
+
+            <div class="back-link">
+                <a href="../login.html">
+                    <i class="fas fa-arrow-right"></i>
+                    العودة إلى تسجيل دخول العملاء
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+adminLoginForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('adminEmail').value.trim();
+    const password = document.getElementById('adminPassword').value.trim();
+
+    errorMessage.style.display = 'none';
+
+    try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            showError(data.message || 'فشل تسجيل الدخول');
+            return;
+        }
+        
+        // التحقق من أن المستخدم أدمن
+        if (data.user.role !== 'admin') {
+            showError('⚠️ غير مصرح لك بالدخول إلى لوحة التحكم');
+            return;
+        }
+        
+        // حفظ التوكن
+        localStorage.setItem('adminToken', data.token);
+        localStorage.setItem('adminEmail', data.user.email);
+        
+        // الانتقال إلى لوحة التحكم
+        window.location.href = 'dashboard.html';
+        
+    } catch (error) {
+        console.error('Login error:', error);
+        showError('خطأ في الاتصال بالخادم');
+    }
+});
+    </script>
+</body>
+</html>

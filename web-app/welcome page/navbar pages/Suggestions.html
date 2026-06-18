@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html rtl="ar" lang="en">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css files/Suggestions.css">
+    <script type="module" src="../js files/Suggestions.js"></script>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>    
+    <script src="/language.js"></script>  
+    <script src="/load-components.js"></script> 
+    <title data-i18n="suggestions.pageTitle">نموذج المقترحات والشكاوى - MSB Bank</title>
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+</head>
+<body>
+    <div id="navbar-container"></div>
+    <div class="container">
+        <div class="header">
+            <h1 data-i18n="suggestions.header">نموذج الاتصال</h1>
+            <p data-i18n="suggestions.description">يرجى ملاحظة أن رقم المرجع الشكوى سيتم إرساله إلى رقم الهاتف المحمول المسجل في النموذج أدناه. للتعليق على شكواك، يرجى الاتصال بنا من خلال مركز الاتصال 19019، أو الدردشة الآلية على موقعنا أو البريد الإلكتروني.</p>
+            <div class="current-date" id="currentDate"></div>
+        </div>
+        
+        <div class="content">
+            <div class="form-note">
+                <i class="fas fa-info-circle"></i> <span data-i18n="suggestions.formNote">جميع الحقول التي تحمل علامة (*) إلزامية ويجب تعبئتها</span>
+            </div>
+            
+            <form id="contactForm">
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="fullName" class="required" data-i18n="suggestions.fullNameLabel">الاسم بالكامل (مطلوب)</label>
+                            <input type="text" id="fullName" class="form-control" data-i18n-placeholder="suggestions.fullNamePlaceholder" placeholder="أدخل اسمك بالكامل">
+                            <div class="error-message" id="nameError" data-i18n="suggestions.fullNameError">الرجاء إدخال اسم صحيح. الاسم مطلوب</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="phone" class="required" data-i18n="suggestions.phoneLabel">رقم الهاتف (مطلوب)</label>
+                            <input type="tel" id="phone" class="form-control" data-i18n-placeholder="suggestions.phonePlaceholder" placeholder="أدخل رقم هاتفك">
+                            <div class="error-message" id="phoneError" data-i18n="suggestions.phoneError">الرجاء إدخال رقم هاتف صحيح. رقم الهاتف مطلوب</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="email" class="required" data-i18n="suggestions.emailLabel">البريد الإلكتروني (مطلوب)</label>
+                            <input type="email" id="email" class="form-control" data-i18n-placeholder="suggestions.emailPlaceholder" placeholder="أدخل بريدك الإلكتروني">
+                            <div class="error-message" id="emailError" data-i18n="suggestions.emailError">الرجاء إدخال بريد إلكتروني صحيح. البريد الإلكتروني مطلوب</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="nationalId" class="required" data-i18n="suggestions.nationalIdLabel">الرقم القومي (مطلوب)</label>
+                            <input type="text" id="nationalId" class="form-control" data-i18n-placeholder="suggestions.nationalIdPlaceholder" placeholder="أدخل الرقم القومي">
+                            <div class="error-message" id="nationalIdError" data-i18n="suggestions.nationalIdError">الرجاء إدخال رقم قومي صحيح. الرقم القومي مطلوب</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="age" data-i18n="suggestions.ageLabel">العمر</label>
+                            <input type="number" id="age" class="form-control" data-i18n-placeholder="suggestions.agePlaceholder" placeholder="أدخل عمرك" min="1" max="120">
+                        </div>
+                    </div>
+                    
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="messageType" class="required" data-i18n="suggestions.messageTypeLabel">نوع الرسالة</label>
+                            <select id="messageType" class="select-box" required>
+                                <option value="" disabled selected data-i18n="suggestions.selectMessageType">اختر نوع الرسالة</option>
+                                <option value="complaint" data-i18n="suggestions.complaintOption">شكوى</option>
+                                <option value="suggestion" data-i18n="suggestions.suggestionOption">اقتراح</option>
+                                <option value="inquiry" data-i18n="suggestions.inquiryOption">استفسار</option>
+                                <option value="feedback" data-i18n="suggestions.feedbackOption">تعليق</option>
+                            </select>
+                            <div class="error-message" id="messageTypeError" data-i18n="suggestions.messageTypeError">نوع الرسالة مطلوب</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject" class="required" data-i18n="suggestions.subjectLabel">الموضوع</label>
+                    <input type="text" id="subject" class="form-control" data-i18n-placeholder="suggestions.subjectPlaceholder" placeholder="أدخل موضوع الرسالة">
+                    <div class="error-message" id="subjectError" data-i18n="suggestions.subjectError">الموضوع مطلوب</div>
+                </div>
+                
+                <div class="form-group">
+                    <label data-i18n="suggestions.attachmentLabel">إرفاق مستندات</label>
+                    
+                    <div class="file-attachment" id="fileDropArea">
+                        <div class="file-info">
+                            <div class="file-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="file-text">
+                                <h3 data-i18n="suggestions.fileDragTitle">اسحب وأفلت الملفات هنا</h3>
+                                <p data-i18n="suggestions.fileClickText">أو انقر لاختيار الملفات من جهازك</p>
+                            </div>
+                            <button type="button" class="choose-file-btn" id="fileBtn">
+                                <i class="fas fa-paperclip"></i>
+                                <span data-i18n="suggestions.chooseFileBtn">اختر ملف</span>
+                            </button>
+                        </div>
+                        
+                        <div class="selected-file" id="selectedFile">
+                            <div class="file-name" id="fileName" data-i18n="suggestions.noFileSelected">لا يوجد ملف مختار</div>
+                            <div class="file-size" id="fileSize" data-i18n="suggestions.fileSize">الحجم: 0 ميغابايت</div>
+                            <div class="remove-file" id="removeFile" data-i18n="suggestions.removeFile">إزالة الملف</div>
+                        </div>
+                        
+                        <div class="file-requirements">
+                            <i class="fas fa-info-circle"></i> <span data-i18n="suggestions.fileRequirements">يجب أن يكون حجم الملفات أقل من أو يساوي 1 ميغابايت، التنسيقات المقبولة هي (PNG ، JPEG ، JPG ، PDF)</span>
+                        </div>
+                        
+                        <div class="error-message" id="fileError" data-i18n="suggestions.fileError">تنسيق الملف يجب أن يكون (PNG، JPEG، JPG، PDF). حجم الملف يجب أن لا يتجاوز 1 ميغابايت</div>
+                        
+                        <input type="file" id="fileInput" accept=".png, .jpeg, .jpg, .pdf" class="hidden">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="summary" class="required" data-i18n="suggestions.summaryLabel">ملخص الاقتراح/الشكوى (مطلوب)</label>
+                    <textarea id="summary" class="form-control" rows="6" data-i18n-placeholder="suggestions.summaryPlaceholder" placeholder="أدخل ملخص الاقتراح أو الشكوى هنا"></textarea>
+                    <div class="char-counter" id="charCounter" data-i18n="suggestions.charCounter">عدد الأحرف: 0 / 4000</div>
+                    <div class="error-message" id="summaryError" data-i18n="suggestions.summaryError">الملخص مطلوب. عدد الأحرف لا يمكن أن يتعدى 4000 حرف</div>
+                    
+                    <div class="requirements">
+                        <i class="fas fa-exclamation-circle"></i> <span data-i18n="suggestions.charLimit">عدد الأحرف لا يمكن أن يتعدى 4000 حرف</span>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span data-i18n="suggestions.submitButton">إرسال النموذج</span>
+                    </button>
+                    <a href="/index.html" class="home-btn">
+                        <i class="fas fa-home"></i>
+                        <span data-i18n="suggestions.homeButton">العودة للصفحة الرئيسية</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- نافذة النجاح -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h2 data-i18n="suggestions.successTitle">تم الإرسال بنجاح!</h2>
+            <p data-i18n="suggestions.successMessage">شكرًا لتواصلك معنا. تم استلام نموذجك بنجاح وسنتواصل معك قريبًا.</p>
+            <button class="modal-btn" id="closeSuccessModal" data-i18n="suggestions.okButton">موافق</button>
+        </div>
+    </div>
+    
+    <!-- نافذة الخطأ -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content error">
+            <h2 data-i18n="suggestions.errorTitle">فشل في الإرسال</h2>
+            <p data-i18n="suggestions.errorMessage">حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى لاحقًا.</p>
+            <button class="modal-btn" id="closeErrorModal" data-i18n="suggestions.tryAgainButton">حاول مرة أخرى</button>
+        </div>
+    </div>
+    
+    <!-- نافذة التحميل -->
+    <div id="loadingModal" class="modal loading-modal">
+        <div class="modal-content">
+            <div class="spinner"></div>
+            <h2 data-i18n="suggestions.loadingTitle">جاري المعالجة</h2>
+            <p data-i18n="suggestions.loadingMessage">قد يستغرق هذا بضع دقائق، يرجى الانتظار...</p>
+        </div>
+    </div>
+    <div id="footer-container"></div>
+
+</body>
+</html>

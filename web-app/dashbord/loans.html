@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.name">MSB BANK - القروض</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Additional styles for loan modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: linear-gradient(135deg, #0a2438 0%, #081b29 100%);
+            border-radius: 15px;
+            border: 2px solid rgba(49, 124, 129, 0.3);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideInUp 0.3s ease;
+        }
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(49, 124, 129, 0.3);
+        }
+        .modal-header h3 {
+            color: #a0d2db;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #a0d2db;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid rgba(49, 124, 129, 0.3);
+        }
+        .upload-area {
+            border: 2px dashed rgba(79, 195, 247, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(79, 195, 247, 0.05);
+        }
+        .upload-area:hover {
+            border-color: #4fc3f7;
+            background: rgba(79, 195, 247, 0.1);
+        }
+        .upload-preview {
+            margin-top: 15px;
+            display: none;
+        }
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(49, 124, 129, 0.2);
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body class="rtl">
+    <!-- Header (same as before) -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="https://i.ibb.co/LhY9KjRv/MSB.png" alt="MSB">
+                    <div class="logo-text" data-i18n="app.name">MSB BANK</div>
+                </a>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-info">
+                    <div class="user-welcome">
+                        <div class="user-name" id="userName">
+                            <span data-i18n="hello">مرحباً</span>، <span id="userNameText">---</span>
+                        </div>
+                        <div class="user-account" id="accountNumber"><span data-i18n="accounts.account_number">الحساب</span>: <span id="accountNumberText">---</span></div>
+                        <div class="rewards-badge" onclick="BankApp.openAIAssistant()">
+                            <i class="fas fa-trophy"></i>
+                            <span data-i18n="header.rewards" id="rewardsLevel">---</span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="window.location.href='/pages/currencyconverter-rate/index.html'">
+                            <i class="fas fa-coins"></i>
+                            <span data-i18n="header.currency_rates">اسعار العملات</span>
+                        </button>
+                        <button class="language-btn" id="languageToggle" data-i18n-toggle data-i18n-lang-btn>
+                            <i class="fas fa-language"></i> English
+                        </button>
+                        <div class="notifications">
+                            <button class="notifications-btn" onclick="document.getElementById('notificationDropdown').classList.toggle('active')">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge" id="notificationBadge">0</span>
+                            </button>
+                            <div class="notification-dropdown" id="notificationDropdown">
+                                <div class="notification-header">
+                                    <div class="notification-title" data-i18n="header.notifications">الإشعارات</div>
+                                    <button class="mark-all-read" onclick="BankApp.markAllNotificationsRead()" data-i18n="header.mark_all_read">تعيين الكل كمقروء</button>
+                                </div>
+                                <div class="notification-list" id="notificationList"></div>
+                                <div class="notification-footer">
+                                    <a href="#" class="view-all-notifications" data-i18n="header.view_all">عرض جميع الإشعارات</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-avatar" onclick="BankApp.logout()">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-list" id="navList">
+                <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i><span data-i18n="nav.home">الرئيسية</span></a></li>
+                <li class="nav-item"><a href="accounts.html" class="nav-link"><i class="fas fa-credit-card"></i><span data-i18n="nav.accounts">الحسابات</span></a></li>
+                <li class="nav-item"><a href="transfers.html" class="nav-link"><i class="fas fa-exchange-alt"></i><span data-i18n="nav.transfers">التحويلات</span></a></li>
+                <li class="nav-item"><a href="investments.html" class="nav-link"><i class="fas fa-chart-line"></i><span data-i18n="nav.investments">الاستثمارات</span></a></li>
+                <li class="nav-item"><a href="cards.html" class="nav-link"><i class="fas fa-credit-card"></i><span data-i18n="nav.cards">البطاقات</span></a></li>
+                <li class="nav-item"><a href="loans.html" class="nav-link active"><i class="fas fa-hand-holding-usd"></i><span data-i18n="nav.loans">القروض</span></a></li>
+                <li class="nav-item"><a href="wallet.html" class="nav-link"><i class="fas fa-wallet"></i><span data-i18n="nav.wallet">المحفظة</span></a></li>
+                <li class="nav-item"><a href="government.html" class="nav-link"><i class="fas fa-landmark"></i><span data-i18n="nav.government">الخدمات الحكومية</span></a></li>
+                <li class="nav-item"><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i><span data-i18n="nav.settings">الإعدادات</span></a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="page-section">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="loans.title">القروض</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="openLoanApplicationModal()">
+                            <i class="fas fa-plus"></i>
+                            <span>طلب قرض جديد</span>
+                        </button>
+                        <button class="btn btn-secondary" onclick="openLoanCalculator()">
+                            <i class="fas fa-calculator"></i>
+                            <span data-i18n="loans.calculator">حاسبة القروض</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- قروضي الحالية -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h2 class="card-title" data-i18n="loans.my_loans">قروضي الحالية</h2>
+                    </div>
+                    
+                    <div class="loans-list" id="loansList">
+                        <div class="text-center p-3"><span data-i18n="loading">جاري التحميل...</span></div>
+                    </div>
+                </div>
+                
+                <!-- أنواع القروض المتاحة -->
+                <h2 class="card-title" data-i18n="available_loans">أنواع القروض المتاحة</h2>
+                <div class="grid grid-3 gap-4 mb-4">
+                    <div class="card" onclick="openLoanApplicationModal()" style="cursor: pointer;">
+                        <div class="action-icon" style="margin: 0 auto 15px; background: linear-gradient(135deg, #FF6384 0%, #FF8FA3 100%);">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 style="text-align: center;" data-i18n="loans.personal_loan">قرض شخصي</h3>
+                        <p style="text-align: center; color: var(--text-color); opacity: 0.8;" data-i18n="personal_loan_desc">لأغراض شخصية مختلفة</p>
+                        <div class="detail-item"><span data-i18n="loans.loan_amount">المبلغ</span> <span>حتى 200,000 <span data-i18n="currency.egp">ج.م</span></span></div>
+                        <div class="detail-item"><span data-i18n="loans.interest_rate">الفائدة</span> <span>8.5%</span></div>
+                        <div class="detail-item"><span data-i18n="loans.term">المدة</span> <span>حتى 5 سنوات</span></div>
+                        <button class="btn btn-primary btn-sm btn-block mt-3" data-i18n="loans.apply_now">تقدم الآن</button>
+                    </div>
+                    
+                    <div class="card" onclick="openLoanApplicationModal()" style="cursor: pointer;">
+                        <div class="action-icon" style="margin: 0 auto 15px; background: linear-gradient(135deg, #36A2EB 0%, #7BC8F8 100%);">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <h3 style="text-align: center;" data-i18n="loans.car_loan">قرض سيارة</h3>
+                        <p style="text-align: center; color: var(--text-color); opacity: 0.8;" data-i18n="car_loan_desc">لشراء سيارة جديدة أو مستعملة</p>
+                        <div class="detail-item"><span data-i18n="loans.loan_amount">المبلغ</span> <span>حتى 500,000 <span data-i18n="currency.egp">ج.م</span></span></div>
+                        <div class="detail-item"><span data-i18n="loans.interest_rate">الفائدة</span> <span>6.5%</span></div>
+                        <div class="detail-item"><span data-i18n="loans.term">المدة</span> <span>حتى 7 سنوات</span></div>
+                        <button class="btn btn-primary btn-sm btn-block mt-3" data-i18n="loans.apply_now">تقدم الآن</button>
+                    </div>
+                    
+                    <div class="card" onclick="openLoanApplicationModal()" style="cursor: pointer;">
+                        <div class="action-icon" style="margin: 0 auto 15px; background: linear-gradient(135deg, #FFCE56 0%, #FFE69B 100%);">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h3 style="text-align: center;" data-i18n="loans.mortgage">قرض عقاري</h3>
+                        <p style="text-align: center; color: var(--text-color); opacity: 0.8;" data-i18n="mortgage_desc">لشراء أو بناء منزل</p>
+                        <div class="detail-item"><span data-i18n="loans.loan_amount">المبلغ</span> <span>حتى 3,000,000 <span data-i18n="currency.egp">ج.م</span></span></div>
+                        <div class="detail-item"><span data-i18n="loans.interest_rate">الفائدة</span> <span>5.5%</span></div>
+                        <div class="detail-item"><span data-i18n="loans.term">المدة</span> <span>حتى 25 سنة</span></div>
+                        <button class="btn btn-primary btn-sm btn-block mt-3" data-i18n="loans.apply_now">تقدم الآن</button>
+                    </div>
+                </div>
+                
+                <!-- حاسبة القروض -->
+                <div class="card" id="calculator">
+                    <div class="card-header">
+                        <h2 class="card-title" data-i18n="loans.calculator">حاسبة القروض</h2>
+                    </div>
+                    
+                    <div class="grid grid-3 gap-4 mb-4">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="loans.loan_amount">مبلغ القرض (ج.م)</label>
+                            <input type="number" class="form-control" id="calcAmount" value="50000" min="5000" max="1000000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="loans.term">مدة السداد (شهر)</label>
+                            <input type="number" class="form-control" id="calcTerm" value="60" min="12" max="360">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="loans.loan_type">نوع القرض</label>
+                            <select class="form-control" id="calcType">
+                                <option value="personal" data-i18n="loans.personal_loan">شخصي (8.5%)</option>
+                                <option value="car" data-i18n="loans.car_loan">سيارة (6.5%)</option>
+                                <option value="mortgage" data-i18n="loans.mortgage">عقاري (5.5%)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="background: rgba(255,255,255,0.05);">
+                        <div class="grid grid-3 gap-4">
+                            <div class="detail-item">
+                                <span data-i18n="loans.monthly_payment">القسط الشهري</span>
+                                <span class="positive" id="monthlyPayment">0 <span data-i18n="currency.egp">ج.م</span></span>
+                            </div>
+                            <div class="detail-item">
+                                <span data-i18n="loans.total_interest">إجمالي الفائدة</span>
+                                <span id="totalInterest">0 <span data-i18n="currency.egp">ج.م</span></span>
+                            </div>
+                            <div class="detail-item">
+                                <span data-i18n="loans.total_payment">إجمالي المبلغ</span>
+                                <span id="totalPayment">0 <span data-i18n="currency.egp">ج.م</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Loan Application Modal -->
+    <div class="modal" id="loanApplicationModal">
+        <div class="modal-content" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-hand-holding-usd" style="color: var(--secondary-color);"></i>
+                    تقديم طلب قرض
+                </h3>
+                <button class="modal-close" onclick="closeLoanModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="loanApplicationForm" onsubmit="submitLoanApplication(event)">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-tag"></i> نوع القرض
+                        </label>
+                        <select class="form-control" id="loanType" required>
+                            <option value="">اختر نوع القرض</option>
+                            <option value="personal">قرض شخصي (حتى 200,000 ج.م)</option>
+                            <option value="car">قرض سيارة (حتى 500,000 ج.م)</option>
+                            <option value="mortgage">قرض عقاري (حتى 3,000,000 ج.م)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-money-bill-wave"></i> المبلغ المطلوب (ج.م)
+                        </label>
+                        <input type="number" class="form-control" id="loanAmount" 
+                               min="5000" placeholder="أدخل المبلغ المطلوب" required>
+                        <small class="form-text" id="maxAmountHint">الحد الأقصى: يختلف حسب نوع القرض</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-calendar-alt"></i> مدة السداد (شهر)
+                        </label>
+                        <input type="number" class="form-control" id="loanTerm" 
+                               min="12" max="300" value="60" required>
+                        <small class="form-text">من 12 شهر إلى 300 شهر</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-chart-line"></i> الدخل الشهري (ج.م)
+                        </label>
+                        <input type="number" class="form-control" id="monthlyIncome" 
+                               min="3000" value="10000" required>
+                    </div>
+
+                    <!-- Salary Slip Upload Section -->
+                    <div class="form-group" style="background: rgba(79, 195, 247, 0.05); border: 2px dashed rgba(79, 195, 247, 0.3); border-radius: 12px; padding: 20px;">
+                        <label class="form-label" style="color: #4fc3f7;">
+                            <i class="fas fa-file-upload"></i> صورة إيصال الراتب (مطلوب)
+                            <span style="color: #ef4444; margin-right: 5px;">*</span>
+                        </label>
+                        
+                        <div id="salarySlipUploadArea" class="upload-area" onclick="document.getElementById('salarySlipInput').click()">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #4fc3f7; margin-bottom: 10px;"></i>
+                            <p style="color: #a0d2db;">اضغط لرفع صورة إيصال الراتب</p>
+                            <small style="color: #a0d2db; opacity: 0.7;">مسموح: JPG, PNG, PDF - الحد الأقصى 10MB</small>
+                        </div>
+                        
+                        <input type="file" id="salarySlipInput" accept="image/jpeg,image/png,image/jpg,application/pdf" 
+                               style="display: none;" onchange="handleSalarySlipUpload(event)">
+                        
+                        <div id="salarySlipPreview" class="upload-preview">
+                            <div style="display: flex; align-items: center; gap: 10px; background: rgba(16, 185, 129, 0.1); padding: 10px; border-radius: 8px;">
+                                <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                                <span id="salarySlipFileName" style="color: #10b981;"></span>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="removeSalarySlip()" style="margin-right: auto;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-building-columns"></i> من حساب (لاستلام القرض)
+                        </label>
+                        <select class="form-control" id="loanFromAccount" required>
+                            <option value="">اختر الحساب</option>
+                        </select>
+                    </div>
+
+                    <div style="background: rgba(245, 158, 11, 0.1); border-right: 3px solid #f59e0b; padding: 12px; border-radius: 8px; margin: 15px 0;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-info-circle" style="color: #f59e0b;"></i>
+                            <span style="color: #a0d2db; font-size: 13px;">
+                                سيتم مراجعة طلب القرض من قبل الإدارة، وسيتم إشعارك بحالة الطلب.
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="acceptLoanTerms" required>
+                            <span>أوافق على شروط وأحكام القرض وأؤكد صحة البيانات المدخلة</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-paper-plane"></i>
+                        تقديم طلب القرض
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loan Request Status Modal -->
+    <div class="modal" id="loanStatusModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>
+                    <i class="fas fa-info-circle" style="color: var(--secondary-color);"></i>
+                    حالة طلب القرض
+                </h3>
+                <button class="modal-close" onclick="closeLoanStatusModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="loanStatusContent"></div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <!-- Footer content same as before -->
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="app.name">MSB BANK</h3>
+                    <p data-i18n="footer.description">نقدم لكم خدمات مصرفية آمنة وسريعة تلبي جميع احتياجاتكم المالية مع أعلى معايير الأمان والجودة.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="quick_links">روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.home">الرئيسية</span></a></li>
+                        <li><a href="accounts.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.accounts">الحسابات</span></a></li>
+                        <li><a href="transfers.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.transfers">التحويلات</span></a></li>
+                        <li><a href="payments.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.payments">الدفع</span></a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="customer_service">خدمة العملاء</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> <span data-i18n="settings.faq">الأسئلة الشائعة</span></a></li>
+                        <li><a href="#" data-i18n="footer.complaints"><i class="fas fa-chevron-left"></i> الشكاوى والاقتراحات</a></li>
+                        <li><a href="#" data-i18n="footer.technical_support"><i class="fas fa-chevron-left"></i> الدعم الفني</a></li>
+                        <li><a href="#" data-i18n="settings.contact_us"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright" data-i18n-html="footer.copyright">
+                © <span class="current-year">2025</span> <span data-i18n="app.name">MSB BANK</span>. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // Menu toggle fix
+        (function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navList = document.getElementById('navList');
+            
+            if (menuToggle && navList) {
+                const newMenuToggle = menuToggle.cloneNode(true);
+                menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
+                
+                newMenuToggle.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    navList.classList.toggle('mobile-active');
+                });
+
+                document.addEventListener('click', function(event) {
+                    if (navList.classList.contains('mobile-active') && 
+                        !navList.contains(event.target) && 
+                        !newMenuToggle.contains(event.target)) {
+                        navList.classList.remove('mobile-active');
+                    }
+                });
+
+                const navLinks = navList.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        navList.classList.remove('mobile-active');
+                    });
+                });
+            }
+        })();
+        
+        // ============= Loan Calculator =============
+        function openLoanCalculator() {
+            document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function updateLoanCalculator() {
+            const amount = parseFloat(document.getElementById('calcAmount').value) || 0;
+            const term = parseInt(document.getElementById('calcTerm').value) || 12;
+            const type = document.getElementById('calcType').value;
+            
+            let rate = 8.5;
+            if (type === 'car') rate = 6.5;
+            if (type === 'mortgage') rate = 5.5;
+            
+            if (amount > 0 && term > 0) {
+                const monthlyRate = rate / 100 / 12;
+                const monthlyPayment = amount * monthlyRate * Math.pow(1 + monthlyRate, term) / 
+                                      (Math.pow(1 + monthlyRate, term) - 1);
+                const totalPayment = monthlyPayment * term;
+                const totalInterest = totalPayment - amount;
+                
+                document.getElementById('monthlyPayment').innerHTML = Math.round(monthlyPayment).toLocaleString() + ' ' + I18n.t('currency.egp');
+                document.getElementById('totalInterest').innerHTML = Math.round(totalInterest).toLocaleString() + ' ' + I18n.t('currency.egp');
+                document.getElementById('totalPayment').innerHTML = Math.round(totalPayment).toLocaleString() + ' ' + I18n.t('currency.egp');
+            } else {
+                document.getElementById('monthlyPayment').innerHTML = '0 ' + I18n.t('currency.egp');
+                document.getElementById('totalInterest').innerHTML = '0 ' + I18n.t('currency.egp');
+                document.getElementById('totalPayment').innerHTML = '0 ' + I18n.t('currency.egp');
+            }
+        }
+        
+        // ============= Salary Slip Upload =============
+        let salarySlipBase64 = null;
+
+        function handleSalarySlipUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+            if (!allowedTypes.includes(file.type)) {
+                BankUtils.showAlert('❌ نوع الملف غير مسموح! يرجى رفع صورة JPG, PNG أو PDF', 'error');
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                BankUtils.showAlert('❌ حجم الملف كبير جداً! الحد الأقصى 10MB', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                salarySlipBase64 = e.target.result;
+                document.getElementById('salarySlipFileName').textContent = file.name;
+                document.getElementById('salarySlipPreview').style.display = 'block';
+                
+                const uploadArea = document.getElementById('salarySlipUploadArea');
+                if (uploadArea) {
+                    uploadArea.style.borderColor = '#10b981';
+                    uploadArea.style.background = 'rgba(16, 185, 129, 0.05)';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeSalarySlip() {
+            salarySlipBase64 = null;
+            document.getElementById('salarySlipInput').value = '';
+            document.getElementById('salarySlipPreview').style.display = 'none';
+            
+            const uploadArea = document.getElementById('salarySlipUploadArea');
+            if (uploadArea) {
+                uploadArea.style.borderColor = 'rgba(79, 195, 247, 0.3)';
+                uploadArea.style.background = 'rgba(79, 195, 247, 0.05)';
+            }
+        }
+        
+        // ============= Loan Application Modal =============
+        function openLoanApplicationModal() {
+            const accountSelect = document.getElementById('loanFromAccount');
+            if (accountSelect && BankApp.user.accounts) {
+                accountSelect.innerHTML = BankApp.user.accounts.map(acc => 
+                    `<option value="${acc.id}">${acc.name} - ${acc.number} (${(acc.balance || 0).toLocaleString()} ج.م)</option>`
+                ).join('');
+            }
+            
+            document.getElementById('loanApplicationModal').style.display = 'flex';
+            
+            document.getElementById('loanType').addEventListener('change', function() {
+                const maxAmounts = {
+                    personal: 200000,
+                    car: 500000,
+                    mortgage: 3000000
+                };
+                const maxAmount = maxAmounts[this.value] || 200000;
+                document.getElementById('maxAmountHint').textContent = `الحد الأقصى: ${maxAmount.toLocaleString()} ج.م`;
+            });
+        }
+
+        function closeLoanModal() {
+            document.getElementById('loanApplicationModal').style.display = 'none';
+        }
+
+        function closeLoanStatusModal() {
+            document.getElementById('loanStatusModal').style.display = 'none';
+        }
+        
+        // ============= Submit Loan Application =============
+async function submitLoanApplication(event) {
+    event.preventDefault();
+    
+    // ✅ تأكد من جلب القيم بشكل صحيح
+    const type = document.getElementById('loanType').value;
+    const amount = parseFloat(document.getElementById('loanAmount').value);
+    const term = parseInt(document.getElementById('loanTerm').value);
+    const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value);
+    const fromAccountId = document.getElementById('loanFromAccount').value;
+    
+    console.log('📝 Loan data:', { type, amount, term, monthlyIncome, fromAccountId, hasImage: !!salarySlipBase64 });
+    
+    if (!salarySlipBase64) {
+        BankUtils.showAlert('❌ يرجى رفع صورة إيصال الراتب (مطلوب)', 'error');
+        return;
+    }
+    
+    if (!type || !amount || !term || !monthlyIncome || !fromAccountId) {
+        BankUtils.showAlert('❌ يرجى إدخال جميع البيانات المطلوبة', 'error');
+        return;
+    }
+    
+    let rate = 8.5;
+    if (type === 'car') rate = 6.5;
+    if (type === 'mortgage') rate = 5.5;
+    
+    const monthlyRate = rate / 100 / 12;
+    const estimatedMonthlyPayment = amount * monthlyRate * Math.pow(1 + monthlyRate, term) / 
+                                  (Math.pow(1 + monthlyRate, term) - 1);
+    
+    if (estimatedMonthlyPayment > monthlyIncome * 0.4) {
+        BankUtils.showAlert(`⚠️ القسط الشهري المقدر (${Math.round(estimatedMonthlyPayment).toLocaleString()} ج.م) يتجاوز 40% من دخلك الشهري`, 'error');
+        return;
+    }
+    
+    BankUtils.showLoading(true, 'جاري تقديم طلب القرض...');
+    
+    try {
+        const result = await BankApp.apiCall('/loans/apply', {
+            method: 'POST',
+            body: JSON.stringify({
+                type: type,
+                amount: amount,
+                term: term,
+                monthlyIncome: monthlyIncome,
+                fromAccountId: fromAccountId,
+                salarySlipImage: salarySlipBase64
+            })
+        });
+        
+        console.log('✅ Loan application result:', result);
+        
+        if (result.success) {
+            document.getElementById('loanApplicationForm').reset();
+            removeSalarySlip();
+            closeLoanModal();
+            
+            showLoanStatusModal(result.loan);
+            
+            await BankApp.loadData(false);
+            updateLoansList();
+            
+            BankUtils.showAlert('✅ تم تقديم طلب القرض بنجاح، وهو قيد المراجعة', 'success');
+        } else {
+            throw new Error(result.message || 'فشل في تقديم الطلب');
+        }
+        
+    } catch (error) {
+        console.error('❌ Loan application error:', error);
+        let errorMsg = error.message;
+        
+        // محاولة قراءة رسالة الخطأ من الاستجابة إذا كانت موجودة
+        if (error.response && error.response.data) {
+            errorMsg = error.response.data.message || errorMsg;
+        }
+        
+        BankUtils.showAlert('❌ ' + errorMsg, 'error');
+    } finally {
+        BankUtils.showLoading(false);
+    }
+}
+        // ============= Show Loan Status =============
+        function showLoanStatusModal(loan) {
+            const statusMessages = {
+                pending: 'قيد المراجعة',
+                approved: 'تمت الموافقة',
+                rejected: 'تم الرفض',
+                active: 'نشط'
+            };
+            
+            const statusColors = {
+                pending: '#f59e0b',
+                approved: '#10b981',
+                rejected: '#ef4444',
+                active: '#10b981'
+            };
+            
+            const statusIcons = {
+                pending: 'fa-clock',
+                approved: 'fa-check-circle',
+                rejected: 'fa-times-circle',
+                active: 'fa-check-circle'
+            };
+            
+            const status = loan.status || 'pending';
+            const content = document.getElementById('loanStatusContent');
+            content.innerHTML = `
+                <div style="text-align: center;">
+                    <i class="fas ${statusIcons[status] || 'fa-clock'}" 
+                       style="font-size: 64px; color: ${statusColors[status] || '#f59e0b'}; margin-bottom: 20px;"></i>
+                    <h3 style="color: ${statusColors[status] || '#f59e0b'}; margin-bottom: 10px;">
+                        ${statusMessages[status] || 'قيد المراجعة'}
+                    </h3>
+                    <p style="color: #a0d2db; margin-bottom: 20px;">
+                        ${status === 'pending' ? 'طلب القرض الخاص بك قيد المراجعة من قبل الإدارة. سنقوم بإشعارك فور الانتهاء من المراجعة.' : 
+                          status === 'approved' || status === 'active' ? 'تهانينا! تمت الموافقة على طلب القرض الخاص بك.' :
+                          'نأسف، تم رفض طلب القرض الخاص بك.'}
+                    </p>
+                    ${loan.adminNotes ? `
+                        <div style="background: rgba(239, 68, 68, 0.1); border-right: 3px solid #ef4444; padding: 12px; border-radius: 8px; margin-top: 15px;">
+                            <span style="color: #ef4444;">سبب الرفض:</span> ${loan.adminNotes}
+                        </div>
+                    ` : ''}
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <p style="color: #a0d2db; opacity: 0.7; font-size: 13px;">
+                            رقم الطلب: ${loan.id?.slice(-8) || '---'}<br>
+                            تاريخ التقديم: ${loan.appliedAt ? BankUtils.formatDate(loan.appliedAt) : '---'}
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('loanStatusModal').style.display = 'flex';
+        }
+        
+        // ============= View Salary Slip =============
+        function viewSalarySlip(loanId) {
+            const loan = BankApp.user.loans?.find(l => l.id === loanId);
+            if (!loan || !loan.salarySlipImage) {
+                BankUtils.showAlert('لا توجد صورة مرفقة', 'error');
+                return;
+            }
+            
+            BankUtils.closeAllModals();
+            
+            const modalHTML = `
+                <div class="modal" id="salarySlipViewModal" style="display: flex;">
+                    <div class="modal-content" style="max-width: 700px;">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-file-image"></i> إيصال الراتب</h3>
+                            <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="${loan.salarySlipImage}" alt="إيصال الراتب" style="max-width: 100%; border-radius: 8px;">
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        // ============= View Loan Status from list =============
+        async function viewLoanStatus(loanId) {
+            const loan = BankApp.user.loans?.find(l => l.id === loanId);
+            if (!loan) {
+                BankUtils.showAlert('القرض غير موجود', 'error');
+                return;
+            }
+            showLoanStatusModal(loan);
+        }
+        
+        // ============= Update Loans List =============
+function updateLoansList() {
+    const loansList = document.getElementById('loansList');
+    if (!loansList) return;
+    
+    if (!BankApp.user.loans || BankApp.user.loans.length === 0) {
+        loansList.innerHTML = `
+            <div class="text-center p-3" style="color: var(--text-color); opacity: 0.7;">
+                <i class="fas fa-hand-holding-usd" style="font-size: 48px; margin-bottom: 15px; display: block; opacity: 0.5;"></i>
+                لا توجد قروض حالية
+                <br><br>
+                <button class="btn btn-primary" onclick="openLoanApplicationModal()">
+                    <i class="fas fa-plus"></i> تقديم طلب قرض جديد
+                </button>
+            </div>
+        `;
+        return;
+    }
+    
+    const statusMessages = {
+        pending: '⏳ قيد المراجعة',
+        approved: '✅ تمت الموافقة',
+        rejected: '❌ مرفوض',
+        active: '✅ نشط'
+    };
+    
+    const statusColors = {
+        pending: '#f59e0b',
+        approved: '#10b981',
+        rejected: '#ef4444',
+        active: '#10b981'
+    };
+    
+    const loanTypeNames = {
+        personal: 'قرض شخصي',
+        car: 'قرض سيارة',
+        mortgage: 'قرض عقاري'
+    };
+    
+    loansList.innerHTML = BankApp.user.loans.map(loan => {
+        const status = loan.status || 'pending';
+        const monthlyPayment = loan.monthlyPayment || 
+            Math.round(loan.amount * (loan.interestRate / 100 / 12) * Math.pow(1 + loan.interestRate / 100 / 12, loan.term) / 
+            (Math.pow(1 + loan.interestRate / 100 / 12, loan.term) - 1));
+        
+        const isRejected = status === 'rejected';
+        
+        return `
+            <div class="card mb-3" style="background: linear-gradient(135deg, rgba(10, 36, 56, 0.9) 0%, rgba(8, 27, 41, 0.95) 100%); border: 2px solid var(--border-color); ${isRejected ? 'opacity: 0.8;' : ''}">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="action-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, #317c81 0%, #4fc3f7 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-hand-holding-usd" style="color: white; font-size: 20px;"></i>
+                        </div>
+                        <div>
+                            <h3 style="color: var(--text-color); margin: 0;">${loanTypeNames[loan.type] || loan.type}</h3>
+                            <p style="color: var(--text-color); opacity: 0.7; margin: 0; font-size: 12px;">
+                                رقم الطلب: ${loan.id?.slice(-8) || '---'}
+                            </p>
+                        </div>
+                    </div>
+                    <span style="background: ${statusColors[status]}; color: white; padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: 600;">
+                        ${statusMessages[status] || status}
+                    </span>
+                </div>
+                
+                <div class="grid grid-2 gap-4 mb-3" style="margin-top: 15px;">
+                    <div class="detail-item">
+                        <span style="color: var(--text-color);">💰 المبلغ المطلوب:</span>
+                        <span style="color: var(--text-color); font-weight: bold;">${(loan.amount || 0).toLocaleString()} ج.م</span>
+                    </div>
+                    <div class="detail-item">
+                        <span style="color: var(--text-color);">📅 القسط الشهري:</span>
+                        <span style="color: #10b981; font-weight: bold;">${monthlyPayment.toLocaleString()} ج.م</span>
+                    </div>
+                    <div class="detail-item">
+                        <span style="color: var(--text-color);">💵 الدخل الشهري:</span>
+                        <span style="color: var(--text-color); font-weight: bold;">${(loan.monthlyIncome || 0).toLocaleString()} ج.م</span>
+                    </div>
+                    <div class="detail-item">
+                        <span style="color: var(--text-color);">📊 نسبة القسط من الدخل:</span>
+                        <span style="color: ${monthlyPayment > (loan.monthlyIncome || 0) * 0.4 ? '#ef4444' : '#10b981'}; font-weight: bold;">
+                            ${Math.round((monthlyPayment / (loan.monthlyIncome || 1)) * 100)}%
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <span style="color: var(--text-color);">📅 تاريخ التقديم:</span>
+                        <span style="color: var(--text-color); font-weight: bold;">${BankUtils.formatDate(loan.appliedAt)}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span style="color: var(--text-color);">💸 المتبقي:</span>
+                        <span style="color: #f59e0b; font-weight: bold;">${(loan.remaining || loan.amount).toLocaleString()} ج.م</span>
+                    </div>
+                </div>
+                
+                ${status === 'rejected' && loan.adminNotes ? `
+                    <div style="background: rgba(239, 68, 68, 0.1); border-right: 3px solid #ef4444; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                        <span style="color: #ef4444; font-size: 13px;"><strong>سبب الرفض:</strong> ${loan.adminNotes}</span>
+                    </div>
+                ` : ''}
+                
+                ${status === 'active' || status === 'approved' ? `
+                    <div style="background: rgba(16, 185, 129, 0.1); border-right: 3px solid #10b981; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                            <span><strong>✅ تم السداد:</strong> ${(loan.paidPercentage || 0).toFixed(1)}%</span>
+                        </div>
+                        <div class="progress-bar mt-2" style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px;">
+                            <div class="progress-fill" style="width: ${loan.paidPercentage || 0}%; height: 100%; background: #10b981; border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                ` : ''}
+                
+<div class="account-actions" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+    <button class="btn btn-secondary btn-sm" onclick="viewLoanStatus('${loan.id}')">
+        <i class="fas fa-info-circle"></i> التفاصيل
+    </button>
+    
+    ${loan.salarySlipImage ? `
+        <button class="btn btn-secondary btn-sm" onclick="viewSalarySlip('${loan.id}')">
+            <i class="fas fa-file-image"></i> عرض إيصال الراتب
+        </button>
+    ` : ''}
+    
+    ${/* ✅ تعديل الشرط هنا - يظهر للحالتين active و approved */''}
+    ${(status === 'active' || status === 'approved') && loan.remaining > 0 ? `
+        <button class="btn btn-primary btn-sm" onclick="payLoanInstallment('${loan.id}')" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%); border: none;">
+            <i class="fas fa-money-bill-wave"></i> دفع القسط (${monthlyPayment.toLocaleString()} ج.م)
+        </button>
+    ` : ''}
+    
+    ${status === 'rejected' ? `
+        <button class="btn btn-danger btn-sm" onclick="deleteRejectedLoan('${loan.id}')">
+            <i class="fas fa-trash-alt"></i> حذف القرض المرفوض
+        </button>
+    ` : ''}
+</div>        `;
+    }).join('');
+}
+
+// حذف قرض مرفوض نهائياً
+async function deleteRejectedLoan(loanId) {
+    // ✅ استخدام مودال مخصص للتأكيد
+    showConfirmModal(
+        '⚠️ حذف طلب القرض',
+        'هل أنت متأكد من حذف طلب القرض المرفوض؟ لا يمكن استرجاعه بعد الحذف.',
+        'نعم، حذف',
+        'إلغاء',
+        async () => {
+            BankUtils.showLoading(true, 'جاري حذف القرض...');
+            
+            try {
+                const result = await BankApp.apiCall(`/loans/${loanId}/delete`, {
+                    method: 'DELETE'
+                });
+                
+                if (result.success) {
+                    // تحديث البيانات محلياً
+                    BankApp.user.loans = BankApp.user.loans.filter(loan => loan.id !== loanId);
+                    
+                    // تحديث الواجهة
+                    updateLoansList();
+                    
+                    BankUtils.showAlert('✅ تم حذف القرض المرفوض بنجاح', 'success');
+                } else {
+                    throw new Error(result.message || 'فشل في حذف القرض');
+                }
+            } catch (error) {
+                console.error('❌ Delete loan error:', error);
+                BankUtils.showAlert('❌ ' + error.message, 'error');
+            } finally {
+                BankUtils.showLoading(false);
+            }
+        }
+    );
+}
+
+// دالة مودال مخصصة للتأكيد (أضفها إذا لم تكن موجودة)
+function showConfirmModal(title, message, confirmText, cancelText, onConfirm) {
+    const existingModal = document.getElementById('customConfirmModal');
+    if (existingModal) existingModal.remove();
+    
+    const modalHTML = `
+        <div class="modal" id="customConfirmModal" style="display: flex;">
+            <div class="modal-content" style="max-width: 450px;">
+                <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                    <h3 style="color: var(--text-color);">
+                        <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                        ${title}
+                    </h3>
+                    <button class="modal-close" onclick="this.closest('.modal').remove()" style="color: var(--text-color);">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <i class="fas fa-trash-alt" style="font-size: 48px; color: #ef4444;"></i>
+                    </div>
+                    <p style="text-align: center; color: var(--text-color); font-size: 16px; margin-bottom: 20px;">
+                        ${message}
+                    </p>
+                    <div style="background: rgba(239, 68, 68, 0.1); border-radius: 12px; padding: 12px; margin-bottom: 20px; border-right: 3px solid #ef4444;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-info-circle" style="color: #ef4444;"></i>
+                            <span style="color: var(--text-color); font-size: 13px;">
+                                هذا الإجراء لا يمكن التراجع عنه. سيتم حذف طلب القرض نهائياً.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; border-top-color: var(--border-color); padding-top: 15px;">
+                    <button class="btn btn-secondary" onclick="this.closest('.modal').remove()" style="padding: 10px 20px;">
+                        <i class="fas fa-times"></i>
+                        ${cancelText}
+                    </button>
+                    <button class="btn btn-danger" id="confirmDeleteBtn" style="padding: 10px 20px;">
+                        <i class="fas fa-trash"></i>
+                        ${confirmText}
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            const modal = document.getElementById('customConfirmModal');
+            if (modal) modal.remove();
+            if (onConfirm) onConfirm();
+        });
+    }
+}
+
+        // ============= Pay Loan Installment =============
+// loans.html - دالة دفع القسط المعدلة
+
+async function payLoanInstallment(loanId) {
+    const loan = BankApp.user.loans?.find(l => l.id === loanId);
+    if (!loan) return;
+    
+    const accounts = BankApp.user.accounts || [];
+    if (accounts.length === 0) {
+        BankUtils.showAlert('لا يوجد حسابات لدفع القسط', 'error');
+        return;
+    }
+    
+    const loanTypeNames = {
+        personal: 'قرض شخصي',
+        car: 'قرض سيارة',
+        mortgage: 'قرض عقاري'
+    };
+    
+    const monthlyPayment = loan.monthlyPayment || 
+        Math.round(loan.amount * (loan.interestRate / 100 / 12) * Math.pow(1 + loan.interestRate / 100 / 12, loan.term) / 
+        (Math.pow(1 + loan.interestRate / 100 / 12, loan.term) - 1));
+    
+    // ✅ استخدام المودال المخصص بدلاً من confirm
+    const confirmed = await BankUtils.showConfirmModal({
+        title: '💰 تأكيد دفع القسط',
+        message: `
+            <div style="text-align: right; direction: rtl;">
+                <div style="background: rgba(79, 195, 247, 0.1); border-radius: 12px; padding: 15px; margin-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <span style="color: #a0d2db;">نوع القرض:</span>
+                        <strong style="color: #4fc3f7;">${loanTypeNames[loan.type] || loan.type}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <span style="color: #a0d2db;">القسط الشهري:</span>
+                        <strong style="color: #10b981;">${monthlyPayment.toLocaleString()} ج.م</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                        <span style="color: #a0d2db;">المبلغ المتبقي:</span>
+                        <strong style="color: #f59e0b;">${(loan.remaining || loan.amount).toLocaleString()} ج.م</strong>
+                    </div>
+                </div>
+            </div>
+        `,
+        confirmText: 'تأكيد الدفع',
+        cancelText: 'إلغاء',
+        confirmColor: '#10b981',
+        icon: 'money-bill-wave',
+        iconColor: '#f59e0b'
+    });
+    
+    if (!confirmed) return;
+    
+    const mainAccount = accounts.find(acc => acc.type === 'current') || accounts[0];
+    
+    if (monthlyPayment > mainAccount.balance) {
+        BankUtils.showAlert(`⚠️ الرصيد غير كافٍ. المتاح: ${mainAccount.balance.toLocaleString()} ج.م`, 'error');
+        return;
+    }
+    
+    BankUtils.showLoading(true, 'جاري دفع القسط...');
+    
+    try {
+        const result = await BankApp.apiCall(`/loans/${loanId}/pay-installment`, {
+            method: 'POST',
+            body: JSON.stringify({ fromAccountId: mainAccount.id })
+        });
+        
+        if (result.success) {
+            await BankApp.loadData(false);
+            if (typeof updateLoansList === 'function') updateLoansList();
+            BankUtils.showAlert('✅ تم دفع القسط بنجاح', 'success');
+        } else {
+            throw new Error(result.message || 'فشل في دفع القسط');
+        }
+    } catch (error) {
+        BankUtils.showAlert(error.message || 'فشل في دفع القسط', 'error');
+    } finally {
+        BankUtils.showLoading(false);
+    }
+}
+        
+        // Initial load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLoanCalculator();
+            
+            const checkBankApp = setInterval(async () => {
+                if (window.BankApp && BankApp.user) {
+                    clearInterval(checkBankApp);
+                    await BankApp.loadData(false);
+                    updateLoansList();
+                }
+            }, 100);
+            
+            setTimeout(async () => {
+                clearInterval(checkBankApp);
+                if (window.BankApp && BankApp.user) {
+                    await BankApp.loadData(false);
+                    updateLoansList();
+                }
+            }, 5000);
+        });
+        
+        document.getElementById('calcAmount').addEventListener('input', updateLoanCalculator);
+        document.getElementById('calcTerm').addEventListener('input', updateLoanCalculator);
+        document.getElementById('calcType').addEventListener('change', updateLoanCalculator);
+        
+        document.addEventListener('languageChanged', function() {
+            updateLoansList();
+            updateLoanCalculator();
+        });
+    </script>
+</body>
+</html>

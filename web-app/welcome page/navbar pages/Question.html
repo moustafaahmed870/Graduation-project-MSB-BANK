@@ -1,0 +1,165 @@
+<html dir="rtl" lang="AR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <title data-i18n="investment_funds_pageTitle">صناديق استثمار بنك MSB</title>
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+    <link rel="stylesheet" href="../css files/question.css">
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>    
+    <script src="/language.js"></script>  
+    <script src="/load-components.js"></script> 
+    <script type="module" src="../js files/question.js"></script>
+</head>
+<body>
+    <div id="navbar-container"></div>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-handshake"></i> <span data-i18n="investment_form_title">طلب التواصل للاستفسار عن صناديق الاستثمار</span></h1>
+            <p data-i18n="investment_form_description">يرجى ملء النموذج أدناه وسنتواصل معك في أقرب وقت ممكن</p>
+        </header>
+        
+        <div class="form-container">
+            <form id="investmentForm">
+                <!-- هل أنت عميل حالي للبنك -->
+                <div class="form-section">
+                    <h2><i class="fas fa-user-check"></i> <span data-i18n="current_customer_question">هل أنت عميل حالي للبنك؟</span></h2>
+                    <div class="form-group">
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="isCustomer" value="yes" required>
+                                <span data-i18n="yes">نعم</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="isCustomer" value="no">
+                                <span data-i18n="no">لا</span>
+                            </label>
+                        </div>
+                        <div class="error-message" id="customerError" data-i18n="customer_error">يرجى اختيار ما إذا كنت عميلاً حاليًا أم لا</div>
+                    </div>
+                    
+                    <!-- هذه الحقول تظهر فقط إذا كان المستعم عميل حالي -->
+                    <div class="form-group" id="customerFields" style="display: none;">
+                        <label for="sim" class="required" data-i18n="full_name_label">برجاء ادخال الاسم كامل</label>
+                        <input type="text" id="sim" name="sim" placeholder="أدخل الاسم كامل">
+                        <div class="error-message" id="simError" data-i18n="full_name_error">يرجى إدخال الاسم كاملاً</div>
+                    </div>
+                </div>
+                
+                <!-- معلومات الاتصال -->
+                <div class="form-section">
+                    <h2><i class="fas fa-address-book"></i> <span data-i18n="contact_information">معلومات الاتصال</span></h2>
+                    
+                    <div class="form-group">
+                        <label for="phone" class="required" data-i18n="phone_label">رقم الموبايل</label>
+                        <input type="tel" id="phone" name="phone" placeholder="0XXXXXXXXXX">
+                        <div class="error-message" id="phoneError" data-i18n="phone_error">يرجى إدخال رقم هاتف صحيح (مثال: 05XXXXXXXX)</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="required" data-i18n="email_label">البريد الإلكتروني</label>
+                        <input type="email" id="email" name="email" placeholder="example@domain.com">
+                        <div class="error-message" id="emailError" data-i18n="email_error">يرجى إدخال بريد إلكتروني صحيح</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="governorate" class="required" data-i18n="governorate_label">المحافظة</label>
+                        <select class="select-0" id="governorate" name="governorate" required>
+                            <option value="" data-i18n="select_governorate">اختر المحافظة</option>
+                            <option value="الرياض">الرياض</option>
+                            <option value="مكة المكرمة">مكة المكرمة</option>
+                            <option value="المدينة المنورة">المدينة المنورة</option>
+                            <option value="القصيم">القصيم</option>
+                            <option value="الشرقية">الشرقية</option>
+                            <option value="عسير">عسير</option>
+                            <option value="تبوك">تبوك</option>
+                            <option value="حائل">حائل</option>
+                            <option value="الحدود الشمالية">الحدود الشمالية</option>
+                            <option value="جازان">جازان</option>
+                            <option value="نجران">نجران</option>
+                            <option value="الباحة">الباحة</option>
+                            <option value="الجوف">الجوف</option>
+                        </select>
+                        <div class="error-message" id="governorateError" data-i18n="governorate_error">يرجى اختيار المحافظة</div>
+                    </div>
+                </div>
+                
+                <!-- صندوق الاستثمار -->
+                <div class="form-section">
+                    <h2><i class="fas fa-chart-line"></i> <span data-i18n="investment_fund_question">صندوق الاستثمار الذي ترغب في الاستفسار عنه</span></h2>
+                    <div class="form-group">
+                        <label for="fund" class="required" data-i18n="select_fund_label">اختر صندوق الاستثمار</label>
+                        <select class="select-o" id="fund" name="fund" required>
+                            <option value="" data-i18n="select_fund">اختر صندوق الاستثمار</option>
+                            <option value="صندوق الأسهم السعودية" data-i18n="fund_saudi_stocks">صندوق الأسهم السعودية</option>
+                            <option value="صندوق النمو المتوازن" data-i18n="fund_balanced_growth">صندوق النمو المتوازن</option>
+                            <option value="صندوق الدخل الثابت" data-i18n="fund_fixed_income">صندوق الدخل الثابت</option>
+                            <option value="صندوق الأسهم الدولية" data-i18n="fund_international_stocks">صندوق الأسهم الدولية</option>
+                            <option value="صندوق الأسهم الناشئة" data-i18n="fund_emerging_stocks">صندوق الأسهم الناشئة</option>
+                            <option value="صندوق التحوط" data-i18n="fund_hedge">صندوق التحوط</option>
+                            <option value="صندوق السلع" data-i18n="fund_commodities">صندوق السلع</option>
+                            <option value="صندوق العقارات" data-i18n="fund_real_estate">صندوق العقارات</option>
+                        </select>
+                        <div class="error-message" id="fundError" data-i18n="fund_error">يرجى اختيار صندوق الاستثمار</div>
+                    </div>
+                </div>
+                
+                <!-- الموعد المناسب -->
+                <div class="form-section">
+                    <h2><i class="fas fa-calendar-alt"></i> <span data-i18n="appointment_time">الموعد المناسب لتلقي مكالمة مسئول خدمة العملاء</span></h2>
+                    <div class="form-group">
+                        <label for="date" class="required" data-i18n="date_label">التاريخ</label>
+                        <input type="date" id="date" name="date" required>
+                        <div class="error-message" id="dateError" data-i18n="date_error">يرجى اختيار تاريخ</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="time" class="required" data-i18n="time_label">الوقت</label>
+                        <select class="select-o" id="time" name="time" required>
+                            <option value="" data-i18n="select_time">اختر الوقت المناسب</option>
+                            <option value="9:00 ص - 11:00 ص" data-i18n="time_morning1">9:00 ص - 11:00 ص</option>
+                            <option value="11:00 ص - 1:00 م" data-i18n="time_morning2">11:00 ص - 1:00 م</option>
+                            <option value="1:00 م - 3:00 م" data-i18n="time_afternoon1">1:00 م - 3:00 م</option>
+                            <option value="3:00 م - 5:00 م" data-i18n="time_afternoon2">3:00 م - 5:00 م</option>
+                            <option value="5:00 م - 7:00 م" data-i18n="time_evening">5:00 م - 7:00 م</option>
+                        </select>
+                        <div class="error-message" id="timeError" data-i18n="time_error">يرجى اختيار الوقت المناسب</div>
+                    </div>
+                </div>
+                
+                <!-- رسالة النجاح -->
+                <div class="success-message" id="successMessage">
+                    <i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                    <h3 data-i18n="success_title">تم إرسال طلبك بنجاح!</h3>
+                    <p data-i18n="success_message">شكراً لك على تقديم طلب الاستفسار عن صناديق الاستثمار. سيتواصل معك مسئول خدمة العملاء في الموعد المحدد.</p>
+                    <p data-i18n="reference_number">رقم المرجع: <strong id="referenceNumber"></strong></p>
+                </div>
+                
+                <!-- أزرار الإرسال -->
+                <div class="buttons">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> <span data-i18n="submit_button">إرسال</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="footer-container"></div>
+</body>
+</html>

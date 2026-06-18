@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.name">MSB BANK - الاستثمارات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .investment-card {
+            background: linear-gradient(135deg, rgba(10, 36, 56, 0.9) 0%, rgba(8, 27, 41, 0.95) 100%);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .investment-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary-color);
+        }
+        .investment-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .type-low-risk { background: #10b981; color: white; }
+        .type-medium-risk { background: #f59e0b; color: white; }
+        .type-high-risk { background: #ef4444; color: white; }
+        .return-positive { color: #10b981; }
+        .return-negative { color: #ef4444; }
+        .calculator-section {
+            background: rgba(79, 195, 247, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .market-ticker {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #3a8d93 100%);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .ticker-item {
+            text-align: center;
+        }
+        .ticker-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        .performance-chart {
+            height: 300px;
+            margin: 20px 0;
+        }
+        .alert-setting {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .investment-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--secondary-color);
+            color: var(--dark-bg);
+        }
+    </style>
+</head>
+<body class="rtl">
+    <!-- Header (نفس الكود الأصلي) -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="https://i.ibb.co/LhY9KjRv/MSB.png" alt="MSB">
+                    <div class="logo-text" data-i18n="app.name">MSB BANK</div>
+                </a>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-info">
+                    <div class="user-welcome">
+                        <div class="user-name" id="userName">
+                            <span data-i18n="hello">مرحباً</span>، <span id="userNameText">---</span>
+                        </div>
+                        <div class="user-account" id="accountNumber"><span data-i18n="accounts.account_number">الحساب</span>: <span id="accountNumberText">---</span></div>
+                        <div class="rewards-badge" onclick="BankApp.openAIAssistant()">
+                            <i class="fas fa-trophy"></i>
+                            <span data-i18n="header.rewards" id="rewardsLevel">---</span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-sm btn-secondary">
+                            <i class="fas fa-coins"></i>
+                            <span data-i18n="header.currency_rates">اسعار العملات</span>
+                        </button>
+                        <button class="language-btn" id="languageToggle" data-i18n-toggle data-i18n-lang-btn>
+                            <i class="fas fa-language"></i> English
+                        </button>
+                        <div class="notifications">
+                            <button class="notifications-btn" onclick="document.getElementById('notificationDropdown').classList.toggle('active')">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge" id="notificationBadge">0</span>
+                            </button>
+                            <div class="notification-dropdown" id="notificationDropdown">
+                                <div class="notification-header">
+                                    <div class="notification-title" data-i18n="header.notifications">الإشعارات</div>
+                                    <button class="mark-all-read" onclick="BankApp.markAllNotificationsRead()" data-i18n="header.mark_all_read">تعيين الكل كمقروء</button>
+                                </div>
+                                <div class="notification-list" id="notificationList"></div>
+                                <div class="notification-footer">
+                                    <a href="#" class="view-all-notifications" data-i18n="header.view_all">عرض جميع الإشعارات</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-avatar" onclick="BankApp.logout()">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-list" id="navList">
+                <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i><span data-i18n="nav.home">الرئيسية</span></a></li>
+                <li class="nav-item"><a href="accounts.html" class="nav-link"><i class="fas fa-credit-card"></i><span data-i18n="nav.accounts">الحسابات</span></a></li>
+                <li class="nav-item"><a href="transfers.html" class="nav-link"><i class="fas fa-exchange-alt"></i><span data-i18n="nav.transfers">التحويلات</span></a></li>
+                <li class="nav-item"><a href="investments.html" class="nav-link active"><i class="fas fa-chart-line"></i><span data-i18n="nav.investments">الاستثمارات</span></a></li>
+                <li class="nav-item"><a href="cards.html" class="nav-link"><i class="fas fa-credit-card"></i><span data-i18n="nav.cards">البطاقات</span></a></li>
+                <li class="nav-item"><a href="loans.html" class="nav-link"><i class="fas fa-hand-holding-usd"></i><span data-i18n="nav.loans">القروض</span></a></li>
+                <li class="nav-item"><a href="wallet.html" class="nav-link"><i class="fas fa-wallet"></i><span data-i18n="nav.wallet">المحفظة</span></a></li>
+                <li class="nav-item"><a href="government.html" class="nav-link"><i class="fas fa-landmark"></i><span data-i18n="nav.government">الخدمات الحكومية</span></a></li>
+                <li class="nav-item"><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i><span data-i18n="nav.settings">الإعدادات</span></a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="page-section">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="investments.title">الاستثمارات</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="openNewInvestment()">
+                            <i class="fas fa-plus"></i>
+                            <span>استثمار جديد</span>
+                        </button>
+                        <button class="btn btn-secondary" onclick="openCalculator()">
+                            <i class="fas fa-calculator"></i>
+                            <span>حاسبة العائد</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- شريط أسعار السوق -->
+                <div class="market-ticker">
+                    <div class="ticker-item">
+                        <div><i class="fas fa-chart-line"></i> EGX30</div>
+                        <div class="ticker-value" id="egx30">29,847</div>
+                        <small id="egx30Change" class="return-positive">+1.2%</small>
+                    </div>
+                    <div class="ticker-item">
+                        <div><i class="fas fa-coins"></i> الذهب (عيار 21)</div>
+                        <div class="ticker-value" id="goldPrice">3,850</div>
+                        <small id="goldChange" class="return-positive">+0.5%</small>
+                    </div>
+                    <div class="ticker-item">
+                        <div><i class="fas fa-dollar-sign"></i> الدولار / جنيه</div>
+                        <div class="ticker-value" id="usdPrice">48.50</div>
+                        <small id="usdChange" class="return-negative">-0.2%</small>
+                    </div>
+                    <div class="ticker-item">
+                        <div><i class="fas fa-percent"></i> فائدة البنك المركزي</div>
+                        <div class="ticker-value" id="interestRate">27.25%</div>
+                        <small>سنوياً</small>
+                    </div>
+                </div>
+                
+                <!-- ملخص المحفظة -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h2 class="card-title">محفظتي الاستثمارية</h2>
+                        <button class="btn btn-sm btn-secondary" onclick="refreshPortfolio()">
+                            <i class="fas fa-sync-alt"></i> تحديث
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-3 gap-4 mb-4">
+                        <div class="stat-item">
+                            <span class="stat-label">القيمة الإجمالية</span>
+                            <span class="stat-value" id="totalValue">0 <span data-i18n="currency.egp">ج.م</span></span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">إجمالي العائد</span>
+                            <span class="stat-value positive" id="totalReturn">0%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">العائد منذ بداية السنة</span>
+                            <span class="stat-value positive" id="ytdReturn">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-chart">
+                        <canvas id="portfolioChart"></canvas>
+                    </div>
+                    
+                    <div class="grid grid-2 gap-4 mt-4" id="portfolioDistribution"></div>
+                </div>
+                
+                <!-- فلتر أنواع الاستثمارات -->
+                <div class="investment-filters">
+                    <button class="filter-btn active" onclick="filterInvestments('all')">الكل</button>
+                    <button class="filter-btn" onclick="filterInvestments('stocks')">أسهم</button>
+                    <button class="filter-btn" onclick="filterInvestments('bonds')">سندات</button>
+                    <button class="filter-btn" onclick="filterInvestments('gold')">ذهب</button>
+                    <button class="filter-btn" onclick="filterInvestments('realEstate')">عقارات</button>
+                    <button class="filter-btn" onclick="filterInvestments('certificates')">شهادات</button>
+                </div>
+                
+                <!-- استثماراتي -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h2 class="card-title">استثماراتي الحالية</h2>
+                    </div>
+                    
+                    <div class="investments-grid grid grid-2 gap-4" id="investmentsGrid">
+                        <div class="text-center p-3"><span data-i18n="loading">جاري التحميل...</span></div>
+                    </div>
+                </div>
+                
+                <!-- حاسبة العائد على الاستثمار -->
+                <div class="card" id="calculatorCard" style="display: none;">
+                    <div class="card-header">
+                        <h2 class="card-title">حاسبة العائد على الاستثمار</h2>
+                        <button class="modal-close" onclick="document.getElementById('calculatorCard').style.display='none'">&times;</button>
+                    </div>
+                    
+                    <div class="grid grid-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label">المبلغ المستثمر (ج.م)</label>
+                            <input type="number" class="form-control" id="calcAmount" value="10000" min="1000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">مدة الاستثمار (سنوات)</label>
+                            <input type="number" class="form-control" id="calcYears" value="1" min="0.5" step="0.5">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">نوع الاستثمار</label>
+                            <select class="form-control" id="calcType">
+                                <option value="8.5">شهادة استثمار - 8.5%</option>
+                                <option value="12">صندوق أسهم - 12%</option>
+                                <option value="6">صندوق سندات - 6%</option>
+                                <option value="10">صندوق ذهب - 10%</option>
+                                <option value="15">استثمار عقاري - 15%</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">نسبة الضريبة</label>
+                            <select class="form-control" id="calcTax">
+                                <option value="0">بدون ضريبة</option>
+                                <option value="15">15% (ضريبة أرباح رأس المال)</option>
+                                <option value="22.5">22.5% (شهادات الاستثمار)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-section">
+                        <div class="grid grid-3 gap-4">
+                            <div class="detail-item">
+                                <span>القيمة المستقبلية</span>
+                                <span class="positive" id="futureValue">0 ج.م</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>صافي العائد</span>
+                                <span class="positive" id="netReturn">0 ج.م</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>نسبة العائد السنوي</span>
+                                <span class="positive" id="annualReturn">0%</span>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="returnProgress" style="width: 0%"></div>
+                            </div>
+                            <p class="text-center mt-2" id="calculatorMessage"></p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-block mt-4" onclick="applyInvestment()">
+                        <i class="fas fa-check"></i> استثمر الآن
+                    </button>
+                </div>
+                
+                <!-- فرص استثمارية موصى بها -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h2 class="card-title">فرص استثمارية موصى بها</h2>
+                    </div>
+                    
+                    <div class="grid grid-3 gap-4" id="opportunitiesGrid"></div>
+                </div>
+                
+               <!-- إعدادات التنبيهات -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h2 class="card-title">
+            <i class="fas fa-bell"></i>
+            تنبيهات استثمارية
+        </h2>
+        <button class="btn btn-sm btn-primary" onclick="saveAlerts()">
+            <i class="fas fa-save"></i> حفظ الإعدادات
+        </button>
+    </div>
+    
+    <div id="alertsSettings" style="padding: 0 5px;">
+        <!-- تنبيه مؤشر EGX30 -->
+        <div class="alert-setting">
+            <div class="alert-setting-info">
+                <div class="alert-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="alert-details">
+                    <div class="alert-title">تنبيه عند تغير مؤشر EGX30</div>
+                    <div class="alert-desc">إشعار عند ارتفاع أو انخفاض المؤشر بنسبة معينة</div>
+                </div>
+            </div>
+            <div class="alert-controls">
+                <div class="threshold-control">
+                    <input type="number" id="alertEGX" value="2" step="0.5" min="0.5" max="10">
+                    <span class="threshold-unit">%</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="alertEGXEnable" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- تنبيه سعر الذهب -->
+        <div class="alert-setting">
+            <div class="alert-setting-info">
+                <div class="alert-icon" style="background: linear-gradient(135deg, #f59e0b20 0%, #fbbf2420 100%);">
+                    <i class="fas fa-coins" style="color: #f59e0b;"></i>
+                </div>
+                <div class="alert-details">
+                    <div class="alert-title">تنبيه عند تغير سعر الذهب</div>
+                    <div class="alert-desc">إشعار عند تغير سعر الذهب عيار 21</div>
+                </div>
+            </div>
+            <div class="alert-controls">
+                <div class="threshold-control">
+                    <input type="number" id="alertGold" value="1" step="0.5" min="0.5" max="10">
+                    <span class="threshold-unit">%</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="alertGoldEnable" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- تنبيه استحقاق العوائد -->
+        <div class="alert-setting">
+            <div class="alert-setting-info">
+                <div class="alert-icon" style="background: linear-gradient(135deg, #10b98120 0%, #34d39920 100%);">
+                    <i class="fas fa-calendar-check" style="color: #10b981;"></i>
+                </div>
+                <div class="alert-details">
+                    <div class="alert-title">تنبيه عند استحقاق العوائد</div>
+                    <div class="alert-desc">إشعار قبل موعد استحقاق العوائد بـ 3 أيام</div>
+                </div>
+            </div>
+            <div class="alert-controls">
+                <div class="threshold-control">
+                    <select id="alertDividendDays" style="background: rgba(255,255,255,0.08); color: #a0d2db; border: 1px solid rgba(0,238,255,0.3); border-radius: 8px; padding: 8px 12px;">
+                        <option value="1">قبل يوم</option>
+                        <option value="3" selected>قبل 3 أيام</option>
+                        <option value="5">قبل 5 أيام</option>
+                        <option value="7">قبل أسبوع</option>
+                    </select>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="alertDividendEnable" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- تنبيه تغير العملات -->
+        <div class="alert-setting">
+            <div class="alert-setting-info">
+                <div class="alert-icon" style="background: linear-gradient(135deg, #3b82f620 0%, #60a5fa20 100%);">
+                    <i class="fas fa-dollar-sign" style="color: #3b82f6;"></i>
+                </div>
+                <div class="alert-details">
+                    <div class="alert-title">تنبيه عند تغير سعر الدولار</div>
+                    <div class="alert-desc">إشعار عند تغير سعر صرف الدولار مقابل الجنيه</div>
+                </div>
+            </div>
+            <div class="alert-controls">
+                <div class="threshold-control">
+                    <input type="number" id="alertUsd" value="2" step="0.5" min="0.5" max="10">
+                    <span class="threshold-unit">%</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="alertUsdEnable" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="app.name">MSB BANK</h3>
+                    <p data-i18n="footer.description">نقدم لكم خدمات مصرفية آمنة وسريعة تلبي جميع احتياجاتكم المالية مع أعلى معايير الأمان والجودة.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3 data-i18n="quick_links">روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.home">الرئيسية</span></a></li>
+                        <li><a href="accounts.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.accounts">الحسابات</span></a></li>
+                        <li><a href="transfers.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.transfers">التحويلات</span></a></li>
+                        <li><a href="payments.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.payments">الدفع</span></a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 data-i18n="customer_service">خدمة العملاء</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> <span data-i18n="settings.faq">الأسئلة الشائعة</span></a></li>
+                        <li><a href="#" data-i18n="footer.complaints"><i class="fas fa-chevron-left"></i> الشكاوى والاقتراحات</a></li>
+                        <li><a href="#" data-i18n="footer.technical_support"><i class="fas fa-chevron-left"></i> الدعم الفني</a></li>
+                        <li><a href="#" data-i18n="settings.contact_us"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright" data-i18n-html="footer.copyright">
+                © <span class="current-year">2025</span> <span data-i18n="app.name">MSB BANK</span>. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+
+        function getInvestmentTypeFromId(opportunityId) {
+    const types = {
+        opp1: 'stocks',
+        opp2: 'gold',
+        opp3: 'realEstate',
+        opp4: 'certificates',
+        opp5: 'bonds'
+    };
+    return types[opportunityId] || 'stocks';
+}
+
+// دالة لفحص الاستثمارات (للتأكد من وجودها)
+async function checkInvestments() {
+    console.log('🔍 Checking investments...');
+    console.log('BankApp.user.investments:', BankApp.user.investments);
+    
+    try {
+        const result = await BankApp.apiCall('/investments', { method: 'GET' });
+        console.log('API /investments response:', result);
+        
+        if (result.success && result.investments) {
+            console.log(`✅ Found ${result.investments.length} investments from API`);
+            if (result.investments.length > 0) {
+                console.log('Investments:', result.investments);
+            }
+        }
+    } catch (error) {
+        console.error('Error checking investments:', error);
+    }
+}
+        // حل مشكلة القائمة في الجوال
+        (function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navList = document.getElementById('navList');
+            if (menuToggle && navList) {
+                const newMenuToggle = menuToggle.cloneNode(true);
+                menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
+                newMenuToggle.addEventListener('click', function() {
+                    navList.classList.toggle('mobile-active');
+                });
+                document.addEventListener('DOMContentLoaded', function() {
+    const checkBankApp = setInterval(async () => {
+        if (window.BankApp && BankApp.user) {
+            clearInterval(checkBankApp);
+            
+            // ✅ تحديث البيانات من API أولاً
+            await BankApp.loadData(false);
+            
+            // ✅ فحص الاستثمارات
+            await checkInvestments();
+            
+            // ✅ تحديث الواجهة
+            refreshInvestmentsPage();
+        }
+    }, 100);
+    
+    setTimeout(async () => {
+        clearInterval(checkBankApp);
+        if (window.BankApp && BankApp.user) {
+            await BankApp.loadData(false);
+            await checkInvestments();
+            refreshInvestmentsPage();
+        }
+    }, 5000);
+});
+            }
+        })();
+
+        let portfolioChart = null;
+        let currentFilter = 'all';
+        
+        // بيانات أسعار السوق
+        const marketData = {
+            egx30: 29847,
+            gold: 3850,
+            usd: 48.50
+        };
+        
+        // تحديث أسعار السوق
+        function updateMarketPrices() {
+            // محاكاة تغيرات عشوائية
+            marketData.egx30 = marketData.egx30 + (Math.random() - 0.5) * 50;
+            marketData.gold = marketData.gold + (Math.random() - 0.5) * 10;
+            marketData.usd = marketData.usd + (Math.random() - 0.5) * 0.2;
+            
+            document.getElementById('egx30').textContent = Math.round(marketData.egx30).toLocaleString();
+            document.getElementById('goldPrice').textContent = Math.round(marketData.gold).toLocaleString();
+            document.getElementById('usdPrice').textContent = marketData.usd.toFixed(2);
+        }
+        
+        // تحديث حاسبة العائد
+        function updateCalculator() {
+            const amount = parseFloat(document.getElementById('calcAmount').value) || 0;
+            const years = parseFloat(document.getElementById('calcYears').value) || 0;
+            const rate = parseFloat(document.getElementById('calcType').value) / 100;
+            const taxRate = parseFloat(document.getElementById('calcTax').value) / 100;
+            
+            const futureValue = amount * Math.pow(1 + rate, years);
+            const grossReturn = futureValue - amount;
+            const taxAmount = grossReturn * taxRate;
+            const netReturn = grossReturn - taxAmount;
+            const finalValue = amount + netReturn;
+            const annualReturnRate = (Math.pow(finalValue / amount, 1 / years) - 1) * 100;
+            
+            document.getElementById('futureValue').innerHTML = Math.round(finalValue).toLocaleString() + ' ج.م';
+            document.getElementById('netReturn').innerHTML = Math.round(netReturn).toLocaleString() + ' ج.م';
+            document.getElementById('annualReturn').innerHTML = annualReturnRate.toFixed(1) + '%';
+            
+            const progressPercent = Math.min(100, (netReturn / amount) * 100);
+            document.getElementById('returnProgress').style.width = progressPercent + '%';
+            
+            let message = '';
+            if (annualReturnRate > 15) message = '⭐ عائد ممتاز! هذا الاستثمار يفوق التضخم';
+            else if (annualReturnRate > 10) message = '👍 عائد جيد مناسب للمستثمر متوسط المدى';
+            else if (annualReturnRate > 5) message = '📊 عائد معتدل مناسب للمستثمر المحافظ';
+            else message = '⚠️ عائد منخفض، يفضل البحث عن بدائل أفضل';
+            document.getElementById('calculatorMessage').textContent = message;
+        }
+        
+        // عرض أنواع الاستثمارات المتاحة
+        const availableInvestments = [
+            { id: 1, name: 'صندوق الأسهم المصرية', type: 'stocks', risk: 'medium', expectedReturn: 12, minAmount: 1000, icon: 'chart-line', color: '#FF6384' },
+            { id: 2, name: 'صندوق السندات الحكومية', type: 'bonds', risk: 'low', expectedReturn: 6, minAmount: 500, icon: 'file-contract', color: '#36A2EB' },
+            { id: 3, name: 'صندوق الذهب', type: 'gold', risk: 'medium', expectedReturn: 10, minAmount: 1000, icon: 'gem', color: '#FFCE56' },
+            { id: 4, name: 'صندوق العقارات', type: 'realEstate', risk: 'high', expectedReturn: 15, minAmount: 5000, icon: 'building', color: '#4BC0C0' },
+            { id: 5, name: 'شهادة استثمار A', type: 'certificates', risk: 'low', expectedReturn: 8.5, minAmount: 500, icon: 'certificate', color: '#9966FF' }
+        ];
+        
+        // عرض الفرص الاستثمارية
+        function updateOpportunitiesGrid() {
+            const grid = document.getElementById('opportunitiesGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = availableInvestments.map(inv => `
+                <div class="investment-card" onclick="showInvestmentDetails('${inv.id}')">
+                    <div class="card-header" style="padding: 0 0 10px 0;">
+                        <div class="action-icon" style="width: 50px; height: 50px; background: ${inv.color};">
+                            <i class="fas fa-${inv.icon}"></i>
+                        </div>
+                        <div>
+                            <h3>${inv.name}</h3>
+                            <span class="investment-type type-${inv.risk}-risk">
+                                ${inv.risk === 'low' ? 'منخفض المخاطر' : inv.risk === 'medium' ? 'متوسط المخاطر' : 'مرتفع المخاطر'}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="detail-item"><span>العائد المتوقع</span> <span class="return-positive">+${inv.expectedReturn}%</span></div>
+                    <div class="detail-item"><span>الحد الأدنى</span> <span>${inv.minAmount.toLocaleString()} ج.م</span></div>
+                    <button class="btn btn-primary btn-sm btn-block mt-3" onclick="event.stopPropagation(); investInOpportunity('${inv.id}')">
+                        <i class="fas fa-chart-line"></i> استثمر الآن
+                    </button>
+                </div>
+            `).join('');
+        }
+// استبدل دالة investInOpportunity بالكامل
+async function investInOpportunity(opportunityId) {
+    // الحصول على اسم الفرصة
+    const opportunities = {
+        opp1: 'صندوق الأسهم المصرية',
+        opp2: 'صندوق الذهب الآمن',
+        opp3: 'صندوق العقارات',
+        opp4: 'شهادة استثمار ممتازة',
+        opp5: 'صندوق السندات الحكومية'
+    };
+    
+    const investmentName = opportunities[opportunityId] || 'استثمار';
+    const expectedReturn = getExpectedReturn(opportunityId);
+    
+    // ✅ استخدام المودال المخصص بدلاً من prompt/confirm
+    showAmountModal(
+        `استثمار في ${investmentName}`,
+        `أدخل المبلغ (الحد الأدنى 100 ج.م)`,
+        async (amount) => {
+            // ✅ بعد إدخال المبلغ، عرض مودال التأكيد
+            showInvestmentConfirmModal(investmentName, amount, expectedReturn, async () => {
+                await processInvestment(opportunityId, amount, investmentName);
+            });
+        }
+    );
+}
+
+// دالة للحصول على العائد المتوقع
+function getExpectedReturn(opportunityId) {
+    const returns = {
+        opp1: '12%',
+        opp2: '8%',
+        opp3: '15%',
+        opp4: '8.5%',
+        opp5: '6%'
+    };
+    return returns[opportunityId] || '10%';
+}
+
+// معالجة الاستثمار بعد التأكيد
+async function processInvestment(opportunityId, amount, investmentName) {
+    BankUtils.showLoading(true, 'جاري تنفيذ الاستثمار...');
+    
+    try {
+        // الحصول على حساب الاستثمار
+        let investmentAccount = BankApp.user.accounts?.find(acc => acc.type === 'investment');
+        
+        if (!investmentAccount) {
+            const accountResult = await BankApp.apiCall('/investment/account', { method: 'GET' });
+            if (accountResult.success && accountResult.account) {
+                investmentAccount = accountResult.account;
+                BankApp.user.accounts.push(investmentAccount);
+            } else {
+                throw new Error('لا يمكن إنشاء حساب استثماري');
+            }
+        }
+        
+        // التحقق من الرصيد في حساب الاستثمار
+        if (investmentAccount.balance < amount) {
+            const currentAccount = BankApp.user.accounts.find(acc => acc.type === 'current');
+            if (!currentAccount) {
+                throw new Error('لا يوجد حساب جاري للتحويل منه');
+            }
+            
+            if (currentAccount.balance < amount) {
+                throw new Error(`الرصيد غير كافٍ. المتاح في الحساب الجاري: ${currentAccount.balance.toLocaleString()} ج.م`);
+            }
+            
+            const transferResult = await BankApp.apiCall('/investment/transfer', {
+                method: 'POST',
+                body: JSON.stringify({
+                    amount: amount,
+                    fromAccountId: currentAccount.id
+                })
+            });
+            
+            if (transferResult.success) {
+                currentAccount.balance -= amount;
+                investmentAccount.balance += amount;
+                BankUtils.showAlert(`تم تحويل ${amount.toLocaleString()} ج.م إلى حساب الاستثمار`, 'success');
+            } else {
+                throw new Error(transferResult.message || 'فشل التحويل إلى حساب الاستثمار');
+            }
+        }
+        
+        // إنشاء الاستثمار
+        const type = getInvestmentTypeFromId(opportunityId);
+        
+        const investmentResult = await BankApp.apiCall('/investments', {
+            method: 'POST',
+            body: JSON.stringify({
+                type: type,
+                amount: amount
+            })
+        });
+        
+        if (investmentResult.success) {
+            if (investmentAccount) {
+                investmentAccount.balance -= amount;
+            }
+            
+            const newInvestment = investmentResult.investment;
+            if (newInvestment) {
+                if (!BankApp.user.investments) BankApp.user.investments = [];
+                BankApp.user.investments.unshift(newInvestment);
+            }
+            
+            updateInvestmentsGrid();
+            updatePortfolioChart();
+            
+            BankUtils.showAlert(`✅ تم إنشاء الاستثمار بنجاح بمبلغ ${amount.toLocaleString()} ج.م`, 'success');
+        } else {
+            throw new Error(investmentResult.message || 'فشل إنشاء الاستثمار');
+        }
+        
+    } catch (error) {
+        console.error('Investment error:', error);
+        BankUtils.showAlert(error.message, 'error');
+    } finally {
+        BankUtils.showLoading(false);
+    }
+}
+
+// دالة إضافة مبلغ للاستثمار (معدلة)
+async function addToInvestment(investmentId) {
+    const investment = BankApp.user.investments?.find(inv => inv.id === investmentId);
+    if (!investment) {
+        BankUtils.showAlert('الاستثمار غير موجود', 'error');
+        return;
+    }
+    
+    // ✅ استخدام المودال المخصص
+    showAmountModal(
+        `إضافة مبلغ إلى ${investment.name}`,
+        'أدخل المبلغ الإضافي',
+        async (amount) => {
+            BankUtils.showLoading(true, 'جاري إضافة المبلغ...');
+            
+            try {
+                const result = await BankApp.apiCall(`/investments/${investmentId}/add`, {
+                    method: 'POST',
+                    body: JSON.stringify({ amount: amount })
+                });
+                
+                if (result.success) {
+                    await BankApp.loadData(false);
+                    refreshInvestmentsPage();
+                    BankUtils.showAlert(`✅ تمت إضافة ${amount.toLocaleString()} ج.م إلى الاستثمار`, 'success');
+                } else {
+                    throw new Error(result.message || 'فشل في إضافة المبلغ');
+                }
+            } catch (error) {
+                BankUtils.showAlert(error.message, 'error');
+            } finally {
+                BankUtils.showLoading(false);
+            }
+        }
+    );
+}
+
+// دالة بيع استثمار (معدلة)
+async function sellInvestment(investmentId) {
+    const investment = BankApp.user.investments?.find(inv => inv.id === investmentId);
+    if (!investment) {
+        BankUtils.showAlert('الاستثمار غير موجود', 'error');
+        return;
+    }
+    
+    // ✅ استخدام مودال مخصص لبيع الاستثمار
+    const existingModal = document.getElementById('customSellModal');
+    if (existingModal) existingModal.remove();
+    
+    const currentValue = investment.amount * (1 + (investment.change || 0) / 100);
+    
+    const modalHTML = `
+        <div class="modal" id="customSellModal" style="display: flex;">
+            <div class="modal-content" style="max-width: 450px;">
+                <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                    <h3 style="color: var(--text-color);">
+                        <i class="fas fa-money-bill-wave" style="color: #ef4444;"></i>
+                        بيع استثمار: ${investment.name}
+                    </h3>
+                    <button class="modal-close" onclick="closeSellModal()" style="color: var(--text-color);">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div style="background: rgba(239, 68, 68, 0.1); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                            <span style="color: var(--text-color);">قيمة الاستثمار الحالية:</span>
+                            <strong style="color: var(--secondary-color);">${Math.round(currentValue).toLocaleString()} ج.م</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                            <span style="color: var(--text-color);">المبلغ المستثمر:</span>
+                            <strong>${investment.amount.toLocaleString()} ج.م</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                            <span style="color: var(--text-color);">الربح/الخسارة:</span>
+                            <strong class="${currentValue - investment.amount >= 0 ? 'return-positive' : 'return-negative'}">
+                                ${currentValue - investment.amount >= 0 ? '+' : ''}${Math.round(currentValue - investment.amount).toLocaleString()} ج.م
+                            </strong>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">المبلغ المراد بيعه (ج.م)</label>
+                        <input type="number" class="form-control" id="sellAmount" 
+                               placeholder="أدخل المبلغ" 
+                               min="100" 
+                               max="${investment.amount}"
+                               value="${investment.amount}"
+                               style="background: rgba(255,255,255,0.1); color: var(--text-color);">
+                        <small class="form-text">الحد الأقصى: ${investment.amount.toLocaleString()} ج.م</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="confirmSellCheckbox">
+                            <span>أؤكد رغبتي في بيع هذا المبلغ</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: flex; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                    <button class="btn btn-secondary" onclick="closeSellModal()" style="flex: 1;">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                    <button class="btn btn-danger" id="confirmSellBtn" style="flex: 1;" disabled>
+                        <i class="fas fa-check"></i> تأكيد البيع
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    const sellAmount = document.getElementById('sellAmount');
+    const confirmCheckbox = document.getElementById('confirmSellCheckbox');
+    const confirmBtn = document.getElementById('confirmSellBtn');
+    
+    if (sellAmount) {
+        sellAmount.addEventListener('input', function() {
+            const max = investment.amount;
+            if (parseFloat(this.value) > max) this.value = max;
+            if (parseFloat(this.value) < 100) this.value = 100;
+        });
+    }
+    
+    if (confirmCheckbox && confirmBtn) {
+        confirmCheckbox.addEventListener('change', function() {
+            confirmBtn.disabled = !this.checked;
+        });
+        
+        confirmBtn.addEventListener('click', async function() {
+            if (confirmCheckbox.checked) {
+                const amount = parseFloat(sellAmount.value);
+                if (amount && amount >= 100 && amount <= investment.amount) {
+                    closeSellModal();
+                    
+                    BankUtils.showLoading(true, 'جاري بيع الاستثمار...');
+                    try {
+                        const result = await BankApp.apiCall(`/investments/${investmentId}/sell`, {
+                            method: 'POST',
+                            body: JSON.stringify({ amount: amount })
+                        });
+                        
+                        if (result.success) {
+                            await BankApp.loadData(false);
+                            refreshInvestmentsPage();
+                            BankUtils.showAlert(`✅ تم بيع ${amount.toLocaleString()} ج.م من الاستثمار بنجاح`, 'success');
+                        } else {
+                            throw new Error(result.message || 'فشل في بيع الاستثمار');
+                        }
+                    } catch (error) {
+                        BankUtils.showAlert(error.message, 'error');
+                    } finally {
+                        BankUtils.showLoading(false);
+                    }
+                } else {
+                    BankUtils.showAlert('الرجاء إدخال مبلغ صحيح', 'error');
+                }
+            }
+        });
+    }
+}
+
+function closeSellModal() {
+    const modal = document.getElementById('customSellModal');
+    if (modal) modal.remove();
+}
+
+
+// دالة مساعدة لتحويل ID الفرصة إلى نوع الاستثمار
+function getInvestmentTypeFromId(opportunityId) {
+    const types = {
+        opp1: 'stocks',
+        opp2: 'gold',
+        opp3: 'realEstate',
+        opp4: 'certificates',
+        opp5: 'bonds'
+    };
+    return types[opportunityId] || 'stocks';
+}
+
+        // تحديث محفظة المستخدم
+        function updateUserInvestments() {
+            const investments = BankApp.user.investments || [];
+            
+            if (investments.length === 0) {
+                document.getElementById('investmentsGrid').innerHTML = '<div class="text-center p-3">لا توجد استثمارات حالية</div>';
+                document.getElementById('totalValue').innerHTML = '0 ج.م';
+                document.getElementById('totalReturn').innerHTML = '0%';
+                document.getElementById('ytdReturn').innerHTML = '0%';
+                return;
+            }
+            
+            let totalValue = 0;
+            let totalChange = 0;
+            
+            const filteredInvestments = currentFilter === 'all' ? 
+                investments : investments.filter(inv => inv.type === currentFilter);
+            
+            document.getElementById('investmentsGrid').innerHTML = filteredInvestments.map(inv => {
+                totalValue += inv.amount || 0;
+                totalChange += (inv.change || 0);
+                
+                return `
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="investment-icon" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-${inv.icon || 'chart-line'}" style="color: white; font-size: 20px;"></i>
+                            </div>
+                            <h3 class="card-title">${inv.name}</h3>
+                        </div>
+                        <div class="detail-item"><span>قيمة الاستثمار</span> <span>${(inv.amount || 0).toLocaleString()} ج.م</span></div>
+                        <div class="detail-item"><span>العائد الحالي</span> <span class="${(inv.change || 0) >= 0 ? 'return-positive' : 'return-negative'}">${(inv.change || 0) >= 0 ? '+' : ''}${(inv.change || 0).toFixed(1)}%</span></div>
+                        <div class="detail-item"><span>تاريخ الشراء</span> <span>${BankUtils.formatDate(inv.createdAt)}</span></div>
+                        <div class="account-actions mt-3">
+                            <button class="btn btn-sm btn-primary" onclick="addToInvestment('${inv.id}')"><i class="fas fa-plus"></i> زيادة</button>
+                            <button class="btn btn-sm btn-secondary" onclick="sellInvestment('${inv.id}')"><i class="fas fa-minus"></i> بيع</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            const avgReturn = investments.length > 0 ? (totalChange / investments.length).toFixed(1) : 0;
+            document.getElementById('totalValue').innerHTML = totalValue.toLocaleString() + ' ج.م';
+            document.getElementById('totalReturn').innerHTML = (avgReturn >= 0 ? '+' : '') + avgReturn + '%';
+            document.getElementById('totalReturn').className = `stat-value ${avgReturn >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('ytdReturn').innerHTML = (avgReturn >= 0 ? '+' : '') + (avgReturn * 2).toFixed(1) + '%';
+        }
+        
+        // فلتر الاستثمارات
+        function filterInvestments(type) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            updateUserInvestments();
+        }
+        
+        // فتح حاسبة الاستثمار
+        function openCalculator() {
+            document.getElementById('calculatorCard').style.display = 'block';
+            document.getElementById('calculatorCard').scrollIntoView({ behavior: 'smooth' });
+            updateCalculator();
+        }
+        
+        // فتح استثمار جديد
+        function openNewInvestment() {
+            openCalculator();
+        }
+        
+// تطبيق الاستثمار من الحاسبة - نسخة معدلة
+async function applyInvestment() {
+    const amount = parseFloat(document.getElementById('calcAmount').value);
+    const selectedType = document.getElementById('calcType').options[document.getElementById('calcType').selectedIndex].text;
+    const rate = parseFloat(document.getElementById('calcType').value);
+    const selectedTypeValue = document.getElementById('calcType').value;
+    
+    if (amount < 500) {
+        BankUtils.showAlert('الحد الأدنى للاستثمار هو 500 ج.م', 'error');
+        return;
+    }
+    
+    // ✅ استخدام مودال مخصص بدلاً من confirm
+    showInvestmentConfirmModal(selectedType, amount, rate + '%', async () => {
+        BankUtils.showLoading(true, 'جاري تنفيذ الاستثمار...');
+        
+        try {
+            const result = await BankApp.apiCall('/investments', {
+                method: 'POST',
+                body: JSON.stringify({
+                    type: selectedTypeValue.includes('سهم') ? 'stocks' : 
+                          selectedTypeValue.includes('ذهب') ? 'gold' :
+                          selectedTypeValue.includes('عقار') ? 'realEstate' : 'certificates',
+                    amount: amount
+                })
+            });
+            
+            if (result.success) {
+                await BankApp.loadData(false);
+                refreshInvestmentsPage();
+                BankUtils.showAlert('✅ تم الاستثمار بنجاح', 'success');
+                document.getElementById('calculatorCard').style.display = 'none';
+            } else {
+                throw new Error(result.message);
+            }
+        } catch (error) {
+            BankUtils.showAlert(error.message, 'error');
+        } finally {
+            BankUtils.showLoading(false);
+        }
+    });
+}        
+        // تحديث الرسم البياني للمحفظة
+        function updatePortfolioChart() {
+            const ctx = document.getElementById('portfolioChart').getContext('2d');
+            const investments = BankApp.user.investments || [];
+            
+            if (portfolioChart) portfolioChart.destroy();
+            
+            if (investments.length === 0) {
+                portfolioChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: { labels: ['لا توجد استثمارات'], datasets: [{ data: [1], backgroundColor: ['#4fc3f7'] }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+                return;
+            }
+            
+            portfolioChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: investments.map(inv => inv.name),
+                    datasets: [{ data: investments.map(inv => inv.amount), backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+        
+        // حفظ إعدادات التنبيهات
+        function saveAlerts() {
+            const alerts = {
+                egx: { enabled: document.getElementById('alertEGXEnable').checked, threshold: parseFloat(document.getElementById('alertEGX').value) },
+                gold: { enabled: document.getElementById('alertGoldEnable').checked, threshold: parseFloat(document.getElementById('alertGold').value) },
+                dividends: document.getElementById('alertDividendEnable').checked
+            };
+            localStorage.setItem('investmentAlerts', JSON.stringify(alerts));
+            BankUtils.showAlert('تم حفظ إعدادات التنبيهات', 'success');
+        }
+        
+        // تحديث الصفحة بالكامل
+// في صفحة investments.html - استبدل الدالة بهذا
+function refreshInvestmentsPage() {
+    console.log('🔄 Refreshing investments page...');
+    
+    // ✅ تحديث البيانات من BankApp.user أولاً
+    if (BankApp.user && BankApp.user.investments) {
+        console.log('📊 Investments in BankApp.user:', BankApp.user.investments.length);
+        
+        if (BankApp.user.investments.length === 0) {
+            document.getElementById('investmentsGrid').innerHTML = '<div class="text-center p-3">لا توجد استثمارات حالية</div>';
+            document.getElementById('totalValue').innerHTML = '0 ج.م';
+            document.getElementById('totalReturn').innerHTML = '0%';
+            document.getElementById('ytdReturn').innerHTML = '0%';
+        } else {
+            updateInvestmentsGrid();
+        }
+    } else {
+        console.warn('⚠️ BankApp.user.investments not available');
+    }
+    
+    updatePortfolioChart();
+    updateOpportunitiesGrid();
+}
+
+// ✅ أضف هذه الدالة لتحديث شبكة الاستثمارات
+function updateInvestmentsGrid() {
+    const grid = document.getElementById('investmentsGrid');
+    if (!grid) return;
+    
+    const investments = BankApp.user.investments || [];
+    
+    if (investments.length === 0) {
+        grid.innerHTML = '<div class="text-center p-3">لا توجد استثمارات حالية</div>';
+        return;
+    }
+    
+    let totalValue = 0;
+    let totalChange = 0;
+    
+    grid.innerHTML = investments.map(inv => {
+        totalValue += inv.amount || 0;
+        totalChange += inv.change || 0;
+        
+        const currentValue = inv.amount * (1 + (inv.change || 0) / 100);
+        const profit = currentValue - inv.amount;
+        
+        return `
+            <div class="card">
+                <div class="card-header">
+                    <div class="investment-icon" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-${inv.icon || 'chart-line'}" style="color: white; font-size: 20px;"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title">${inv.name}</h3>
+                        <span class="investment-type type-medium-risk">${inv.type === 'stocks' ? 'أسهم' : inv.type === 'gold' ? 'ذهب' : inv.type === 'realEstate' ? 'عقارات' : inv.type === 'certificates' ? 'شهادات' : 'سندات'}</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <span>قيمة الاستثمار</span>
+                    <span>${(inv.amount || 0).toLocaleString()} ج.م</span>
+                </div>
+                <div class="detail-item">
+                    <span>القيمة الحالية</span>
+                    <span class="${profit >= 0 ? 'return-positive' : 'return-negative'}">${Math.round(currentValue).toLocaleString()} ج.م</span>
+                </div>
+                <div class="detail-item">
+                    <span>العائد</span>
+                    <span class="${(inv.change || 0) >= 0 ? 'return-positive' : 'return-negative'}">${(inv.change || 0) >= 0 ? '+' : ''}${(inv.change || 0).toFixed(1)}%</span>
+                </div>
+                <div class="detail-item">
+                    <span>الربح/الخسارة</span>
+                    <span class="${profit >= 0 ? 'return-positive' : 'return-negative'}">${profit >= 0 ? '+' : ''}${Math.round(profit).toLocaleString()} ج.م</span>
+                </div>
+                <div class="detail-item">
+                    <span>تاريخ الشراء</span>
+                    <span>${BankUtils.formatDate(inv.createdAt)}</span>
+                </div>
+                <div class="account-actions mt-3">
+                    <button class="btn btn-sm btn-primary" onclick="addToInvestment('${inv.id}')">
+                        <i class="fas fa-plus"></i> زيادة
+                    </button>
+                    <button class="btn btn-sm btn-secondary" onclick="sellInvestment('${inv.id}')">
+                        <i class="fas fa-minus"></i> بيع
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    // تحديث الإحصائيات
+    const avgReturn = investments.length > 0 ? (totalChange / investments.length).toFixed(1) : 0;
+    document.getElementById('totalValue').innerHTML = totalValue.toLocaleString() + ' ج.م';
+    document.getElementById('totalReturn').innerHTML = (avgReturn >= 0 ? '+' : '') + avgReturn + '%';
+    document.getElementById('totalReturn').className = `stat-value ${avgReturn >= 0 ? 'positive' : 'negative'}`;
+    document.getElementById('ytdReturn').innerHTML = (avgReturn >= 0 ? '+' : '') + (avgReturn * 2).toFixed(1) + '%';
+}        
+        // ربط الأحداث
+        document.getElementById('calcAmount').addEventListener('input', updateCalculator);
+        document.getElementById('calcYears').addEventListener('input', updateCalculator);
+        document.getElementById('calcType').addEventListener('change', updateCalculator);
+        document.getElementById('calcTax').addEventListener('change', updateCalculator);
+        
+        // تحديث الأسعار كل 30 ثانية
+        setInterval(updateMarketPrices, 30000);
+        
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMarketPrices();
+            
+            const checkBankApp = setInterval(() => {
+                if (window.BankApp && BankApp.user) {
+                    clearInterval(checkBankApp);
+                    refreshInvestmentsPage();
+                }
+            }, 100);
+        });
+        // ============= مودال إدخال المبلغ المخصص =============
+
+// ========================================
+// مودال إدخال المبلغ المخصص
+// ========================================
+
+function showAmountModal(title, placeholder, onConfirm) {
+    // إزالة أي مودال موجود
+    const existingModal = document.getElementById('customAmountModal');
+    if (existingModal) existingModal.remove();
+    
+    const modalHTML = `
+        <div class="modal" id="customAmountModal" style="display: flex;">
+            <div class="modal-content" style="max-width: 450px;">
+                <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                    <h3 style="color: var(--text-color);">
+                        <i class="fas fa-chart-line" style="color: var(--secondary-color);"></i>
+                        ${title}
+                    </h3>
+                    <button class="modal-close" onclick="closeAmountModal()" style="color: var(--text-color);">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <i class="fas fa-money-bill-wave" style="font-size: 48px; color: var(--secondary-color);"></i>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" style="color: var(--text-color);">
+                            <i class="fas fa-coins"></i> المبلغ (ج.م)
+                        </label>
+                        <input type="number" class="form-control" id="amountInput" 
+                               placeholder="${placeholder}" 
+                               min="100" 
+                               step="100"
+                               value="1000"
+                               style="background: rgba(255,255,255,0.1); color: var(--text-color); font-size: 18px; text-align: center;">
+                        <small class="form-text" style="color: var(--text-color); opacity: 0.7;">
+                            الحد الأدنى للاستثمار: 100 ج.م
+                        </small>
+                    </div>
+                    
+                    <div class="quick-amounts" style="display: flex; gap: 10px; margin: 15px 0; flex-wrap: wrap; justify-content: center;">
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="setQuickAmount(500)" style="background: rgba(255,255,255,0.1);">500 ج.م</button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="setQuickAmount(1000)" style="background: rgba(255,255,255,0.1);">1,000 ج.م</button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="setQuickAmount(5000)" style="background: rgba(255,255,255,0.1);">5,000 ج.م</button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="setQuickAmount(10000)" style="background: rgba(255,255,255,0.1);">10,000 ج.م</button>
+                    </div>
+                    
+                    <div style="background: rgba(79, 195, 247, 0.1); border-radius: 12px; padding: 12px; margin-top: 15px; border-right: 3px solid var(--secondary-color);">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-info-circle" style="color: var(--secondary-color);"></i>
+                            <span style="color: var(--text-color); font-size: 13px;">
+                                سيتم خصم المبلغ من حساب الاستثمار الخاص بك
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: flex; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                    <button class="btn btn-secondary" onclick="closeAmountModal()" style="flex: 1;">
+                        <i class="fas fa-times"></i>
+                        إلغاء
+                    </button>
+                    <button class="btn btn-success" id="confirmAmountBtn" style="flex: 1; background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">
+                        <i class="fas fa-check"></i>
+                        تأكيد الاستثمار
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    const amountInput = document.getElementById('amountInput');
+    const confirmBtn = document.getElementById('confirmAmountBtn');
+    
+    if (amountInput) {
+        amountInput.focus();
+        amountInput.select();
+        
+        amountInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const amount = parseFloat(amountInput.value);
+                if (amount && amount >= 100) {
+                    closeAmountModal();
+                    onConfirm(amount);
+                } else {
+                    BankUtils.showAlert('الرجاء إدخال مبلغ صحيح (الحد الأدنى 100 ج.م)', 'error');
+                }
+            }
+        });
+    }
+    
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+            const amount = parseFloat(amountInput.value);
+            if (amount && amount >= 100) {
+                closeAmountModal();
+                onConfirm(amount);
+            } else {
+                BankUtils.showAlert('الرجاء إدخال مبلغ صحيح (الحد الأدنى 100 ج.م)', 'error');
+            }
+        });
+    }
+}
+
+function closeAmountModal() {
+    const modal = document.getElementById('customAmountModal');
+    if (modal) modal.remove();
+}
+
+function setQuickAmount(amount) {
+    const input = document.getElementById('amountInput');
+    if (input) {
+        input.value = amount;
+        input.focus();
+    }
+}
+
+// ========================================
+// مودال تأكيد الاستثمار
+// ========================================
+
+function showInvestmentConfirmModal(investmentName, amount, expectedReturn, onConfirm) {
+    const existingModal = document.getElementById('customConfirmModal');
+    if (existingModal) existingModal.remove();
+    
+    const modalHTML = `
+        <div class="modal" id="customConfirmModal" style="display: flex;">
+            <div class="modal-content" style="max-width: 450px;">
+                <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                    <h3 style="color: var(--text-color);">
+                        <i class="fas fa-chart-line" style="color: #f59e0b;"></i>
+                        تأكيد الاستثمار
+                    </h3>
+                    <button class="modal-close" onclick="closeInvestmentConfirmModal()" style="color: var(--text-color);">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <i class="fas fa-chart-line" style="font-size: 48px; color: var(--secondary-color);"></i>
+                    </div>
+                    
+                    <div style="background: rgba(79, 195, 247, 0.1); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                            <span style="color: var(--text-color);">نوع الاستثمار:</span>
+                            <strong style="color: var(--secondary-color);">${investmentName}</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                            <span style="color: var(--text-color);">المبلغ:</span>
+                            <strong style="color: #10b981; font-size: 1.2em;">${amount.toLocaleString()} ج.م</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                            <span style="color: var(--text-color);">العائد المتوقع:</span>
+                            <strong style="color: #f59e0b;">${expectedReturn}</strong>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(239, 68, 68, 0.1); border-radius: 12px; padding: 12px; margin-bottom: 20px; border-right: 3px solid #f59e0b;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-info-circle" style="color: #f59e0b;"></i>
+                            <span style="color: var(--text-color); font-size: 13px;">
+                                ⚠️ الاستثمارات تحمل مخاطر. العوائد غير مضمونة وقد تختلف حسب أداء السوق.
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="confirmInvestmentCheckbox" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span style="color: var(--text-color);">أؤكد رغبتي في الاستثمار بهذا المبلغ وأقر بالمخاطر</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: flex; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                    <button class="btn btn-secondary" onclick="closeInvestmentConfirmModal()" style="flex: 1;">
+                        <i class="fas fa-times"></i>
+                        إلغاء
+                    </button>
+                    <button class="btn btn-success" id="confirmInvestmentBtn" style="flex: 1; background: linear-gradient(135deg, #10b981 0%, #34d399 100%);" disabled>
+                        <i class="fas fa-check"></i>
+                        تأكيد الاستثمار
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    const confirmCheckbox = document.getElementById('confirmInvestmentCheckbox');
+    const confirmBtn = document.getElementById('confirmInvestmentBtn');
+    
+    if (confirmCheckbox && confirmBtn) {
+        confirmCheckbox.addEventListener('change', function() {
+            confirmBtn.disabled = !this.checked;
+            if (this.checked) {
+                confirmBtn.style.opacity = '1';
+                confirmBtn.style.cursor = 'pointer';
+            } else {
+                confirmBtn.style.opacity = '0.6';
+                confirmBtn.style.cursor = 'not-allowed';
+            }
+        });
+        
+        confirmBtn.addEventListener('click', function() {
+            if (confirmCheckbox.checked) {
+                closeInvestmentConfirmModal();
+                onConfirm();
+            }
+        });
+    }
+}
+
+function closeInvestmentConfirmModal() {
+    const modal = document.getElementById('customConfirmModal');
+    if (modal) modal.remove();
+}
+
+// دالة مساعدة لتحويل ID الفرصة إلى نوع الاستثمار
+function getInvestmentTypeFromId(opportunityId) {
+    const types = {
+        opp1: 'stocks',
+        opp2: 'gold',
+        opp3: 'realEstate',
+        opp4: 'certificates',
+        opp5: 'bonds'
+    };
+    return types[opportunityId] || 'stocks';
+}
+
+// إغلاق مودال إدخال المبلغ
+function closeAmountModal() {
+    const modal = document.getElementById('customAmountModal');
+    if (modal) modal.remove();
+}
+
+// تعيين مبلغ سريع
+function setQuickAmount(amount) {
+    const input = document.getElementById('amountInput');
+    if (input) {
+        input.value = amount;
+        input.focus();
+    }
+}
+
+
+function closeConfirmInvestmentModal() {
+    const modal = document.getElementById('customConfirmModal');
+    if (modal) modal.remove();
+}
+    </script>
+</body>
+</html>

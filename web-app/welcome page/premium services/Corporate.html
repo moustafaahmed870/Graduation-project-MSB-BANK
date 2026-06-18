@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html rtl="ar" lang="en">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/Corporate.css">
+    <script type="module" src="js/Corporate.js"></script>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>    
+    <script src="/language.js"></script>  
+    <script src="/load-components.js"></script>
+    <title data-i18n="corporate_cards_title">بطاقات الشركات - بنك MSB</title>
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+</head>
+<body>
+    <div id="navbar-container"></div>  
+    
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title" data-i18n="corporate_hero_title">بطاقات الشركات من بنك MSB</h1>
+            <p class="hero-subtitle" data-i18n="corporate_hero_subtitle">
+                حلول بطاقات مالية متكاملة مصممة خصيصًا لاحتياجات الشركات والمؤسسات. إدارة مصاريف الشركة بسهولة وأمان مع مجموعة متنوعة من البطاقات التي تلبي جميع متطلبات عملك.
+            </p>
+            <div class="vip-badge">
+                <i class="fas fa-building"></i> <span data-i18n="corporate_vip_badge">مصممة خصيصًا للشركات</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="cards-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="corporate_cards_title">أنواع بطاقات الشركات</h2>
+            <p class="section-subtitle" data-i18n="corporate_cards_subtitle">
+                اختر من مجموعة بطاقاتنا المصممة خصيصًا للشركات لتلبية احتياجاتك المالية المختلفة مع ضوابط وأمان متقدمة.
+            </p>
+            
+            <!-- Cards Filter -->
+            <div class="cards-filter">
+                <button class="filter-btn active" data-filter="all" data-i18n="filter_all">جميع البطاقات</button>
+                <button class="filter-btn" data-filter="debit" data-i18n="filter_debit">بطاقات السحب</button>
+                <button class="filter-btn" data-filter="deposit" data-i18n="filter_deposit">بطاقات الإيداع</button>
+                <button class="filter-btn" data-filter="prepaid" data-i18n="filter_prepaid">البطاقات المسبقة الدفع</button>
+            </div>
+            
+            <!-- Cards Grid -->
+            <div class="cards-grid" id="cardsContainer">
+                <!-- Debit Card 1 -->
+                <div class="card-item" data-type="debit">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fab fa-cc-visa"></i>
+                        </div>
+                        <div class="card-type" data-i18n="card_type_debit">بطاقة سحب</div>
+                        <div class="card-name">VISA Business Debit Card</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> <span data-i18n="card1_feature1">السحب النقدي والشراء والتجارة الإلكترونية داخل وخارج مصر</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card1_feature2">تتبع سهل لاستخدام البطاقة لتسهيل إدارة النقدية</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card1_feature3">تصدر باسم حامل البطاقة والشركة المالكة للحساب</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card1_feature4">خط ساخن مخصص 19019 لعملاء الشركات</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card1_feature5">لا يمكن إصدار بطاقات إضافية لهذا النوع</span></li>
+                        </ul>
+                        
+                        <div class="card-details">
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="issuance_fee">رسوم الإصدار:</span>
+                                <span class="detail-value">250 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="renewal_fee">رسوم التجديد:</span>
+                                <span class="detail-value">75 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="replacement_fee">استبدال بطاقة مفقودة/تالفة:</span>
+                                <span class="detail-value">50 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="domestic_purchase">الشراء داخل مصر (يومي):</span>
+                                <span class="detail-value"><span data-i18n="up_to">حتى</span> 1,000,000 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="atm_withdrawal">السحب النقدي من ماكينات الصراف الآلي:</span>
+                                <span class="detail-value">30,000 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="card-btn" data-i18n="request_card">طلب البطاقة</button>
+                        <div class="card-details" style="color: #0EF; font-weight: 700; font-size: 14px;" data-i18n="valid_5_years">صالحة لمدة 5 سنوات</div>
+                    </div>
+                </div>
+                
+                <!-- Debit Card 2 -->
+                <div class="card-item" data-type="debit">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="card-type" data-i18n="card_type_debit">بطاقة سحب</div>
+                        <div class="card-name">Corporate Visa Platinum Debit Card</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> <span data-i18n="card2_feature1">تصدر مع فتح الحساب المؤسسي عبر جميع فروع بنك MSB</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card2_feature2">تستخدم للسحب النقدي والشراء داخل مصر</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card2_feature3">تمكن من مراقبة استخدام حامل البطاقة</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card2_feature4">خط ساخن مخصص 19019 لعملاء الشركات</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card2_feature5">مقبولة لدى العديد من التجار في جميع أنحاء مصر</span></li>
+                        </ul>
+                        
+                        <div class="card-details">
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="issuance_fee">رسوم الإصدار:</span>
+                                <span class="detail-value">400 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="renewal_fee">رسوم التجديد:</span>
+                                <span class="detail-value">400 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="replacement_fee">استبدال بطاقة مفقودة/تالفة:</span>
+                                <span class="detail-value">200 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="domestic_purchase">الشراء داخل مصر (يومي):</span>
+                                <span class="detail-value"><span data-i18n="up_to">حتى</span> 1,000,000 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="atm_withdrawal">السحب النقدي من ماكينات الصراف الآلي:</span>
+                                <span class="detail-value">30,000 <span data-i18n="currency_egp">جنيه</span> <span data-i18n="daily">يوميًا</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="card-btn" data-i18n="request_card">طلب البطاقة</button>
+                        <div class="card-details" style="color: #0EF; font-weight: 700; font-size: 14px;" data-i18n="widely_accepted">مقبولة على نطاق واسع</div>
+                    </div>
+                </div>
+                
+                <!-- Debit Card 3 -->
+                <div class="card-item" data-type="debit">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="card-type" data-i18n="card_type_debit">بطاقة سحب</div>
+                        <div class="card-name">Corporate Visa Signature Debit Card</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> <span data-i18n="card3_feature1">تصدر مع فتح الحساب المؤسسي عبر جميع فروع MSB مصر</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card3_feature2">تستخدم للسحب النقدي والشراء داخل مصر</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card3_feature3">تمكن من مراقبة استخدام حامل البطاقة</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card3_feature4">خط ساخن مخصص 19019 لعملاء الشركات</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card3_feature5">مقبولة لدى العديد من التجار في جميع أنحاء مصر</span></li>
+                        </ul>
+                        
+                        <div class="card-details">
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="issuance_fee">رسوم الإصدار:</span>
+                                <span class="detail-value">2,500 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="renewal_fee">رسوم التجديد:</span>
+                                <span class="detail-value">2,500 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="replacement_fee">استبدال بطاقة مفقودة/تالفة:</span>
+                                <span class="detail-value">500 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="domestic_purchase">الشراء داخل مصر (يومي):</span>
+                                <span class="detail-value"><span data-i18n="up_to">حتى</span> 1,250,000 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="atm_withdrawal">السحب النقدي من ماكينات الصراف الآلي:</span>
+                                <span class="detail-value">30,000 <span data-i18n="currency_egp">جنيه</span> <span data-i18n="daily">يوميًا</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="card-btn" data-i18n="request_card">طلب البطاقة</button>
+                        <div class="card-details" style="color: #0EF; font-weight: 700; font-size: 14px;" data-i18n="highest_services">أعلى مستوى من الخدمات</div>
+                    </div>
+                </div>
+                
+                <!-- Meeza Debit Card -->
+                <div class="card-item" data-type="debit">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="card-type" data-i18n="card_type_debit">بطاقة سحب</div>
+                        <div class="card-name">MEEZA Business Debit Card</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> <span data-i18n="card4_feature1">يمكن استخدامها للسحب النقدي والشراء والتجارة الإلكترونية داخل مصر</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card4_feature2">تتبع سهل لاستخدام البطاقة لتسهيل إدارة النقدية</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card4_feature3">تصدر باسم حامل البطاقة والشركة المالكة للحساب</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card4_feature4">خط ساخن مخصص 19019 لعملاء الشركات</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card4_feature5">لا يمكن إصدار بطاقات إضافية لهذا النوع</span></li>
+                        </ul>
+                        
+                        <div class="card-details">
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="domestic_purchase">الشراء داخل مصر:</span>
+                                <span class="detail-value"><span data-i18n="according_to_balance">حسب الرصيد المتاح في الحساب</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="atm_withdrawal">السحب النقدي من ماكينات الصراف الآلي:</span>
+                                <span class="detail-value">5 <span data-i18n="times_daily">مرات يوميًا</span>، <span data-i18n="max">بحد أقصى</span> 20,000 <span data-i18n="currency_egp">جنيه</span> <span data-i18n="daily">يوميًا</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="pos_withdrawal">السحب النقدي من أجهزة نقاط البيع:</span>
+                                <span class="detail-value"><span data-i18n="according_to_balance">حسب الرصيد المتاح في البطاقة/الحساب</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="card-btn" data-i18n="request_card">طلب البطاقة</button>
+                        <div class="card-details" style="color: #0EF; font-weight: 700; font-size: 14px;" data-i18n="egypt_only">للاستخدام داخل مصر فقط</div>
+                    </div>
+                </div>
+                
+                <!-- Deposit Card -->
+                <div class="card-item" data-type="deposit">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <div class="card-type" data-i18n="card_type_deposit">بطاقة إيداع</div>
+                        <div class="card-name">Corporate Deposit Card</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> <span data-i18n="card5_feature1">إيداع يومي فوري عبر ماكينات الصراف الآلي لبنك MSB</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card5_feature2">خدمة على مدار الساعة (24/7) بدون حد لعدد الإيداعات يوميًا</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card5_feature3">إيداع نقدي عبر أجهزة نقاط البيع في فروع بنك MSB</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card5_feature4">لا يمكن إجراء عمليات سحب نقدي أو شراء أو استعلام رصيد</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card5_feature5">إرسال رسالة نصية لتأكيد الإيداع</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card5_feature6">سارية لمدة خمس سنوات قابلة للتجديد</span></li>
+                        </ul>
+                        
+                        <div class="card-details">
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="card_type">نوع البطاقة:</span>
+                                <span class="detail-value"><span data-i18n="deposit_card_with">بطاقة إيداع بشعار</span> "Visa" <span data-i18n="or">أو</span> "Meeza"</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="beneficiaries">المستفيدون:</span>
+                                <span class="detail-value"><span data-i18n="legal_entities">الأشخاص الاعتباريون أصحاب الحسابات</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="card_validity">صلاحية البطاقة:</span>
+                                <span class="detail-value">5 <span data-i18n="years_renewable">سنوات قابلة للتجديد</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="deposit_confirmation">تأكيد الإيداع:</span>
+                                <span class="detail-value"><span data-i18n="instant_sms">رسالة SMS فورية</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="card-btn" data-i18n="request_card">طلب البطاقة</button>
+                        <div class="card-details" style="color: #0EF; font-weight: 700; font-size: 14px;" data-i18n="deposit_only">للإيداع فقط</div>
+                    </div>
+                </div>
+                
+                <!-- Prepaid Card -->
+                <div class="card-item" data-type="prepaid">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="card-type" data-i18n="card_type_prepaid">بطاقة مسبقة الدفع</div>
+                        <div class="card-name">Meeza Corporate Prepaid Card</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> <span data-i18n="card6_feature1">مصممة حصريًا لعملاء الشركات</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card6_feature2">أعلى معايير الأمان مع إشعارات SMS مجانية</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card6_feature3">استخدام للشراء والسحب والمدفوعات الحكومية</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card6_feature4">تحويل أموال مباشر من الحساب عبر BM Online Business</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card6_feature5">تتبع سهل لتفاصيل المعاملات من خلال BM Online Business</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="card6_feature6">تفعيل سهل عبر فروع أو ماكينات بنك MSB</span></li>
+                        </ul>
+                        
+                        <div class="card-details">
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="issuance_fee">رسوم الإصدار:</span>
+                                <span class="detail-value">150 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="replacement_fee">رسوم الاستبدال:</span>
+                                <span class="detail-value">50 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="daily_withdrawal_limit">حد السحب اليومي:</span>
+                                <span class="detail-value">30,000 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="daily_purchase_limit">حد الشراء اليومي:</span>
+                                <span class="detail-value">100,000 <span data-i18n="currency_egp">جنيه</span></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label" data-i18n="msb_atm_withdrawal">السحب من ماكينات بنك MSB:</span>
+                                <span class="detail-value"><span data-i18n="free">مجانًا</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="card-btn" data-i18n="request_card">طلب البطاقة</button>
+                        <div class="card-details" style="color: #0EF; font-weight: 700; font-size: 14px;" data-i18n="designed_for_corporate">مصممة للشركات</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="comparison_title">مقارنة بين بطاقات الشركات</h2>
+            <p class="section-subtitle" data-i18n="comparison_subtitle">
+                قارن بين مزايا ورسوم بطاقات الشركات المختلفة لتختار الأنسب لاحتياجات عملك.
+            </p>
+            
+            <div class="table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="feature">الميزة</th>
+                            <th>VISA Business Debit</th>
+                            <th>VISA Platinum Debit</th>
+                            <th>VISA Signature Debit</th>
+                            <th>MEEZA Business Debit</th>
+                            <th>MEEZA Prepaid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-i18n="issuance_fee">رسوم الإصدار</td>
+                            <td>250 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td>400 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td>2,500 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td data-i18n="not_specified">غير محدد</td>
+                            <td>150 <span data-i18n="currency_egp">جنيه</span></td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="renewal_fee">رسوم التجديد</td>
+                            <td>75 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td>400 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td>2,500 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td data-i18n="not_specified">غير محدد</td>
+                            <td data-i18n="not_specified">غير محدد</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td data-i18n="domestic_purchase">الشراء داخل مصر (يومي)</td>
+                            <td>1,000,000 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td>1,000,000 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td>1,250,000 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td data-i18n="according_to_balance">حسب الرصيد</td>
+                            <td>100,000 <span data-i18n="currency_egp">جنيه</span></td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="atm_withdrawal">السحب النقدي (يومي)</td>
+                            <td>30,000 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td>30,000 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td>30,000 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td>20,000 <span data-i18n="currency_egp">جنيه</span></td>
+                            <td>30,000 <span data-i18n="currency_egp">جنيه</span></td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="ecommerce">التجارة الإلكترونية</td>
+                            <td><i class="fas fa-check" style="color: #0ef;"></i></td>
+                            <td><i class="fas fa-check" style="color: #0ef;"></i></td>
+                            <td><i class="fas fa-check" style="color: #0ef;"></i></td>
+                            <td><i class="fas fa-check" style="color: #0ef;"></i></td>
+                            <td><i class="fas fa-check" style="color: #0ef;"></i></td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="international_use">الاستخدام خارج مصر</td>
+                            <td><i class="fas fa-check" style="color: #0ef;"></i></td>
+                            <td><i class="fas fa-times" style="color: #dc3545;"></i></td>
+                            <td><i class="fas fa-times" style="color: #dc3545;"></i></td>
+                            <td><i class="fas fa-times" style="color: #dc3545;"></i></td>
+                            <td><i class="fas fa-times" style="color: #dc3545;"></i></td>
+                        </tr>
+                        <tr class="highlight">
+                            <td data-i18n="dedicated_hotline">الخط الساخن المخصص</td>
+                            <td><i class="fas fa-check" style="color: #0ef;"></i></td>
+                            <td><i class="fas fa-check" style="color: #0ef;"></i></td>
+                            <td><i class="fas fa-check" style="color: #0ef;"></i></td>
+                            <td><i class="fas fa-check" style="color: #0ef;"></i></td>
+                            <td><i class="fas fa-check" style="color: #0ef;"></i></td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="card_validity">صلاحية البطاقة</td>
+                            <td>5 <span data-i18n="years">سنوات</span></td>
+                            <td>5 <span data-i18n="years">سنوات</span></td>
+                            <td>5 <span data-i18n="years">سنوات</span></td>
+                            <td>5 <span data-i18n="years">سنوات</span></td>
+                            <td>5 <span data-i18n="years">سنوات</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="benefits_title">مزايا بطاقات الشركات من بنك MSB</h2>
+            <p class="section-subtitle" data-i18n="benefits_subtitle">
+                نقدم لعملائنا من الشركات مجموعة من المزايا الحصرية المصممة لتحسين إدارة الشؤون المالية وزيادة كفاءة العمليات.
+            </p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="benefit-title" data-i18n="benefit1_title">إدارة مالية ذكية</h3>
+                    <p class="benefit-desc" data-i18n="benefit1_desc">
+                        تحكم كامل في مصاريف الشركة مع تقارير مفصلة ومراقبة في الوقت الحقيقي لجميع المعاملات.
+                    </p>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="benefit-title" data-i18n="benefit2_title">أمان متقدم</h3>
+                    <p class="benefit-desc" data-i18n="benefit2_desc">
+                        أنظمة حماية متطورة ضد الاحتيال مع تأمين شامل على البطاقات وإشعارات فورية لكل معاملة.
+                    </p>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="benefit-title" data-i18n="benefit3_title">دعم متخصص</h3>
+                    <p class="benefit-desc" data-i18n="benefit3_desc">
+                        خط ساخن مخصص 19019 وفريق دعم على مدار الساعة مخصص لعملاء الشركات فقط.
+                    </p>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="benefit-title" data-i18n="benefit4_title">حلول مخصصة</h3>
+                    <p class="benefit-desc" data-i18n="benefit4_desc">
+                        بطاقات مصممة خصيصًا لاحتياجات الشركات مع إمكانية تخصيص الحدود والصلاحيات.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Section -->
+    <section class="application-section">
+        <div class="container">
+            <div class="application-container">
+                <div class="application-content">
+                    <h3 data-i18n="application_title">كيفية التقديم للحصول على بطاقات الشركات</h3>
+                    <p data-i18n="application_subtitle">
+                        عملية التقديم لبطاقات شركات بنك MSB بسيطة وسريعة. اتبع الخطوات البسيطة للحصول على بطاقات شركتك في أسرع وقت.
+                    </p>
+                    
+                    <ul class="application-steps">
+                        <li><i class="fas fa-file-contract"></i> <span data-i18n="step1">تقديم طلب التقديم مع المستندات القانونية للشركة</span></li>
+                        <li><i class="fas fa-user-check"></i> <span data-i18n="step2">التحقق من هوية الممثل القانوني ومسؤولي الشركة</span></li>
+                        <li><i class="fas fa-search"></i> <span data-i18n="step3">مراجعة الطلب والتحقق من المعلومات والملاءة المالية</span></li>
+                        <li><i class="fas fa-credit-card"></i> <span data-i18n="step4">إصدار البطاقات وتخصيصها حسب احتياجات الشركة</span></li>
+                        <li><i class="fas fa-truck"></i> <span data-i18n="step5">تسليم البطاقات للشركة مع دليل الاستخدام والتفعيل</span></li>
+                        <li><i class="fas fa-lock"></i> <span data-i18n="step6">تفعيل البطاقات وبدء الاستخدام الفوري</span></li>
+                    </ul>
+                    
+                    <p data-i18n="application_note">
+                        يمكنك أيضًا التقديم عن طريق زيارة أي فرع من فروع بنك MSB أو عبر الاتصال بمركز خدمة عملاء الشركات.
+                    </p>
+                </div>
+                
+                <div class="application-form">
+                    <h3 class="form-title" data-i18n="request_form_title">طلب بطاقات للشركة</h3>
+                    <form id="cardApplicationForm">
+                        <div class="form-group">
+                            <label class="form-label" for="companyName" data-i18n="company_name">اسم الشركة</label>
+                            <input type="text" id="companyName" class="form-input" data-i18n-placeholder="company_name_placeholder" placeholder="الاسم الرسمي للشركة" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="commercialRegistration" data-i18n="commercial_registration">رقم السجل التجاري</label>
+                            <input type="text" id="commercialRegistration" class="form-input" data-i18n-placeholder="commercial_registration_placeholder" placeholder="رقم السجل التجاري" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="contactPerson" data-i18n="contact_person">اسم الشخص المسؤول</label>
+                            <input type="text" id="contactPerson" class="form-input" data-i18n-placeholder="contact_person_placeholder" placeholder="اسم الشخص المسؤول عن الطلب" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="contactPhone" data-i18n="contact_phone">رقم الهاتف</label>
+                            <input type="tel" id="contactPhone" class="form-input" data-i18n-placeholder="contact_phone_placeholder" placeholder="01XXXXXXXXX" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="cardType" data-i18n="card_type_select">نوع البطاقة المطلوبة</label>
+                            <select id="cardType" class="form-input" required>
+                                <option value="" disabled selected data-i18n="select_card_type">اختر نوع البطاقة</option>
+                                <option value="visa_business">VISA Business Debit Card</option>
+                                <option value="visa_platinum">Corporate Visa Platinum Debit Card</option>
+                                <option value="visa_signature">Corporate Visa Signature Debit Card</option>
+                                <option value="meeza_business">MEEZA Business Debit Card</option>
+                                <option value="deposit">Corporate Deposit Card</option>
+                                <option value="meeza_prepaid">MEEZA Corporate Prepaid Card</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="cardCount" data-i18n="card_count">عدد البطاقات المطلوبة</label>
+                            <input type="number" id="cardCount" class="form-input" data-i18n-placeholder="card_count_placeholder" placeholder="عدد البطاقات" min="1" max="50" required>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn" data-i18n="submit_request">إرسال الطلب <i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div id="footer-container"></div>   
+</body>
+</html>

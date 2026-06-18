@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.name">MSB BANK - المحفظة الإلكترونية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: linear-gradient(135deg, #0a2438 0%, #081b29 100%);
+            border-radius: 15px;
+            border: 2px solid rgba(49, 124, 129, 0.3);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideInUp 0.3s ease;
+        }
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(49, 124, 129, 0.3);
+        }
+        .modal-header h3 {
+            color: #a0d2db;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #a0d2db;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid rgba(49, 124, 129, 0.3);
+        }
+        .form-text {
+            font-size: 12px;
+            color: #a0d2db;
+            opacity: 0.7;
+            margin-top: 5px;
+            display: block;
+        }
+        .quick-amounts {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .transfer-summary {
+            background: rgba(79, 195, 247, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid rgba(49, 124, 129, 0.3);
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .summary-item.total {
+            font-weight: bold;
+            color: #4fc3f7;
+            font-size: 1.1em;
+        }
+        .wallet-transaction {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid rgba(49, 124, 129, 0.2);
+        }
+        .wallet-transaction:last-child {
+            border-bottom: none;
+        }
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .transaction-icon.recharge { background: #10b981; color: white; }
+        .transaction-icon.send { background: #ef4444; color: white; }
+        .transaction-icon.withdraw { background: #f59e0b; color: white; }
+        .transaction-icon.receive { background: #3b82f6; color: white; }
+        .transaction-details h4 { margin: 0 0 5px 0; color: #a0d2db; font-size: 14px; }
+        .transaction-details p { margin: 0; color: #a0d2db; opacity: 0.7; font-size: 12px; }
+        .transaction-amount { font-weight: bold; font-size: 16px; }
+        .transaction-amount.positive { color: #10b981; }
+        .transaction-amount.negative { color: #ef4444; }
+    </style>
+</head>
+<body class="rtl">
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="https://i.ibb.co/LhY9KjRv/MSB.png" alt="MSB">
+                    <div class="logo-text" data-i18n="app.name">MSB BANK</div>
+                </a>
+                
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="user-info">
+                    <div class="user-welcome">
+                        <div class="user-name" id="userName">
+                            <span data-i18n="hello">مرحباً</span>، <span id="userNameText">---</span>
+                        </div>
+                        <div class="user-account" id="accountNumber"><span data-i18n="accounts.account_number">الحساب</span>: <span id="accountNumberText">---</span></div>
+                        <div class="rewards-badge" onclick="BankApp.openAIAssistant()">
+                            <i class="fas fa-trophy"></i>
+                            <span data-i18n="header.rewards" id="rewardsLevel">---</span>
+                        </div>
+                    </div>
+                    
+                    <div class="header-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="window.location.href='/pages/currencyconverter-rate/index.html'">
+                            <i class="fas fa-coins"></i>
+                            <span data-i18n="header.currency_rates">اسعار العملات</span>
+                        </button>
+                        
+                        <button class="language-btn" id="languageToggle" data-i18n-toggle data-i18n-lang-btn>
+                            <i class="fas fa-language"></i> English
+                        </button>
+                        
+                        <div class="notifications">
+                            <button class="notifications-btn" onclick="document.getElementById('notificationDropdown').classList.toggle('active')">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge" id="notificationBadge">0</span>
+                            </button>
+                            <div class="notification-dropdown" id="notificationDropdown">
+                                <div class="notification-header">
+                                    <div class="notification-title" data-i18n="header.notifications">الإشعارات</div>
+                                    <button class="mark-all-read" onclick="BankApp.markAllNotificationsRead()" data-i18n="header.mark_all_read">تعيين الكل كمقروء</button>
+                                </div>
+                                <div class="notification-list" id="notificationList"></div>
+                                <div class="notification-footer">
+                                    <a href="#" class="view-all-notifications" data-i18n="header.view_all">عرض جميع الإشعارات</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="user-avatar" onclick="BankApp.logout()">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-list" id="navList">
+                <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i><span data-i18n="nav.home">الرئيسية</span></a></li>
+                <li class="nav-item"><a href="accounts.html" class="nav-link"><i class="fas fa-credit-card"></i><span data-i18n="nav.accounts">الحسابات</span></a></li>
+                <li class="nav-item"><a href="transfers.html" class="nav-link"><i class="fas fa-exchange-alt"></i><span data-i18n="nav.transfers">التحويلات</span></a></li>
+                <li class="nav-item"><a href="investments.html" class="nav-link"><i class="fas fa-chart-line"></i><span data-i18n="nav.investments">الاستثمارات</span></a></li>
+                <li class="nav-item"><a href="cards.html" class="nav-link"><i class="fas fa-credit-card"></i><span data-i18n="nav.cards">البطاقات</span></a></li>
+                <li class="nav-item"><a href="loans.html" class="nav-link"><i class="fas fa-hand-holding-usd"></i><span data-i18n="nav.loans">القروض</span></a></li>
+                <li class="nav-item"><a href="wallet.html" class="nav-link active"><i class="fas fa-wallet"></i><span data-i18n="nav.wallet">المحفظة</span></a></li>
+                <li class="nav-item"><a href="government.html" class="nav-link"><i class="fas fa-landmark"></i><span data-i18n="nav.government">الخدمات الحكومية</span></a></li>
+                <li class="nav-item"><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i><span data-i18n="nav.settings">الإعدادات</span></a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="page-section">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="wallet.title">المحفظة الإلكترونية</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="showRechargeModal()">
+                            <i class="fas fa-plus-circle"></i>
+                            <span data-i18n="wallet.recharge">شحن المحفظة</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- ملخص المحفظة -->
+                <div class="card mb-4">
+                    <div class="wallet-summary">
+                        <div class="wallet-balance">
+                            <div class="balance-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="balance-info">
+                                <div class="balance-label" data-i18n="wallet.balance">رصيد المحفظة</div>
+                                <div class="balance-amount" id="walletBalanceAmount">
+                                    <span class="loading-placeholder">---</span> <span data-i18n="currency.egp">ج.م</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="wallet-stats">
+                            <div class="stat-item">
+                                <span class="stat-label" data-i18n="wallet.total_sent">إجمالي الإرسال</span>
+                                <span class="stat-value" id="totalSent">0 <span data-i18n="currency.egp">ج.م</span></span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label" data-i18n="wallet.total_received">إجمالي الاستلام</span>
+                                <span class="stat-value" id="totalReceived">0 <span data-i18n="currency.egp">ج.م</span></span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label" data-i18n="wallet.transactions_count">عدد العمليات</span>
+                                <span class="stat-value" id="transactionsCount">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الإجراءات السريعة -->
+                <div class="grid grid-4 gap-4 mb-4">
+                    <div class="quick-action-card send" onclick="showSendMoneyModal()">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                        <div class="action-title" data-i18n="wallet.send">إرسال أموال</div>
+                        <div class="action-desc" data-i18n="wallet.send_desc">إرسال أموال إلى جهات اتصال</div>
+                    </div>
+                    
+                    <div class="quick-action-card receive" onclick="showReceiveModal()">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div class="action-title" data-i18n="wallet.receive">استلام أموال</div>
+                        <div class="action-desc" data-i18n="wallet.receive_desc">إنشاء رابط استلام فوري</div>
+                    </div>
+                    
+                    <div class="quick-action-card withdraw" onclick="showWithdrawModal()">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="action-title" data-i18n="wallet.withdraw">سحب للمصرف</div>
+                        <div class="action-desc" data-i18n="wallet.withdraw_desc">تحويل إلى حسابك البنكي</div>
+                    </div>
+                    
+                    <div class="quick-action-card qr" onclick="showQRCodeModal()">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="action-title" data-i18n="qr_code">رمز QR</div>
+                        <div class="action-desc" data-i18n="wallet.qr_desc">مسح للدفع أو الاستلام</div>
+                    </div>
+                </div>
+                
+                <!-- معاملات المحفظة -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-i18n="wallet_transactions">آخر معاملات المحفظة</h2>
+                        <button class="btn btn-sm btn-secondary" onclick="refreshWalletData()">
+                            <i class="fas fa-sync-alt"></i>
+                            تحديث
+                        </button>
+                    </div>
+                    
+                    <div id="walletTransactionsList" style="max-height: 400px; overflow-y: auto;">
+                        <div class="text-center p-3"><span data-i18n="loading">جاري التحميل...</span></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="app.name">MSB BANK</h3>
+                    <p data-i18n="footer.description">نقدم لكم خدمات مصرفية آمنة وسريعة تلبي جميع احتياجاتكم المالية مع أعلى معايير الأمان والجودة.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="quick_links">روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.home">الرئيسية</span></a></li>
+                        <li><a href="accounts.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.accounts">الحسابات</span></a></li>
+                        <li><a href="transfers.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.transfers">التحويلات</span></a></li>
+                        <li><a href="payments.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.payments">الدفع</span></a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 data-i18n="customer_service">خدمة العملاء</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> <span data-i18n="settings.faq">الأسئلة الشائعة</span></a></li>
+                        <li><a href="#" data-i18n="footer.complaints"><i class="fas fa-chevron-left"></i> الشكاوى والاقتراحات</a></li>
+                        <li><a href="#" data-i18n="footer.technical_support"><i class="fas fa-chevron-left"></i> الدعم الفني</a></li>
+                        <li><a href="#" data-i18n="settings.contact_us"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright" data-i18n-html="footer.copyright">
+                © <span class="current-year">2025</span> <span data-i18n="app.name">MSB BANK</span>. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // ============= إصلاح مشكلة زر القائمة في الجوال =============
+        (function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navList = document.getElementById('navList');
+            
+            if (menuToggle && navList) {
+                const newMenuToggle = menuToggle.cloneNode(true);
+                menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
+                
+                newMenuToggle.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    navList.classList.toggle('mobile-active');
+                });
+
+                document.addEventListener('click', function(event) {
+                    if (navList.classList.contains('mobile-active') && 
+                        !navList.contains(event.target) && 
+                        !newMenuToggle.contains(event.target)) {
+                        navList.classList.remove('mobile-active');
+                    }
+                });
+
+                const navLinks = navList.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        navList.classList.remove('mobile-active');
+                    });
+                });
+            }
+        })();
+
+        // ============= تحديث بيانات المحفظة من API =============
+        async function updateWalletData() {
+            console.log('🔄 تحديث بيانات المحفظة...');
+            
+            try {
+                // جلب رصيد المحفظة
+                const walletResult = await BankApp.apiCall('/wallet', { method: 'GET' });
+                if (walletResult.success && walletResult.wallet) {
+                    BankApp.user.walletBalance = walletResult.wallet.balance || 0;
+                    document.getElementById('walletBalanceAmount').innerHTML = 
+                        BankApp.user.walletBalance.toLocaleString() + ' ' + I18n.t('currency.egp');
+                }
+                
+                // جلب معاملات المحفظة
+                const transactionsResult = await BankApp.apiCall('/wallet/transactions', { method: 'GET' });
+                if (transactionsResult.success) {
+                    BankApp.user.walletTransactions = transactionsResult.transactions || [];
+                    updateWalletTransactionsList();
+                    updateWalletStats();
+                }
+                
+                console.log('✅ تم تحديث بيانات المحفظة - الرصيد:', BankApp.user.walletBalance);
+                
+            } catch (error) {
+                console.error('❌ خطأ في تحديث بيانات المحفظة:', error);
+                // إذا فشل ال API، استخدم البيانات المحلية
+                if (BankApp.user.walletBalance !== undefined) {
+                    document.getElementById('walletBalanceAmount').innerHTML = 
+                        BankApp.user.walletBalance.toLocaleString() + ' ' + I18n.t('currency.egp');
+                }
+                if (BankApp.user.walletTransactions) {
+                    updateWalletTransactionsList();
+                    updateWalletStats();
+                }
+            }
+        }
+        
+        // ============= تحديث قائمة معاملات المحفظة =============
+        function updateWalletTransactionsList() {
+            const container = document.getElementById('walletTransactionsList');
+            const transactions = BankApp.user.walletTransactions || [];
+            
+            if (transactions.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center p-3" style="color: var(--text-color); opacity: 0.7;">
+                        <i class="fas fa-exchange-alt" style="font-size: 48px; margin-bottom: 15px; display: block; opacity: 0.5;"></i>
+                        لا توجد معاملات في المحفظة
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = transactions.slice(0, 20).map(trans => {
+                let iconClass = '';
+                let iconName = '';
+                let amountClass = trans.amount >= 0 ? 'positive' : 'negative';
+                let amountPrefix = trans.amount >= 0 ? '+' : '';
+                
+                switch(trans.type) {
+                    case 'recharge':
+                        iconClass = 'recharge';
+                        iconName = 'plus-circle';
+                        break;
+                    case 'send':
+                        iconClass = 'send';
+                        iconName = 'paper-plane';
+                        break;
+                    case 'withdraw':
+                        iconClass = 'withdraw';
+                        iconName = 'university';
+                        break;
+                    case 'receive':
+                        iconClass = 'receive';
+                        iconName = 'download';
+                        break;
+                    default:
+                        iconClass = 'recharge';
+                        iconName = 'exchange-alt';
+                }
+                
+                return `
+                    <div class="wallet-transaction">
+                        <div class="transaction-info">
+                            <div class="transaction-icon ${iconClass}">
+                                <i class="fas fa-${iconName}"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <h4>${trans.description || (trans.type === 'recharge' ? 'شحن المحفظة' : trans.type === 'send' ? 'إرسال أموال' : trans.type === 'withdraw' ? 'سحب من المحفظة' : 'استلام أموال')}</h4>
+                                <p>${BankUtils.formatDate(trans.date)}</p>
+                                ${trans.toPhone ? `<p style="font-size: 11px; opacity: 0.6;">إلى: ${trans.toPhone}</p>` : ''}
+                            </div>
+                        </div>
+                        <div class="transaction-amount ${amountClass}">
+                            ${amountPrefix}${Math.abs(trans.amount).toLocaleString()} ${I18n.t('currency.egp')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // ============= تحديث إحصائيات المحفظة =============
+        function updateWalletStats() {
+            const transactions = BankApp.user.walletTransactions || [];
+            let totalSent = 0;
+            let totalReceived = 0;
+            
+            transactions.forEach(trans => {
+                if (trans.type === 'send' && trans.amount < 0) {
+                    totalSent += Math.abs(trans.amount);
+                } else if (trans.type === 'receive') {
+                    totalReceived += trans.amount;
+                } else if (trans.type === 'recharge') {
+                    totalReceived += trans.amount;
+                } else if (trans.type === 'withdraw' && trans.amount < 0) {
+                    totalSent += Math.abs(trans.amount);
+                }
+            });
+            
+            document.getElementById('totalSent').innerHTML = totalSent.toLocaleString() + ' ' + I18n.t('currency.egp');
+            document.getElementById('totalReceived').innerHTML = totalReceived.toLocaleString() + ' ' + I18n.t('currency.egp');
+            document.getElementById('transactionsCount').innerHTML = transactions.length;
+        }
+        
+        // ============= تحديث الصفحة بالكامل =============
+        async function refreshWalletData() {
+            BankUtils.showLoading(true, 'جاري تحديث بيانات المحفظة...');
+            await BankApp.loadData(false);
+            await updateWalletData();
+            BankUtils.showLoading(false);
+            BankUtils.showAlert('تم تحديث بيانات المحفظة', 'success');
+        }
+        
+        // ============= شحن المحفظة =============
+        function showRechargeModal() {
+            BankUtils.closeAllModals();
+            
+            const accounts = BankApp.user.accounts || [];
+            if (accounts.length === 0) {
+                BankUtils.showAlert('لا توجد حسابات للشحن منها', 'error');
+                return;
+            }
+            
+            const modalHTML = `
+                <div class="modal" id="rechargeModal" style="display: flex;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-coins"></i> شحن المحفظة</h3>
+                            <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="rechargeForm" onsubmit="processRecharge(event)">
+                                <div class="form-group">
+                                    <label class="form-label">المبلغ (ج.م)</label>
+                                    <input type="number" class="form-control" id="rechargeAmount" 
+                                           min="10" max="50000" value="100" required>
+                                    <div class="quick-amounts">
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setRechargeAmount(50)">50</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setRechargeAmount(100)">100</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setRechargeAmount(500)">500</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setRechargeAmount(1000)">1000</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">من حساب</label>
+                                    <select class="form-control" id="rechargeFromAccount" required>
+                                        ${accounts.map(acc => 
+                                            `<option value="${acc.id}">${acc.name} - ${acc.number} (${(acc.balance || 0).toLocaleString()} ج.م)</option>`
+                                        ).join('')}
+                                    </select>
+                                </div>
+                                
+                                <div class="transfer-summary">
+                                    <div class="summary-item total">
+                                        <span>المبلغ</span>
+                                        <span id="summaryAmount">100 ج.م</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px;">
+                                        <input type="checkbox" id="confirmRecharge" required>
+                                        <span>أؤكد صحة البيانات المدخلة</span>
+                                    </label>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-coins"></i>
+                                    تأكيد الشحن
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // تحديث الملخص عند تغيير المبلغ
+            const amountInput = document.getElementById('rechargeAmount');
+            if (amountInput) {
+                amountInput.addEventListener('input', function() {
+                    const amount = parseFloat(this.value) || 0;
+                    document.getElementById('summaryAmount').innerHTML = amount.toLocaleString() + ' ' + I18n.t('currency.egp');
+                });
+            }
+        }
+        
+        function setRechargeAmount(amount) {
+            document.getElementById('rechargeAmount').value = amount;
+            document.getElementById('summaryAmount').innerHTML = amount.toLocaleString() + ' ' + I18n.t('currency.egp');
+        }
+        
+        async function processRecharge(event) {
+            event.preventDefault();
+            
+            const amount = parseFloat(document.getElementById('rechargeAmount').value);
+            const fromAccountId = document.getElementById('rechargeFromAccount').value;
+            
+            if (!amount || amount <= 0) {
+                BankUtils.showAlert('يرجى إدخال مبلغ صحيح', 'error');
+                return;
+            }
+            
+            const fromAccount = BankApp.user.accounts?.find(acc => acc.id === fromAccountId);
+            if (!fromAccount || fromAccount.balance < amount) {
+                BankUtils.showAlert(`الرصيد غير كافٍ. المتاح: ${(fromAccount?.balance || 0).toLocaleString()} ج.م`, 'error');
+                return;
+            }
+            
+            BankUtils.showLoading(true, 'جاري شحن المحفظة...');
+            
+            try {
+                const result = await BankApp.apiCall('/wallet/recharge', {
+                    method: 'POST',
+                    body: JSON.stringify({ amount, fromAccountId })
+                });
+                
+                if (result.success) {
+                    // تحديث البيانات محلياً
+                    await BankApp.loadData(false);
+                    await updateWalletData();
+                    
+                    BankUtils.showLoading(false);
+                    BankUtils.closeAllModals();
+                    BankUtils.showAlert(`✅ تم شحن المحفظة بمبلغ ${amount.toLocaleString()} ج.م بنجاح`, 'success');
+                } else {
+                    throw new Error(result.message || 'فشل في شحن المحفظة');
+                }
+                
+            } catch (error) {
+                BankUtils.showLoading(false);
+                console.error('❌ Recharge error:', error);
+                BankUtils.showAlert(error.message || 'فشل في شحن المحفظة', 'error');
+            }
+        }
+        
+        // ============= إرسال أموال من المحفظة =============
+        function showSendMoneyModal() {
+            BankUtils.closeAllModals();
+            
+            const modalHTML = `
+                <div class="modal" id="sendMoneyModal" style="display: flex;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-paper-plane"></i> إرسال أموال من المحفظة</h3>
+                            <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="sendMoneyForm" onsubmit="processSendMoney(event)">
+                                <div class="form-group">
+                                    <label class="form-label">رقم الهاتف المستلم</label>
+                                    <input type="tel" class="form-control" id="sendPhone" 
+                                           placeholder="01XXXXXXXXX" pattern="[0-9]{11}" required>
+                                    <small class="form-text">أدخل رقم هاتف المستلم (11 رقم)</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">المبلغ (ج.م)</label>
+                                    <input type="number" class="form-control" id="sendAmount" 
+                                           min="5" max="10000" value="50" required>
+                                    <div class="quick-amounts">
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setSendAmount(50)">50</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setSendAmount(100)">100</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setSendAmount(500)">500</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setSendAmount(1000)">1000</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">رسالة (اختياري)</label>
+                                    <input type="text" class="form-control" id="sendMessage" 
+                                           placeholder="أدخل رسالة" maxlength="50">
+                                </div>
+                                
+                                <div class="transfer-summary">
+                                    <div class="summary-item">
+                                        <span>العمولة</span>
+                                        <span id="sendFees">1 ج.م</span>
+                                    </div>
+                                    <div class="summary-item total">
+                                        <span>الإجمالي</span>
+                                        <span id="sendTotal">51 ج.م</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px;">
+                                        <input type="checkbox" id="confirmSend" required>
+                                        <span>أؤكد صحة البيانات المدخلة</span>
+                                    </label>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-paper-plane"></i>
+                                    تأكيد الإرسال
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // تحديث الملخص عند تغيير المبلغ
+            const amountInput = document.getElementById('sendAmount');
+            if (amountInput) {
+                amountInput.addEventListener('input', updateSendSummary);
+            }
+            updateSendSummary();
+        }
+        
+        function setSendAmount(amount) {
+            document.getElementById('sendAmount').value = amount;
+            updateSendSummary();
+        }
+        
+        function updateSendSummary() {
+            const amount = parseFloat(document.getElementById('sendAmount').value) || 0;
+            const fees = Math.max(1, Math.ceil(amount * 0.01));
+            const total = amount + fees;
+            document.getElementById('sendFees').innerHTML = fees.toLocaleString() + ' ' + I18n.t('currency.egp');
+            document.getElementById('sendTotal').innerHTML = total.toLocaleString() + ' ' + I18n.t('currency.egp');
+        }
+        
+// إرسال أموال من المحفظة - نسخة معدلة مع التحقق
+async function processSendMoney(event) {
+    event.preventDefault();
+    
+    const phone = document.getElementById('sendPhone').value.trim();
+    const amount = parseFloat(document.getElementById('sendAmount').value);
+    const message = document.getElementById('sendMessage').value;
+    
+    // التحقق من رقم الهاتف
+    if (!phone || phone.length !== 11 || !/^01[0-9]{9}$/.test(phone)) {
+        BankUtils.showAlert('❌ يرجى إدخال رقم هاتف صحيح مكون من 11 رقم (مثال: 01012345678)', 'error');
+        return;
+    }
+    
+    if (!amount || amount <= 0) {
+        BankUtils.showAlert('❌ يرجى إدخال مبلغ صحيح', 'error');
+        return;
+    }
+    
+    const walletBalance = BankApp.user.walletBalance || 0;
+    const fees = Math.max(1, Math.ceil(amount * 0.01));
+    const total = amount + fees;
+    
+    if (walletBalance < total) {
+        BankUtils.showAlert(`⚠️ رصيد المحفظة غير كافٍ. المتاح: ${walletBalance.toLocaleString()} ج.م`, 'error');
+        return;
+    }
+    
+    // ✅ التحقق من وجود المستخدم قبل الإرسال
+    BankUtils.showLoading(true, 'جاري التحقق من رقم المستلم...');
+    
+    try {
+        // خطوة 1: التحقق من وجود المستخدم
+        const checkResult = await BankApp.apiCall('/wallet/check-user', {
+            method: 'POST',
+            body: JSON.stringify({ phone: phone })
+        });
+        
+        if (!checkResult.exists) {
+            BankUtils.showLoading(false);
+            BankUtils.showAlert(`❌ لا يوجد مستخدم مسجل برقم ${phone}. يرجى التأكد من الرقم.`, 'error');
+            return;
+        }
+        
+        // خطوة 2: إرسال الأموال إلى محفظة المستلم
+        BankUtils.showLoading(true, 'جاري إرسال الأموال...');
+        
+        const sendResult = await BankApp.apiCall('/wallet/send-to-wallet', {
+    method: 'POST',
+    body: JSON.stringify({ 
+        toPhone: phone, 
+        amount: amount, 
+        message: message 
+    })
+});
+        
+        if (sendResult.success) {
+            await BankApp.loadData(false);
+            await updateWalletData();
+            
+            BankUtils.showLoading(false);
+            BankUtils.closeAllModals();
+            BankUtils.showAlert(`✅ تم إرسال ${amount.toLocaleString()} ج.م إلى ${phone} بنجاح`, 'success');
+        } else {
+            throw new Error(sendResult.message || 'فشل في إرسال الأموال');
+        }
+        
+    } catch (error) {
+        BankUtils.showLoading(false);
+        console.error('❌ Send money error:', error);
+        BankUtils.showAlert(error.message || 'فشل في إرسال الأموال', 'error');
+    }
+}
+
+        // ============= استلام أموال =============
+        function showReceiveModal() {
+            BankUtils.closeAllModals();
+            
+            const walletPhone = BankApp.user.phone || '01XXXXXXXXX';
+            
+            const modalHTML = `
+                <div class="modal" id="receiveModal" style="display: flex;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-download"></i> استلام أموال</h3>
+                            <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <div style="background: white; padding: 20px; width: 200px; height: 200px; margin: 20px auto; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-qrcode" style="font-size: 160px; color: black;"></i>
+                            </div>
+                            <p><strong>رقم محفظتك:</strong> ${walletPhone}</p>
+                            <p style="color: var(--text-color); opacity: 0.8; margin: 15px 0;">يمكنك مشاركة هذا الرقم لاستلام الأموال</p>
+                            <button class="btn btn-primary" onclick="copyWalletNumber('${walletPhone}')">
+                                <i class="fas fa-copy"></i> نسخ رقم المحفظة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        function copyWalletNumber(phone) {
+            navigator.clipboard.writeText(phone);
+            BankUtils.showAlert('تم نسخ رقم المحفظة', 'success');
+        }
+        
+        // ============= سحب من المحفظة للحساب البنكي =============
+        function showWithdrawModal() {
+            BankUtils.closeAllModals();
+            
+            const accounts = BankApp.user.accounts || [];
+            if (accounts.length === 0) {
+                BankUtils.showAlert('لا توجد حسابات للسحب إليها', 'error');
+                return;
+            }
+            
+            const modalHTML = `
+                <div class="modal" id="withdrawModal" style="display: flex;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-university"></i> سحب من المحفظة للحساب البنكي</h3>
+                            <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="withdrawForm" onsubmit="processWithdraw(event)">
+                                <div class="form-group">
+                                    <label class="form-label">المبلغ (ج.م)</label>
+                                    <input type="number" class="form-control" id="withdrawAmount" 
+                                           min="10" max="50000" value="100" required>
+                                    <div class="quick-amounts">
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setWithdrawAmount(100)">100</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setWithdrawAmount(500)">500</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="setWithdrawAmount(1000)">1000</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">إلى الحساب</label>
+                                    <select class="form-control" id="withdrawToAccount" required>
+                                        ${accounts.map(acc => 
+                                            `<option value="${acc.id}">${acc.name} - ${acc.number}</option>`
+                                        ).join('')}
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px;">
+                                        <input type="checkbox" id="confirmWithdraw" required>
+                                        <span>أؤكد صحة البيانات المدخلة</span>
+                                    </label>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-check"></i>
+                                    تأكيد السحب
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        function setWithdrawAmount(amount) {
+            document.getElementById('withdrawAmount').value = amount;
+        }
+        
+        async function processWithdraw(event) {
+            event.preventDefault();
+            
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const toAccountId = document.getElementById('withdrawToAccount').value;
+            
+            if (!amount || amount <= 0) {
+                BankUtils.showAlert('يرجى إدخال مبلغ صحيح', 'error');
+                return;
+            }
+            
+            const walletBalance = BankApp.user.walletBalance || 0;
+            if (walletBalance < amount) {
+                BankUtils.showAlert(`⚠️ رصيد المحفظة غير كافٍ. المتاح: ${walletBalance.toLocaleString()} ج.م`, 'error');
+                return;
+            }
+            
+            BankUtils.showLoading(true, 'جاري السحب من المحفظة...');
+            
+            try {
+                const result = await BankApp.apiCall('/wallet/withdraw', {
+                    method: 'POST',
+                    body: JSON.stringify({ amount: amount, toAccountId: toAccountId })
+                });
+                
+                if (result.success) {
+                    await BankApp.loadData(false);
+                    await updateWalletData();
+                    
+                    BankUtils.showLoading(false);
+                    BankUtils.closeAllModals();
+                    BankUtils.showAlert(`✅ تم سحب ${amount.toLocaleString()} ج.م من المحفظة إلى حسابك البنكي بنجاح`, 'success');
+                } else {
+                    throw new Error(result.message || 'فشل في سحب الأموال');
+                }
+                
+            } catch (error) {
+                BankUtils.showLoading(false);
+                console.error('❌ Withdraw error:', error);
+                BankUtils.showAlert(error.message || 'فشل في سحب الأموال', 'error');
+            }
+        }
+        
+        // ============= عرض QR Code =============
+        function showQRCodeModal() {
+            BankUtils.closeAllModals();
+            
+            const walletPhone = BankApp.user.phone || '01XXXXXXXXX';
+            const walletBalance = BankApp.user.walletBalance || 0;
+            
+            const modalHTML = `
+                <div class="modal" id="qrModal" style="display: flex;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-qrcode"></i> رمز QR للمحفظة</h3>
+                            <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <div style="background: white; padding: 20px; width: 200px; height: 200px; margin: 20px auto; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-qrcode" style="font-size: 160px; color: black;"></i>
+                            </div>
+                            <p><strong>رقم المحفظة:</strong> ${walletPhone}</p>
+                            <p><strong>الرصيد:</strong> ${walletBalance.toLocaleString()} ج.م</p>
+                            <button class="btn btn-primary" onclick="copyWalletNumber('${walletPhone}')">
+                                <i class="fas fa-copy"></i> نسخ رقم المحفظة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        // ============= تحديث البيانات عند تغيير اللغة =============
+        document.addEventListener('languageChanged', function() {
+            updateWalletTransactionsList();
+            updateWalletStats();
+        });
+        
+        // ============= تهيئة الصفحة =============
+        document.addEventListener('DOMContentLoaded', async function() {
+            // انتظار تحميل BankApp
+            const checkBankApp = setInterval(async () => {
+                if (window.BankApp && BankApp.user) {
+                    clearInterval(checkBankApp);
+                    console.log('✅ BankApp loaded, initializing wallet page...');
+                    
+                    // تحميل بيانات المحفظة من API
+                    await updateWalletData();
+                }
+            }, 100);
+            
+            setTimeout(async () => {
+                clearInterval(checkBankApp);
+                if (window.BankApp && BankApp.user) {
+                    console.log('✅ Fallback: initializing wallet page...');
+                    await updateWalletData();
+                }
+            }, 5000);
+        });
+        // ========================================
+// دوال التحقق من المستخدم وإرسال للمحفظة
+// ========================================
+
+// التحقق من وجود مستخدم برقم الهاتف
+async function checkUserExists(phone) {
+    try {
+        const result = await BankApp.apiCall('/wallet/check-user', {
+            method: 'POST',
+            body: JSON.stringify({ phone: phone })
+        });
+        return result;
+    } catch (error) {
+        console.error('Check user error:', error);
+        return { exists: false, message: error.message };
+    }
+}
+
+// عرض مودال تأكيد الإرسال مع معلومات المستلم
+function showSendConfirmModal(phone, userName, amount, fees, total, onConfirm) {
+    const existingModal = document.getElementById('sendConfirmModal');
+    if (existingModal) existingModal.remove();
+    
+    const modalHTML = `
+        <div class="modal" id="sendConfirmModal" style="display: flex; z-index: 10001;">
+            <div class="modal-content" style="max-width: 450px;">
+                <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                    <h3 style="color: #0ef;">
+                        <i class="fas fa-paper-plane" style="color: #f59e0b;"></i>
+                        تأكيد إرسال الأموال
+                    </h3>
+                    <button class="modal-close" onclick="closeSendConfirmModal()" style="color: #a0d2db;">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div style="background: rgba(79, 195, 247, 0.1); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                            <span style="color: var(--text-color);">إلى:</span>
+                            <strong style="color: #0ef;">${userName}</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                            <span style="color: var(--text-color);">رقم الهاتف:</span>
+                            <strong style="color: #a0d2db;">${phone}</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                            <span style="color: var(--text-color);">المبلغ:</span>
+                            <strong style="color: #10b981;">${amount.toLocaleString()} ج.م</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                            <span style="color: var(--text-color);">العمولة:</span>
+                            <strong style="color: #f59e0b;">${fees.toLocaleString()} ج.م</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                            <span style="color: var(--text-color);">الإجمالي:</span>
+                            <strong style="color: #ef4444;">${total.toLocaleString()} ج.م</strong>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(239, 68, 68, 0.1); border-radius: 12px; padding: 12px; border-right: 3px solid #f59e0b;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-info-circle" style="color: #f59e0b;"></i>
+                            <span style="color: var(--text-color); font-size: 13px;">
+                                سيتم إرسال المبلغ إلى محفظة المستلم. لا يمكن استرجاع الأموال بعد الإرسال.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: flex; gap: 10px; justify-content: center; border-top: 1px solid var(--border-color); padding: 15px;">
+                    <button class="btn btn-secondary" onclick="closeSendConfirmModal()" style="flex: 1;">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                    <button class="btn btn-primary" id="confirmSendBtn" style="flex: 1; background: linear-gradient(135deg, #0ef 0%, #0a8ba8 100%);">
+                        <i class="fas fa-paper-plane"></i> تأكيد الإرسال
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    document.getElementById('confirmSendBtn')?.addEventListener('click', () => {
+        closeSendConfirmModal();
+        if (onConfirm) onConfirm();
+    });
+}
+
+function closeSendConfirmModal() {
+    const modal = document.getElementById('sendConfirmModal');
+    if (modal) modal.remove();
+}
+// عرض مودال إرسال أموال - مع التحقق من المستخدم
+function showSendMoneyModal() {
+    BankUtils.closeAllModals();
+    
+    const modalHTML = `
+        <div class="modal" id="sendMoneyModal" style="display: flex;">
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                    <h3 style="color: #0ef;">
+                        <i class="fas fa-paper-plane"></i> إرسال أموال من المحفظة
+                    </h3>
+                    <button class="modal-close" onclick="BankUtils.closeAllModals()" style="color: #a0d2db;">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="sendMoneyForm" onsubmit="validateAndSend(event)">
+                        <div class="form-group">
+                            <label class="form-label" style="color: var(--text-color);">
+                                <i class="fas fa-phone"></i> رقم الهاتف المستلم
+                            </label>
+                            <input type="tel" class="form-control" id="sendPhone" 
+                                   placeholder="01XXXXXXXXX" pattern="[0-9]{11}" required
+                                   style="background: rgba(255,255,255,0.1); color: var(--text-color);">
+                            <small class="form-text">أدخل رقم هاتف المستلم (11 رقم)</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" style="color: var(--text-color);">
+                                <i class="fas fa-coins"></i> المبلغ (ج.م)
+                            </label>
+                            <input type="number" class="form-control" id="sendAmount" 
+                                   min="5" max="10000" value="50" required
+                                   style="background: rgba(255,255,255,0.1); color: var(--text-color);">
+                            <div class="quick-amounts" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="setSendAmount(50)">50</button>
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="setSendAmount(100)">100</button>
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="setSendAmount(500)">500</button>
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="setSendAmount(1000)">1000</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" style="color: var(--text-color);">
+                                <i class="fas fa-comment"></i> رسالة (اختياري)
+                            </label>
+                            <input type="text" class="form-control" id="sendMessage" 
+                                   placeholder="أدخل رسالة" maxlength="50"
+                                   style="background: rgba(255,255,255,0.1); color: var(--text-color);">
+                        </div>
+                        
+                        <div class="transfer-summary" style="margin: 15px 0;">
+                            <div class="summary-item">
+                                <span>العمولة</span>
+                                <span id="sendFees">1 ج.م</span>
+                            </div>
+                            <div class="summary-item total">
+                                <span>الإجمالي</span>
+                                <span id="sendTotal">51 ج.م</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" id="confirmSend" required>
+                                <span style="color: var(--text-color);">أؤكد صحة البيانات المدخلة</span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-search"></i>
+                            التحقق والمتابعة
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    const amountInput = document.getElementById('sendAmount');
+    if (amountInput) {
+        amountInput.addEventListener('input', updateSendSummary);
+    }
+    updateSendSummary();
+}
+
+// دالة التحقق من المستخدم قبل الإرسال
+// دالة التحقق من المستخدم قبل الإرسال (باستخدام API موجود)
+// دالة التحقق من المستخدم قبل الإرسال (باستخدام API)
+async function validateAndSend(event) {
+    event.preventDefault();
+    
+    const phone = document.getElementById('sendPhone').value.trim();
+    const amount = parseFloat(document.getElementById('sendAmount').value);
+    const message = document.getElementById('sendMessage').value;
+    
+    // التحقق من رقم الهاتف
+    if (!phone || phone.length !== 11 || !/^01[0-9]{9}$/.test(phone)) {
+        BankUtils.showAlert('❌ يرجى إدخال رقم هاتف صحيح مكون من 11 رقم', 'error');
+        return;
+    }
+    
+    if (!amount || amount <= 0) {
+        BankUtils.showAlert('❌ يرجى إدخال مبلغ صحيح', 'error');
+        return;
+    }
+    
+    const walletBalance = BankApp.user.walletBalance || 0;
+    const fees = Math.max(1, Math.ceil(amount * 0.01));
+    const total = amount + fees;
+    
+    if (walletBalance < total) {
+        BankUtils.showAlert(`⚠️ رصيد المحفظة غير كافٍ. المتاح: ${walletBalance.toLocaleString()} ج.م`, 'error');
+        return;
+    }
+    
+    // ✅ التحقق من وجود المستخدم في الـ Backend
+    BankUtils.showLoading(true, 'جاري التحقق من رقم المستلم...');
+    
+    try {
+        const checkResult = await BankApp.apiCall('/wallet/check-user', {
+            method: 'POST',
+            body: JSON.stringify({ phone: phone })
+        });
+        
+        BankUtils.showLoading(false);
+        
+        if (!checkResult.exists) {
+            BankUtils.showAlert(`❌ لا يوجد مستخدم مسجل برقم ${phone}. يرجى التأكد من الرقم.`, 'error');
+            return;
+        }
+        
+        // ✅ عرض مودال التأكيد مع اسم المستلم
+        showSendConfirmModal(phone, checkResult.userName, amount, fees, total, async () => {
+            BankUtils.showLoading(true, 'جاري إرسال الأموال...');
+            
+            try {
+                const sendResult = await BankApp.apiCall('/wallet/send-to-wallet', {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        toPhone: phone, 
+                        amount: amount, 
+                        message: message 
+                    })
+                });
+                
+                if (sendResult.success) {
+                    await BankApp.loadData(false);
+                    await updateWalletData();
+                    
+                    BankUtils.showLoading(false);
+                    BankUtils.closeAllModals();
+                    BankUtils.showAlert(`✅ تم إرسال ${amount.toLocaleString()} ج.م إلى ${checkResult.userName} بنجاح`, 'success');
+                } else {
+                    throw new Error(sendResult.message || 'فشل في إرسال الأموال');
+                }
+            } catch (error) {
+                BankUtils.showLoading(false);
+                BankUtils.showAlert(error.message || 'فشل في إرسال الأموال', 'error');
+            }
+        });
+        
+    } catch (error) {
+        BankUtils.showLoading(false);
+        console.error('❌ Check user error:', error);
+        
+        if (error.message.includes('404')) {
+            BankUtils.showAlert('⚠️ خدمة التحقق غير متاحة حالياً. يرجى المحاولة لاحقاً.', 'warning');
+        } else {
+            BankUtils.showAlert(error.message || 'فشل في التحقق من المستخدم', 'error');
+        }
+    }
+}
+
+</script>
+</body>
+</html>

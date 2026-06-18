@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تمويل المشروعات متناهية الصغر - بنك مصر</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts for Arabic -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css files/mini.css">
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>    
+    <script src="/language.js"></script>  
+    <script src="/load-components.js"></script> 
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+</head>
+<body>
+    <div id="navbar-container"></div>
+    
+    <!-- Hero Section -->
+    <section id="home" class="heroo">
+        <div class="container fade-in">
+            <h1><i class="fas fa-hand-holding-usd"></i> <span data-i18n="micro_finance.hero_title">منتج مرابحات تمويل المشروعات متناهية الصغر</span></h1>
+            <p data-i18n="micro_finance.hero_description">تمويل يصل إلى 400,000 جنيه مصري لدعم مشاريعك الصغيرة بطريقة إسلامية</p>
+            <a href="#product" class="btn btn-primary btn-lg"><i class="fas fa-arrow-down"></i> <span data-i18n="micro_finance.discover_more">اكتشف المزيد</span></a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <section id="product" class="section fade-in">
+            <h2 class="section-title"><i class="fas fa-chart-line"></i> <span data-i18n="micro_finance.company_size_title">حجم شركات تمويل المشروعات متناهية الصغر</span></h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card p-4">
+                        <h5><i class="fas fa-building icon"></i> <span data-i18n="micro_finance.existing_companies">الشركات القائمة</span></h5>
+                        <p data-i18n="micro_finance.sales_under_million">المبيعات حتى أقل من مليون جنيه مصري سنوياً.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card p-4">
+                        <h5><i class="fas fa-seedling icon"></i> <span data-i18n="micro_finance.companies_under_year">الشركات القائمة لمدة أقل من عام</span></h5>
+                        <p data-i18n="micro_finance.capital_under_50k">رأس المال المدفوع أقل من 50 ألف جم.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title mt-5"><i class="fas fa-lightbulb"></i> <span data-i18n="micro_finance.product_concept">فكرة المنتج</span></h3>
+            <div class="card p-4">
+                <p data-i18n="micro_finance.product_description">
+                    برنامج مرابحة آجلة مقسطة لتمويل أصحاب المشروعات متناهية الصغر التي تزاول الأنشطة التجارية أو الصناعية أو الخدمية والتي لا يزيد حجم إيراداتها السنوية عن مليون جنيه. يتم التمويل بنظام (المرابحة للآمر بالشراء أو المرابحة بالوكالة) حيث يوقع العميل على عقد اتفاق لتمويل شراء بضاعة ثم تنفيذ عملية المرابحة للعميل مع هامش ربح متفق عليه، ثم يتم توزيع الإجمالي (قيمة البضاعة المشتراة + هامش ربح البنك) على مجموعة من الأقساط يتم الاتفاق عليها بين البنك والعميل.
+                </p>
+            </div>
+        </section>
+
+        <section id="requirements" class="section fade-in">
+            <h2 class="section-title"><i class="fas fa-clipboard-check"></i> <span data-i18n="micro_finance.requirements_title">الشروط العامة والأنشطة</span></h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card p-4">
+                        <h5><i class="fas fa-user-check icon"></i> <span data-i18n="micro_finance.general_conditions">الشروط العامة لمنح المرابحة</span></h5>
+                        <p data-i18n="micro_finance.follow_conditions">الرجاء متابعه الشروط بدقه و الاتخاذ بها</p>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><i class="fas fa-check-circle icon"></i> <span data-i18n="micro_finance.condition1">الحد الأدنى لعمر العميل 21 عاماً وبحد أقصى 65 عاماً في تاريخ انتهاء مدة المرابحة.</span></li>
+                            <li class="list-group-item"><i class="fas fa-check-circle icon"></i> <span data-i18n="micro_finance.condition2">ألا يكون الضامن قاصراً.</span></li>
+                            <li class="list-group-item"><i class="fas fa-check-circle icon"></i> <span data-i18n="micro_finance.condition3">أن يكون كلا من العميل والضامن مصري الجنسية.</span></li>
+                            <li class="list-group-item"><i class="fas fa-check-circle icon"></i> <span data-i18n="micro_finance.condition4">أن يجيد العميل أو ضامنه القراءة والكتابة (أحدهما على الأقل).</span></li>
+                            <li class="list-group-item"><i class="fas fa-check-circle icon"></i> <span data-i18n="micro_finance.condition5">أن يكون النشاط قائماً منذ سنة على الأقل.</span></li>
+                            <li class="list-group-item"><i class="fas fa-check-circle icon"></i> <span data-i18n="micro_finance.condition6">أن يكون نشاط العميل داخل نطاق المدينة أو القرية أو المركز الذي يقع فيه فرع المعاملات الإسلامية.</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card p-4">
+                        <h5><i class="fas fa-industry icon"></i> <span data-i18n="micro_finance.fundable_activities">الأنشطة المتاح تمويلها</span></h5>
+                        <p data-i18n="micro_finance.activities_description">كافة العملاء التي تمارس الأنشطة (التجارية – الصناعية – الخدمية) بغرض تمويل رأس المال العامل وألا يكون النشاط من الأنشطة غير المباحة شرعاً.</p>
+                        <h6 data-i18n="micro_finance.prohibited_activities">الأنشطة المحظورة:</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><i class="fas fa-times-circle icon"></i> <span data-i18n="micro_finance.prohibited1">تصنيع وتجارة الأسلحة والذخائر وأنشطة القمار والملاهي الليلية وتصنيع وتجارة الخمور.</span></li>
+                            <li class="list-group-item"><i class="fas fa-times-circle icon"></i> <span data-i18n="micro_finance.prohibited2">الأنشطة الإعلامية ومكاتب المحاماة والمحاسبة والاستشارات القانونية والسماسرة.</span></li>
+                            <li class="list-group-item"><i class="fas fa-times-circle icon"></i> <span data-i18n="micro_finance.prohibited3">أنشطة الإنتاج والتصنيع (الزراعي / الحيواني / الداجني / السمكي).</span></li>
+                            <li class="list-group-item"><i class="fas fa-times-circle icon"></i> <span data-i18n="micro_finance.prohibited4">مكاتب النقل والرحلات.</span></li>
+                            <li class="list-group-item"><i class="fas fa-times-circle icon"></i> <span data-i18n="micro_finance.prohibited5">وسائل النقل (سواء كانت وسيلة النقل باسم النشاط / باسم العميل).</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title mt-5"><i class="fas fa-list-ul"></i> <span data-i18n="micro_finance.fundable_examples">أمثلة على الأنشطة المتاح تمويلها</span></h3>
+            <div class="card p-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><i class="fas fa-store icon"></i> <span data-i18n="micro_finance.activity1">البقالة</span></li>
+                            <li class="list-group-item"><i class="fas fa-utensils icon"></i> <span data-i18n="micro_finance.activity2">تجارة الأغذية والمشروبات</span></li>
+                            <li class="list-group-item"><i class="fas fa-couch icon"></i> <span data-i18n="micro_finance.activity3">تجارة الأخشاب والأثاث</span></li>
+                            <li class="list-group-item"><i class="fas fa-tshirt icon"></i> <span data-i18n="micro_finance.activity4">صناعة وتجارة الملابس والمنسوجات</span></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><i class="fas fa-shoe-prints icon"></i> <span data-i18n="micro_finance.activity5">صناعة وتجارة الجلود والأحذية</span></li>
+                            <li class="list-group-item"><i class="fas fa-print icon"></i> <span data-i18n="micro_finance.activity6">صناعة وتجارة الورق والطباعة والتغليف</span></li>
+                            <li class="list-group-item"><i class="fas fa-glass-whiskey icon"></i> <span data-i18n="micro_finance.activity7">تجارة الزجاج</span></li>
+                            <li class="list-group-item"><i class="fas fa-paint-roller icon"></i> <span data-i18n="micro_finance.activity8">تجارة الدهانات</span></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><i class="fas fa-tools icon"></i> <span data-i18n="micro_finance.activity9">تجارة الألومنيوم</span></li>
+                            <li class="list-group-item"><i class="fas fa-plug icon"></i> <span data-i18n="micro_finance.activity10">تجارة الأسلاك والكابلات وصناعة معدات الإضاءة الكهربائية</span></li>
+                            <li class="list-group-item"><i class="fas fa-soap icon"></i> <span data-i18n="micro_finance.activity11">صناعة وتجارة الصابون والمطهرات</span></li>
+                            <li class="list-group-item"><i class="fas fa-tv icon"></i> <span data-i18n="micro_finance.activity12">تجارة الأجهزة الكهربائية والمنزلية</span></li>
+                            <li class="list-group-item"><i class="fas fa-recycle icon"></i> <span data-i18n="micro_finance.activity13">صناعة وتجارة البلاستيك</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="table-container">
+            <h2 data-i18n="micro_finance.products_details">البيان والتفاصيل للمنتجات</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th data-i18n="micro_finance.statement">البيان</th>
+                        <th data-i18n="micro_finance.product_one">المنتج الأول</th>
+                        <th data-i18n="micro_finance.product_two">المنتج الثاني</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="highlight" data-i18n="micro_finance.purchase_value">القيمة الشرائية للمرابحة</td>
+                        <td data-i18n="micro_finance.product1_range">من 30,000 إلى 75,000 جم</td>
+                        <td data-i18n="micro_finance.product2_range">أكبر من 75,000 إلى 400,000 جم</td>
+                    </tr>
+                    <tr>
+                        <td class="highlight" data-i18n="micro_finance.installment_segments">شرائح المرابحة والتدرج في قيمتها</td>
+                        <td>
+                            <span data-i18n="micro_finance.segment1_detail">
+                                الشريحة الأولى: من 30,000 إلى 50,000 جم.<br>
+                                الشريحة الثانية: أكبر من 50,000 إلى 75,000 جم.<br>
+                                يمكن إعطاء العملاء ميزة للمنح بدءاً من الشريحة الثانية بشرط أن يكون للعميل تاريخ ائتماني مع بنك مصر أو البنوك الأخرى أو جمعيات وشركات التمويل متناهي الصغر المقر عنها.
+                            </span>
+                        </td>
+                        <td>
+                            <span data-i18n="micro_finance.segment2_detail">
+                                الشريحة الأولى: أكبر من 75,000 إلى 150,000 جم.<br>
+                                الشريحة الثانية: أكبر من 150,000 إلى 250,000 جم.<br>
+                                الشريحة الثالثة: أكبر من 250,000 إلى 400,000 جم.<br>
+                                يمكن إعطاء العملاء ميزة للمنح بداية من الشريحة الثانية بشرط أن يكون للمنشأة تاريخ ائتماني (في التمويل متناهي الصغر) مع بنك مصر أو البنوك الأخرى أو جمعيات وشركات التمويل متناهي الصغر المقر عنها.<br>
+                                يمكن زيادة المبلغ الممنوح إلى الشريحة الثالثة بعد البقاء لمدة 18 شهر متصلة في أحدث مرابحة في الشريحة الثانية لهم طرف مصرفنا.
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="highlight" data-i18n="micro_finance.installment_duration">مدة المرابحة</td>
+                        <td data-i18n="micro_finance.product1_duration">من 6 إلى 24 شهر</td>
+                        <td data-i18n="micro_finance.product2_duration">من 12 إلى 36 شهر</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div id="footer-container"></div>
+</body>
+</html>
+    
+
+        

@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.name">MSB BANK - الحسابات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            color: white;
+            border: none;
+        }
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+            transform: translateY(-2px);
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+            color: white;
+            border: none;
+        }
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+            transform: translateY(-2px);
+        }
+        .btn-warning:disabled, .btn-danger:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: not-allowed;
+        }
+        .text-success { color: #10b981; }
+        .text-danger { color: #ef4444; }
+        .bg-success { background: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .bg-warning { background: #f59e0b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        
+        /* تنسيق الملخص في نموذج الإرسال */
+        .transfer-summary {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid var(--border-color);
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .summary-item.total {
+            font-weight: bold;
+            color: var(--secondary-color);
+            font-size: 1.1em;
+        }
+        .form-text {
+            font-size: 12px;
+            color: #a0d2db;
+            opacity: 0.8;
+            margin-top: 5px;
+            display: block;
+        }
+
+        /* أنيميشن للمودال */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* تحسين ظهور المودال */
+        .modal {
+            z-index: 10000;
+        }
+
+        .modal-content {
+            animation: slideInUp 0.3s ease;
+        }
+
+        .modal-footer .btn {
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .modal-footer .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="rtl">
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="https://i.ibb.co/LhY9KjRv/MSB.png" alt="MSB">
+                    <div class="logo-text" data-i18n="app.name">MSB BANK</div>
+                </a>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-info">
+                    <div class="user-welcome">
+                        <div class="user-name" id="userName">
+                            <span data-i18n="hello">مرحباً</span>، <span id="userNameText">---</span>
+                        </div>
+                        <div class="user-account" id="accountNumber"><span data-i18n="accounts.account_number">الحساب</span>: <span id="accountNumberText">---</span></div>
+                        <div class="rewards-badge" onclick="BankApp.openAIAssistant()">
+                            <i class="fas fa-trophy"></i>
+                            <span data-i18n="header.rewards" id="rewardsLevel">---</span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="window.location.href='/pages/currencyconverter-rate/index.html'">
+                            <i class="fas fa-coins"></i>
+                            <span data-i18n="header.currency_rates">اسعار العملات</span>
+                        </button>
+                        <button class="language-btn" id="languageToggle" data-i18n-toggle data-i18n-lang-btn>
+                            <i class="fas fa-language"></i> English
+                        </button>
+                        <div class="notifications">
+                            <button class="notifications-btn" onclick="document.getElementById('notificationDropdown').classList.toggle('active')">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge" id="notificationBadge">0</span>
+                            </button>
+                            <div class="notification-dropdown" id="notificationDropdown">
+                                <div class="notification-header">
+                                    <div class="notification-title" data-i18n="header.notifications">الإشعارات</div>
+                                    <button class="mark-all-read" onclick="BankApp.markAllNotificationsRead()" data-i18n="header.mark_all_read">تعيين الكل كمقروء</button>
+                                </div>
+                                <div class="notification-list" id="notificationList"></div>
+                                <div class="notification-footer">
+                                    <a href="#" class="view-all-notifications" data-i18n="header.view_all">عرض جميع الإشعارات</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-avatar" onclick="BankApp.logout()">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-list" id="navList">
+                <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i><span data-i18n="nav.home">الرئيسية</span></a></li>
+                <li class="nav-item"><a href="accounts.html" class="nav-link active"><i class="fas fa-credit-card"></i><span data-i18n="nav.accounts">الحسابات</span></a></li>
+                <li class="nav-item"><a href="transfers.html" class="nav-link"><i class="fas fa-exchange-alt"></i><span data-i18n="nav.transfers">التحويلات</span></a></li>
+                <li class="nav-item"><a href="investments.html" class="nav-link"><i class="fas fa-chart-line"></i><span data-i18n="nav.investments">الاستثمارات</span></a></li>
+                <li class="nav-item"><a href="cards.html" class="nav-link"><i class="fas fa-credit-card"></i><span data-i18n="nav.cards">البطاقات</span></a></li>
+                <li class="nav-item"><a href="loans.html" class="nav-link"><i class="fas fa-hand-holding-usd"></i><span data-i18n="nav.loans">القروض</span></a></li>
+                <li class="nav-item"><a href="wallet.html" class="nav-link"><i class="fas fa-wallet"></i><span data-i18n="nav.wallet">المحفظة</span></a></li>
+                <li class="nav-item"><a href="government.html" class="nav-link"><i class="fas fa-landmark"></i><span data-i18n="nav.government">الخدمات الحكومية</span></a></li>
+                <li class="nav-item"><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i><span data-i18n="nav.settings">الإعدادات</span></a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="page-section">
+                <div class="page-header">
+                    <h1 class="page-title" data-i18n="accounts.title">الحسابات</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="openNewAccount()">
+                            <i class="fas fa-plus"></i>
+                            <span data-i18n="accounts.new_account">حساب جديد</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- الحساب الرئيسي -->
+                <div class="card mb-4" id="mainAccountCard">
+                    <div class="card-header">
+                        <h2 class="card-title" id="mainAccountName" data-i18n="accounts.main_account">الحساب الرئيسي</h2>
+                        <span class="account-status" id="mainAccountStatus" data-i18n="active">نشط</span>
+                    </div>
+                    <div class="account-details">
+                        <div class="account-info">
+                            <div class="account-icon" id="mainAccountIcon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div>
+                                <h3 id="mainAccountType" data-i18n="accounts.current_account">الحساب الجاري</h3>
+                                <p class="account-number" id="mainAccountNumberDisplay"><span data-i18n="accounts.account_number">رقم الحساب</span>: <span id="mainAccountNumber">---</span></p>
+                            </div>
+                        </div>
+                        <div class="account-balance">
+                            <div class="balance-amount" id="mainAccountBalance">
+                                <span class="loading-placeholder">---</span> <span data-i18n="currency.egp">ج.م</span>
+                            </div>
+                            <div class="balance-label" data-i18n="available_balance">الرصيد المتاح</div>
+                        </div>
+                    </div>
+                    <div class="account-actions">
+                        <button class="btn btn-primary" onclick="BankApp.showSendMoneyModalFromAccount(getCurrentMainAccountId())">
+                            <i class="fas fa-paper-plane"></i>
+                            <span data-i18n="accounts.send_money">إرسال نقود</span>
+                        </button>
+                        <button class="btn btn-secondary" onclick="BankApp.showRequestMoneyModalFromAccount(getCurrentMainAccountId())">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            <span data-i18n="accounts.request_money">طلب نقود</span>
+                        </button>
+                        <button class="btn btn-secondary" onclick="BankApp.showStatementModalFromAccount(getCurrentMainAccountId())">
+                            <i class="fas fa-file-alt"></i>
+                            <span data-i18n="accounts.statement">كشف حساب</span>
+                        </button>
+                        <button class="btn btn-secondary" onclick="BankApp.viewAccountDetails(getCurrentMainAccountId())">
+                            <i class="fas fa-info-circle"></i>
+                            <span data-i18n="details">تفاصيل</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- جميع الحسابات -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h2 class="card-title" data-i18n="accounts.all_accounts">جميع حساباتي</h2>
+                    </div>
+                    <div class="accounts-grid" id="accountsGrid">
+                        <div class="text-center p-3"><span data-i18n="loading">جاري التحميل...</span></div>
+                    </div>
+                </div>
+                
+                <!-- آخر عمليات الحساب -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title" data-i18n="accounts.recent_transactions">آخر عمليات الحساب</h2>
+                        <a href="transactions.html" class="view-all">
+                            <span data-i18n="header.view_all">عرض الكل</span>
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="accounts.transaction">العملية</th>
+                                    <th data-i18n="accounts.description">الوصف</th>
+                                    <th data-i18n="accounts.date">التاريخ</th>
+                                    <th data-i18n="accounts.amount">المبلغ</th>
+                                    <th data-i18n="status">الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="accountTransactions">
+                                <td><td colspan="5" class="text-center p-3"><span data-i18n="loading">جاري التحميل...</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- الفوتر -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="app.name">MSB BANK</h3>
+                    <p data-i18n="footer.description">نقدم لكم خدمات مصرفية آمنة وسريعة تلبي جميع احتياجاتكم المالية مع أعلى معايير الأمان والجودة.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3 data-i18n="quick_links">روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.home">الرئيسية</span></a></li>
+                        <li><a href="accounts.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.accounts">الحسابات</span></a></li>
+                        <li><a href="transfers.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.transfers">التحويلات</span></a></li>
+                        <li><a href="payments.html"><i class="fas fa-chevron-left"></i> <span data-i18n="nav.payments">الدفع</span></a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 data-i18n="customer_service">خدمة العملاء</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> <span data-i18n="settings.faq">الأسئلة الشائعة</span></a></li>
+                        <li><a href="#" data-i18n="footer.complaints"><i class="fas fa-chevron-left"></i> الشكاوى والاقتراحات</a></li>
+                        <li><a href="#" data-i18n="footer.technical_support"><i class="fas fa-chevron-left"></i> الدعم الفني</a></li>
+                        <li><a href="#" data-i18n="settings.contact_us"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright" data-i18n-html="footer.copyright">
+                © <span class="current-year">2025</span> <span data-i18n="app.name">MSB BANK</span>. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // إصلاح مشكلة زر القائمة في الجوال
+        (function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navList = document.getElementById('navList');
+            if (menuToggle && navList) {
+                const newMenuToggle = menuToggle.cloneNode(true);
+                menuToggle.parentNode.replaceChild(newMenuToggle, menuToggle);
+                newMenuToggle.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    navList.classList.toggle('mobile-active');
+                });
+                document.addEventListener('click', function(event) {
+                    if (navList.classList.contains('mobile-active') && !navList.contains(event.target) && !newMenuToggle.contains(event.target)) {
+                        navList.classList.remove('mobile-active');
+                    }
+                });
+                const navLinks = navList.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() { navList.classList.remove('mobile-active'); });
+                });
+            }
+        })();
+
+        // ========================================
+        // الحصول على ID الحساب الرئيسي الحالي
+        // ========================================
+        let currentMainAccountId = null;
+        
+        function getCurrentMainAccountId() {
+            return currentMainAccountId;
+        }
+        
+        function setCurrentMainAccount(accountId) {
+            currentMainAccountId = accountId;
+            updateMainAccountDisplay();
+        }
+        
+        // ========================================
+        // تحديث عرض الحساب الرئيسي
+        // ========================================
+        function updateMainAccountDisplay() {
+            if (!BankApp.user.accounts || BankApp.user.accounts.length === 0) return;
+            
+            let account;
+            if (currentMainAccountId) {
+                account = BankApp.user.accounts.find(acc => acc.id === currentMainAccountId);
+            }
+            if (!account) {
+                account = BankApp.user.accounts.find(acc => acc.type === 'current') || BankApp.user.accounts[0];
+                currentMainAccountId = account.id;
+            }
+            
+            const nameEl = document.getElementById('mainAccountName');
+            const typeEl = document.getElementById('mainAccountType');
+            const numberEl = document.getElementById('mainAccountNumber');
+            const balanceEl = document.getElementById('mainAccountBalance');
+            
+            if (nameEl) nameEl.textContent = account.name;
+            if (typeEl) typeEl.textContent = account.name;
+            if (numberEl) numberEl.textContent = account.number;
+            if (balanceEl) balanceEl.innerHTML = `${account.balance.toLocaleString()} <span data-i18n="currency.egp">${I18n.t('currency.egp')}</span>`;
+            
+            const iconEl = document.getElementById('mainAccountIcon');
+            if (iconEl) iconEl.innerHTML = `<i class="fas fa-${account.icon || 'credit-card'}"></i>`;
+            
+            const statusEl = document.getElementById('mainAccountStatus');
+            if (statusEl) {
+                statusEl.textContent = account.status === 'active' ? I18n.t('active') : I18n.t('inactive');
+                statusEl.className = `account-status ${account.status === 'active' ? 'active' : 'inactive'}`;
+            }
+        }
+        
+        // ========================================
+        // دوال المعاملات من الحساب الرئيسي (معدلة للتحويل لمستخدم آخر)
+        // ========================================
+        
+BankApp.showSendMoneyModalFromAccount = function(accountId) {
+    BankUtils.closeAllModals();
+    const account = BankApp.user.accounts.find(acc => acc.id === accountId);
+    if (!account) {
+        BankUtils.showAlert('الرجاء اختيار حساب أولاً', 'error');
+        return;
+    }
+    
+    const accountsOptions = BankApp.user.accounts.map(acc => 
+        `<option value="${acc.id}" ${acc.id === accountId ? 'selected' : ''}>${acc.name} - ${acc.number} (${acc.balance.toLocaleString()} ${I18n.t('currency.egp')})</option>`
+    ).join('');
+    
+    const modalHTML = `
+        <div class="modal" id="sendMoneyModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-paper-plane"></i> إرسال نقود من ${account.name}</h3>
+                    <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="sendMoneyForm" onsubmit="BankApp.processSendMoneyFromAccount(event)">
+                        <div class="form-group">
+                            <label class="form-label">المبلغ (ج.م)</label>
+                            <input type="number" class="form-control" id="sendAmount" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">رقم حساب المستلم</label>
+                            <input type="text" class="form-control" id="sendToAccountNumber" required placeholder="أدخل رقم حساب المستلم">
+                            <small class="form-text">أدخل رقم حساب المستلم (مثال: 10123456789012)</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">السبب (اختياري)</label>
+                            <input type="text" class="form-control" id="sendReason">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">من حساب</label>
+                            <select class="form-control" id="sendFromAccount" required>${accountsOptions}</select>
+                        </div>
+                        <div class="transfer-summary">
+                            <div class="summary-item total">
+                                <span>المبلغ</span>
+                                <span id="summaryAmount">0 ${I18n.t('currency.egp')}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="confirmSend" required>
+                                <span>أؤكد صحة البيانات المدخلة</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-paper-plane"></i>
+                            تأكيد الإرسال
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    document.getElementById('sendMoneyModal').style.display = 'block';
+    
+    // تحديث الملخص عند إدخال المبلغ
+    const amountInput = document.getElementById('sendAmount');
+    if (amountInput) {
+        amountInput.addEventListener('input', function() {
+            const amount = parseFloat(this.value) || 0;
+            document.getElementById('summaryAmount').innerHTML = amount.toLocaleString() + ' ' + I18n.t('currency.egp');
+        });
+    }
+};        
+BankApp.processSendMoneyFromAccount = async function(event) {
+    event.preventDefault();
+    
+    const amount = parseFloat(document.getElementById('sendAmount').value);
+    const toAccountNumber = document.getElementById('sendToAccountNumber').value;
+    const fromAccountId = document.getElementById('sendFromAccount').value;
+    const description = document.getElementById('sendReason').value;
+    
+    console.log('📝 عملية الإرسال:', { amount, toAccountNumber, fromAccountId });
+    
+    // التحقق من صحة البيانات
+    if (!amount || amount <= 0) {
+        BankUtils.showAlert('يرجى إدخال مبلغ صحيح', 'error');
+        return;
+    }
+    
+    if (!toAccountNumber || toAccountNumber.trim() === '') {
+        BankUtils.showAlert('يرجى إدخال رقم حساب المستلم', 'error');
+        return;
+    }
+    
+    if (!fromAccountId) {
+        BankUtils.showAlert('يرجى اختيار حساب المرسل', 'error');
+        return;
+    }
+    
+    // التحقق من الرصيد
+    const fromAccount = BankApp.user.accounts.find(acc => acc.id === fromAccountId);
+    if (!fromAccount) {
+        BankUtils.showAlert('حساب المرسل غير موجود', 'error');
+        return;
+    }
+    
+    if (fromAccount.balance < amount) {
+        BankUtils.showAlert(`الرصيد غير كافٍ. المتاح: ${fromAccount.balance.toLocaleString()} ج.م`, 'error');
+        return;
+    }
+    
+    // التحقق من عدم التحويل لنفس الحساب
+    if (fromAccount.number === toAccountNumber) {
+        BankUtils.showAlert('لا يمكن التحويل إلى نفس الحساب', 'error');
+        return;
+    }
+    
+    BankUtils.showLoading(true, 'جاري تحويل الأموال...');
+    
+    try {
+        const result = await BankApp.apiCall('/transfers/internal', {
+            method: 'POST',
+            body: JSON.stringify({
+                fromAccountId: fromAccountId,
+                toAccountNumber: toAccountNumber,
+                amount: amount,
+                description: description || `تحويل إلى حساب ${toAccountNumber}`
+            })
+        });
+        
+        console.log('✅ نتيجة التحويل:', result);
+        
+        if (result.success) {
+            // تحديث الرصيد محلياً
+            fromAccount.balance -= amount;
+            
+            // إضافة المعاملة للسجل
+            const newTransaction = {
+                id: `trans_${Date.now()}`,
+                description: description || `تحويل إلى حساب ${toAccountNumber}`,
+                amount: -amount,
+                category: 'transfer',
+                icon: 'paper-plane',
+                status: 'completed',
+                date: new Date().toISOString()
+            };
+            BankApp.user.transactions = [newTransaction, ...(BankApp.user.transactions || [])];
+            
+            // تحديث الواجهة
+            if (typeof refreshAllPageData === 'function') {
+                refreshAllPageData();
+            } else {
+                // تحديث يدوي
+                updateMainAccountDisplay();
+                updateAccountsGridWithActions();
+                updateAccountTransactions();
+            }
+            
+            // تحديث الرصيد المعروض في الصفحة الرئيسية إذا كانت مفتوحة
+            if (typeof BankApp.updateBalances === 'function') {
+                BankApp.updateBalances();
+            }
+            
+            BankUtils.showLoading(false);
+            BankUtils.closeAllModals();
+            BankUtils.showAlert(result.message || 'تم التحويل بنجاح', 'success');
+        } else {
+            throw new Error(result.message || 'فشل في التحويل');
+        }
+        
+    } catch (error) {
+        BankUtils.showLoading(false);
+        console.error('❌ خطأ في التحويل:', error);
+        BankUtils.showAlert(error.message || 'حدث خطأ أثناء التحويل', 'error');
+    }
+};
+
+BankApp.showRequestMoneyModalFromAccount = function(accountId) {
+    BankUtils.closeAllModals();
+    const account = BankApp.user.accounts.find(acc => acc.id === accountId);
+    if (!account) {
+        BankUtils.showAlert('الرجاء اختيار حساب أولاً', 'error');
+        return;
+    }
+    
+    const modalHTML = `
+        <div class="modal" id="requestMoneyModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-hand-holding-heart"></i> طلب نقود لحساب ${account.name}</h3>
+                    <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="requestMoneyForm" onsubmit="BankApp.processRequestMoneyFromAccount(event, '${accountId}')">
+                        <div class="form-group">
+                            <label class="form-label">المبلغ (ج.م)</label>
+                            <input type="number" class="form-control" id="requestAmount" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">رقم حساب المرسل (اللي هيطلب منه)</label>
+                            <input type="text" class="form-control" id="requestFromAccountNumber" required placeholder="أدخل رقم حساب الشخص اللي تطلب منه المال">
+                            <small class="form-text">أدخل رقم حساب الشخص الذي تريد أن يرسل لك المال</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">السبب (اختياري)</label>
+                            <input type="text" class="form-control" id="requestReason">
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="confirmRequest" required>
+                                <span data-i18n="form.confirm_data">أؤكد صحة البيانات المدخلة</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            إرسال الطلب
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    document.getElementById('requestMoneyModal').style.display = 'block';
+};
+
+BankApp.processRequestMoneyFromAccount = async function(event, fromAccountId) {
+    event.preventDefault();
+    const amount = parseFloat(document.getElementById('requestAmount').value);
+    const toAccountNumber = document.getElementById('requestFromAccountNumber').value;
+    const description = document.getElementById('requestReason').value;
+    
+    if (!amount || amount <= 0) {
+        BankUtils.showAlert('يرجى إدخال مبلغ صحيح', 'error');
+        return;
+    }
+    
+    if (!toAccountNumber) {
+        BankUtils.showAlert('يرجى إدخال رقم حساب المرسل', 'error');
+        return;
+    }
+    
+    BankUtils.showLoading(true, 'جاري إرسال الطلب...');
+    
+    try {
+        const result = await BankApp.apiCall('/money-request/send', {
+            method: 'POST',
+            body: JSON.stringify({
+                fromAccountNumber: toAccountNumber, // رقم حساب اللي هيطلب منه
+                amount: amount,
+                description: description || `طلب مبلغ ${amount} ج.م`
+            })
+        });
+        
+        BankUtils.showLoading(false);
+        BankUtils.closeAllModals();
+        BankUtils.showAlert(result.message || 'تم إرسال طلب النقود بنجاح', 'success');
+        
+    } catch (error) {
+        BankUtils.showLoading(false);
+        BankUtils.showAlert(error.message, 'error');
+    }
+};
+// أضف هذه الدوال في accounts.html
+
+// عرض طلبات النقود الواردة
+function showMoneyRequests() {
+    BankUtils.closeAllModals();
+    
+    const modalHTML = `
+        <div class="modal" id="moneyRequestsModal">
+            <div class="modal-content" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3><i class="fas fa-hand-holding-heart"></i> طلبات النقود</h3>
+                    <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="tabs" style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color);">
+                        <button class="tab-btn active" onclick="switchRequestsTab('incoming')">الطلبات الواردة</button>
+                        <button class="tab-btn" onclick="switchRequestsTab('outgoing')">الطلبات الصادرة</button>
+                        <button class="tab-btn" onclick="switchRequestsTab('history')">السجل</button>
+                    </div>
+                    <div id="incomingRequestsList" class="requests-list"></div>
+                    <div id="outgoingRequestsList" class="requests-list" style="display: none;"></div>
+                    <div id="historyRequestsList" class="requests-list" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    document.getElementById('moneyRequestsModal').style.display = 'block';
+    
+    loadMoneyRequests();
+}
+
+// تبديل التبويبات
+function switchRequestsTab(tab) {
+    document.querySelectorAll('.requests-list').forEach(el => el.style.display = 'none');
+    document.getElementById(`${tab}RequestsList`).style.display = 'block';
+    
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+// تحميل الطلبات
+async function loadMoneyRequests() {
+    try {
+        const result = await BankApp.apiCall('/money-requests', { method: 'GET' });
+        
+        if (result.success) {
+            displayRequests('incoming', result.incoming || []);
+            displayRequests('outgoing', result.outgoing || []);
+            displayRequests('history', result.history || []);
+        }
+    } catch (error) {
+        console.error('Error loading requests:', error);
+    }
+}
+
+// عرض الطلبات
+function displayRequests(type, requests) {
+    const container = document.getElementById(`${type}RequestsList`);
+    
+    if (!requests || requests.length === 0) {
+        container.innerHTML = '<div class="text-center p-3">لا توجد طلبات</div>';
+        return;
+    }
+    
+    container.innerHTML = requests.map(req => `
+        <div class="request-item" style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h4 style="margin: 0 0 5px 0;">${req.fromUser?.name || req.toUser?.name || 'مستخدم'}</h4>
+                    <p style="margin: 0; font-size: 14px;">المبلغ: <strong>${req.amount.toLocaleString()} ج.م</strong></p>
+                    <p style="margin: 5px 0 0 0; font-size: 12px; opacity: 0.7;">${req.description || 'طلب نقود'}</p>
+                    <p style="margin: 5px 0 0 0; font-size: 11px; opacity: 0.5;">${new Date(req.createdAt).toLocaleDateString('ar-EG')}</p>
+                </div>
+                <div>
+                    ${req.status === 'pending' && type === 'incoming' ? `
+                        <button class="btn btn-sm btn-success" onclick="acceptRequest('${req.id}')" style="margin-left: 5px;">
+                            <i class="fas fa-check"></i> قبول
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="rejectRequest('${req.id}')">
+                            <i class="fas fa-times"></i> رفض
+                        </button>
+                    ` : ''}
+                    ${req.status === 'pending' && type === 'outgoing' ? `
+                        <span class="badge bg-warning">قيد الانتظار</span>
+                    ` : ''}
+                    ${req.status === 'paid' ? `
+                        <span class="badge bg-success">تم الدفع</span>
+                    ` : ''}
+                    ${req.status === 'rejected' ? `
+                        <span class="badge bg-danger">مرفوض</span>
+                    ` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// قبول طلب - نسخة معدلة (بدون confirm)
+async function acceptRequest(requestId) {
+    const accounts = BankApp.user.accounts;
+    if (!accounts || accounts.length === 0) {
+        BankUtils.showAlert('لا توجد حسابات للدفع', 'error');
+        return;
+    }
+    
+    // ✅ استخدام المودال المخصص
+    showCustomConfirmModal({
+        title: 'قبول طلب الدفع',
+        message: 'هل أنت متأكد من قبول هذا الطلب؟ سيتم خصم المبلغ من حسابك.',
+        confirmText: 'قبول',
+        cancelText: 'إلغاء',
+        confirmColor: '#10b981',
+        icon: 'check-circle',
+        warning: '⚠️ سيتم خصم المبلغ من حسابك فور قبول الطلب!',
+        onConfirm: async () => {
+            const accountId = accounts[0]?.id;
+            
+            BankUtils.showLoading(true, 'جاري معالجة الطلب...');
+            
+            try {
+                const result = await BankApp.apiCall('/money-request/accept', {
+                    method: 'POST',
+                    body: JSON.stringify({ requestId, fromAccountId: accountId })
+                });
+                
+                BankUtils.showLoading(false);
+                BankUtils.closeAllModals();
+                BankUtils.showAlert(result.message, 'success');
+                await BankApp.loadData();
+                loadMoneyRequests();
+                
+            } catch (error) {
+                BankUtils.showLoading(false);
+                BankUtils.showAlert(error.message, 'error');
+            }
+        }
+    });
+}
+
+// رفض طلب - نسخة معدلة (بدون confirm)
+async function rejectRequest(requestId) {
+    // ✅ استخدام المودال المخصص
+    showCustomConfirmModal({
+        title: 'رفض الطلب',
+        message: 'هل أنت متأكد من رفض هذا الطلب؟',
+        confirmText: 'رفض',
+        cancelText: 'إلغاء',
+        confirmColor: '#ef4444',
+        icon: 'times-circle',
+        warning: '⚠️ هذا الإجراء لا يمكن التراجع عنه!',
+        onConfirm: async () => {
+            BankUtils.showLoading(true, 'جاري معالجة الطلب...');
+            
+            try {
+                const result = await BankApp.apiCall('/money-request/reject', {
+                    method: 'POST',
+                    body: JSON.stringify({ requestId })
+                });
+                
+                BankUtils.showLoading(false);
+                BankUtils.closeAllModals();
+                BankUtils.showAlert(result.message, 'success');
+                await BankApp.loadData();
+                loadMoneyRequests();
+                
+            } catch (error) {
+                BankUtils.showLoading(false);
+                BankUtils.showAlert(error.message, 'error');
+            }
+        }
+    });
+}
+
+// إضافة زر لعرض الطلبات في صفحة الحسابات
+function addRequestsButton() {
+    const headerActions = document.querySelector('.page-header .header-actions');
+    if (headerActions && !document.getElementById('requestsBtn')) {
+        const requestsBtn = document.createElement('button');
+        requestsBtn.id = 'requestsBtn';
+        requestsBtn.className = 'btn btn-secondary';
+        requestsBtn.innerHTML = '<i class="fas fa-hand-holding-heart"></i> طلباتي';
+        requestsBtn.onclick = showMoneyRequests;
+        headerActions.appendChild(requestsBtn);
+    }
+}
+
+// تهيئة الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        addRequestsButton();
+    }, 1000);
+});
+BankApp.processRequestMoneyFromAccount = async function(event) {
+            event.preventDefault();
+            const amount = document.getElementById('requestAmount').value;
+            const fromAccountNumber = document.getElementById('requestFrom').value;
+            BankUtils.showLoading(true, I18n.t('sending_request'));
+            setTimeout(() => {
+                BankUtils.showLoading(false);
+                BankUtils.closeAllModals();
+                BankUtils.showAlert(I18n.t('alert.request_sent'), 'success');
+            }, 1000);
+        };
+        
+        BankApp.showStatementModalFromAccount = function(accountId) {
+            BankUtils.closeAllModals();
+            const account = BankApp.user.accounts.find(acc => acc.id === accountId);
+            if (!account) {
+                BankUtils.showAlert('الرجاء اختيار حساب أولاً', 'error');
+                return;
+            }
+            
+            const modalHTML = `
+                <div class="modal" id="statementModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-file-alt"></i> كشف حساب ${account.name}</h3>
+                            <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="statementForm" onsubmit="BankApp.processStatementFromAccount(event)">
+                                <div class="form-group">
+                                    <label class="form-label">الفترة من</label>
+                                    <input type="date" class="form-control" id="statementFrom" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">الفترة إلى</label>
+                                    <input type="date" class="form-control" id="statementTo" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">صيغة التقرير</label>
+                                    <select class="form-control" id="statementFormat" required>
+                                        <option value="pdf">PDF</option>
+                                        <option value="excel">Excel</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-download"></i>
+                                    تحميل كشف الحساب
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            document.getElementById('statementModal').style.display = 'block';
+            const today = new Date();
+            const lastMonth = new Date();
+            lastMonth.setMonth(lastMonth.getMonth() - 1);
+            document.getElementById('statementFrom').valueAsDate = lastMonth;
+            document.getElementById('statementTo').valueAsDate = today;
+        };
+        
+        BankApp.processStatementFromAccount = async function(event) {
+            event.preventDefault();
+            BankUtils.showLoading(true, 'جاري تجهيز كشف الحساب...');
+            setTimeout(() => {
+                BankUtils.showLoading(false);
+                BankUtils.closeAllModals();
+                BankUtils.showAlert('تم تجهيز كشف الحساب، سيبدأ التحميل...', 'success');
+            }, 2000);
+        };
+        
+        // ========================================
+        // تحديث شبكة الحسابات مع أزرار الحذف والتحويل
+        // ========================================
+        function updateAccountsGridWithActions() {
+            const grid = document.getElementById('accountsGrid');
+            if (!grid) return;
+            
+            console.log('Updating accounts grid with', BankApp.user.accounts?.length || 0, 'accounts');
+            
+            if (!BankApp.user.accounts || BankApp.user.accounts.length === 0) {
+                grid.innerHTML = '<div class="text-center p-3">لا توجد حسابات</div>';
+                return;
+            }
+            
+            const isLastAccount = BankApp.user.accounts.length === 1;
+            
+            grid.innerHTML = BankApp.user.accounts.map(account => {
+                const otherAccount = BankApp.user.accounts.find(a => a.id !== account.id);
+                const otherAccountId = otherAccount ? otherAccount.id : '';
+                const canDelete = account.balance === 0;
+                
+                return `
+                    <div class="account-card" onclick="selectMainAccount('${account.id}')" style="cursor: pointer;">
+                        <div class="account-header">
+                            <div class="account-icon ${account.type}">
+                                <i class="fas fa-${account.icon || 'credit-card'}"></i>
+                            </div>
+                            <div class="account-info">
+                                <h3>${account.name}</h3>
+                                <p class="account-number">${I18n.t('accounts.account_number')}: ${account.number}</p>
+                            </div>
+                        </div>
+                        <div class="account-balance">
+                            <div class="balance-amount">${account.balance.toLocaleString()} ${I18n.t('currency.egp')}</div>
+                            <div class="balance-label" data-i18n="available_balance">${I18n.t('available_balance')}</div>
+                        </div>
+                        <div class="account-actions">
+                            <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); BankApp.showSendMoneyModalFromAccount('${account.id}')">
+                                <i class="fas fa-paper-plane"></i> ${I18n.t('send')}
+                            </button>
+                            <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); selectMainAccount('${account.id}')">
+                                <i class="fas fa-star"></i> تعيين كرئيسي
+                            </button>
+                            <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); BankApp.viewAccountDetails('${account.id}')">
+                                <i class="fas fa-info-circle"></i> ${I18n.t('details')}
+                            </button>
+                            ${!isLastAccount ? (canDelete ? `
+                            <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); BankApp.deleteAccount('${account.id}')">
+                                <i class="fas fa-trash-alt"></i> حذف
+                            </button>
+                            ` : `
+                            <button class="btn btn-sm btn-warning" onclick="event.stopPropagation(); BankApp.transferBalanceAndDelete('${account.id}', '${otherAccountId}')">
+                                <i class="fas fa-exchange-alt"></i> تحويل (${account.balance.toLocaleString()}) وحذف
+                            </button>
+                            `) : `
+                            <button class="btn btn-sm btn-secondary" disabled style="opacity:0.5; cursor:not-allowed;" title="لا يمكن حذف الحساب الوحيد">
+                                <i class="fas fa-trash-alt"></i> الحساب الوحيد
+                            </button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // ========================================
+        // تعيين حساب رئيسي جديد
+        // ========================================
+        function selectMainAccount(accountId) {
+            setCurrentMainAccount(accountId);
+            const account = BankApp.user.accounts.find(a => a.id === accountId);
+            if (account) {
+                BankUtils.showAlert(`تم تعيين ${account.name} كحساب رئيسي`, 'success');
+            }
+            updateAccountsGridWithActions();
+        }
+        
+        // ========================================
+        // تحديث المعاملات في الجدول
+        // ========================================
+// في accounts.html - تحديث جدول المعاملات
+function updateAccountTransactions() {
+    const tbody = document.getElementById('accountTransactions');
+    if (!tbody) return;
+    
+    if (!BankApp.user.transactions || BankApp.user.transactions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center p-3">لا توجد معاملات</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = BankApp.user.transactions.slice(0, 10).map(t => {
+        let displayDescription = t.description;
+        let displayIcon = t.icon || 'exchange-alt';
+        
+        if (t.amount > 0 && t.category === 'transfer') {
+            if (!displayDescription.includes('استلام')) {
+                displayDescription = `استلام تحويل من ${t.fromUserName || 'مستخدم'}`;
+                displayIcon = 'arrow-down';
+            }
+        }
+        
+        if (t.amount < 0 && t.category === 'transfer') {
+            if (!displayDescription.includes('تحويل إلى')) {
+                displayDescription = `تحويل إلى ${t.toUserName || 'حساب آخر'}`;
+                displayIcon = 'paper-plane';
+            }
+        }
+        
+        return `
+            <tr>
+                <td><i class="fas fa-${displayIcon}"></i></td>
+                <td>${displayDescription}</td>
+                <td>${BankUtils.formatDate(t.date)}</td>
+                <td class="${t.amount >= 0 ? 'text-success' : 'text-danger'}">${t.amount >= 0 ? '+' : ''}${Math.abs(t.amount).toLocaleString()} ${I18n.t('currency.egp')}</td>
+                <td><span class="badge ${t.status === 'completed' ? 'bg-success' : 'bg-warning'}">${t.status || I18n.t('completed')}</span></td>
+            </tr>
+        `;
+    }).join('');
+}
+        // ========================================
+        // تحديث كل شيء في الصفحة
+        // ========================================
+        function refreshAllPageData() {
+            console.log('Refreshing all page data...');
+            
+            if (BankApp.user.accounts && BankApp.user.accounts.length > 0) {
+                if (!currentMainAccountId) {
+                    const defaultAccount = BankApp.user.accounts.find(acc => acc.type === 'current') || BankApp.user.accounts[0];
+                    currentMainAccountId = defaultAccount.id;
+                }
+                updateMainAccountDisplay();
+                updateAccountsGridWithActions();
+            } else {
+                document.getElementById('mainAccountNumber').textContent = '---';
+                document.getElementById('mainAccountBalance').innerHTML = '0 <span data-i18n="currency.egp">ج.م</span>';
+                document.getElementById('accountsGrid').innerHTML = '<div class="text-center p-3">لا توجد حسابات</div>';
+            }
+            
+            updateAccountTransactions();
+            
+            if (typeof BankApp.updateNotifications === 'function') {
+                BankApp.updateNotifications();
+            }
+        }
+        
+        // ========================================
+        // فتح حساب جديد
+        // ========================================
+        function openNewAccount() {
+            BankUtils.closeAllModals();
+            const modalHTML = `
+                <div class="modal" id="newAccountModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 data-i18n="accounts.new_account">فتح حساب جديد</h3>
+                            <button class="modal-close" onclick="BankUtils.closeAllModals()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="newAccountForm" onsubmit="processNewAccount(event)">
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="form.please_select">نوع الحساب</label>
+                                    <select class="form-control" id="accountType" required>
+                                        <option value="">${I18n.t('form.please_select')}</option>
+                                        <option value="current" data-i18n="accounts.current_account">حساب جاري</option>
+                                        <option value="saving" data-i18n="accounts.saving_account">حساب توفير</option>
+                                        <option value="investment" data-i18n="accounts.investment_account">حساب استثمار</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="form.amount">الرصيد الافتتاحي (ج.م)</label>
+                                    <input type="number" class="form-control" id="initialDeposit" min="1000" value="1000" required>
+                                    <small class="form-text"><span data-i18n="form.min_amount">الحد الأدنى</span>: 1,000 <span data-i18n="currency.egp">ج.م</span></small>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="acceptTerms" required>
+                                        <span data-i18n="form.accept_terms">أوافق على الشروط والأحكام</span>
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-check"></i>
+                                    <span data-i18n="form.submit">فتح الحساب</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            document.getElementById('newAccountModal').style.display = 'block';
+        }
+        
+        async function processNewAccount(event) {
+            event.preventDefault();
+            const accountType = document.getElementById('accountType').value;
+            const deposit = parseFloat(document.getElementById('initialDeposit').value);
+            if (accountType && deposit >= 1000) {
+                BankUtils.showLoading(true, 'جاري فتح الحساب...');
+                try {
+                    await BankApp.apiCall('/accounts', {
+                        method: 'POST',
+                        body: JSON.stringify({ type: accountType, initialDeposit: deposit })
+                    });
+                    BankUtils.showLoading(false);
+                    BankUtils.closeAllModals();
+                    await BankApp.loadData();
+                    refreshAllPageData();
+                    BankUtils.showAlert('تم فتح الحساب بنجاح', 'success');
+                } catch (error) {
+                    BankUtils.showLoading(false);
+                    BankUtils.showAlert(error.message, 'error');
+                }
+            }
+        }
+        
+        // ========================================
+        // استدعاء التحديث عند تحميل البيانات
+        // ========================================
+        const originalLoadData = BankApp.loadData;
+        BankApp.loadData = async function() {
+            const result = await originalLoadData.call(this);
+            setTimeout(function() {
+                refreshAllPageData();
+            }, 100);
+            return result;
+        };
+        
+        // ========================================
+        // تحديث عند تغيير اللغة
+        // ========================================
+        document.addEventListener('languageChanged', function() {
+            refreshAllPageData();
+        });
+        
+        // ========================================
+        // تهيئة الصفحة
+        // ========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(refreshAllPageData, 500);
+        });
+        
+        // ========================================
+        // مودال تأكيد مخصص شامل لجميع العمليات
+        // ========================================
+
+        function showCustomConfirmModal(options) {
+            const existingModal = document.getElementById('customConfirmModal');
+            if (existingModal) existingModal.remove();
+            
+            const {
+                title = 'تأكيد العملية',
+                message = 'هل أنت متأكد؟',
+                confirmText = 'تأكيد',
+                cancelText = 'إلغاء',
+                confirmColor = '#0ef',
+                icon = 'question-circle',
+                warning = '',
+                onConfirm = null,
+                onCancel = null
+            } = options;
+            
+            const modalHTML = `
+                <div class="modal" id="customConfirmModal" style="display: flex; z-index: 10001;">
+                    <div class="modal-content" style="max-width: 450px; animation: slideInUp 0.3s ease;">
+                        <div class="modal-header" style="border-bottom-color: var(--border-color);">
+                            <h3 style="color: var(--text-color);">
+                                <i class="fas fa-${icon}" style="color: ${confirmColor};"></i>
+                                ${title}
+                            </h3>
+                            <button class="modal-close" onclick="closeCustomConfirmModal()" style="color: var(--text-color);">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <i class="fas fa-${icon}" style="font-size: 48px; color: ${confirmColor};"></i>
+                            </div>
+                            <p style="text-align: center; color: var(--text-color); font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                                ${message}
+                            </p>
+                            ${warning ? `
+                            <div style="background: rgba(239, 68, 68, 0.1); border-radius: 12px; padding: 12px; border-right: 3px solid #ef4444;">
+                                <p style="color: var(--text-color); font-size: 13px; margin: 0;">
+                                    <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
+                                    ${warning}
+                                </p>
+                            </div>
+                            ` : ''}
+                        </div>
+                        <div class="modal-footer" style="display: flex; gap: 10px; justify-content: center; border-top: 1px solid var(--border-color); padding: 15px;">
+                            <button class="btn btn-secondary" id="customConfirmCancel" style="background: rgba(255,255,255,0.1); color: var(--text-color); padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                                <i class="fas fa-times"></i> ${cancelText}
+                            </button>
+                            <button class="btn btn-primary" id="customConfirmOk" style="background: linear-gradient(135deg, ${confirmColor} 0%, ${confirmColor}cc 100%); color: #081b29; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                                <i class="fas fa-check"></i> ${confirmText}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            document.getElementById('customConfirmCancel')?.addEventListener('click', () => {
+                closeCustomConfirmModal();
+                if (onCancel) onCancel();
+            });
+            
+            document.getElementById('customConfirmOk')?.addEventListener('click', () => {
+                closeCustomConfirmModal();
+                if (onConfirm) onConfirm();
+            });
+        }
+
+        function closeCustomConfirmModal() {
+            const modal = document.getElementById('customConfirmModal');
+            if (modal) modal.remove();
+        }
+
+        // ========================================
+        // الدالة المعدلة transferBalanceAndDelete
+        // ========================================
+        async function transferBalanceAndDelete(fromAccountId, toAccountId) {
+            const fromAccount = BankApp.user.accounts.find(acc => acc.id === fromAccountId);
+            const toAccount = BankApp.user.accounts.find(acc => acc.id === toAccountId);
+            
+            if (!fromAccount || !toAccount) {
+                BankUtils.showAlert('حساب غير موجود', 'error');
+                return;
+            }
+            
+            if (fromAccountId === toAccountId) {
+                BankUtils.showAlert('لا يمكن تحويل الرصيد إلى نفس الحساب', 'error');
+                return;
+            }
+            
+            if (fromAccount.balance === 0) {
+                BankApp.deleteAccount(fromAccountId);
+                return;
+            }
+            
+            const amount = fromAccount.balance;
+            
+            // ✅ مودال مخصص بدلاً من confirm()
+            showCustomConfirmModal({
+                title: 'تحويل الرصيد وحذف الحساب',
+                message: `الحساب "<strong style="color: #f59e0b;">${fromAccount.name}</strong>" يحتوي على رصيد (<strong style="color: #10b981;">${amount.toLocaleString()}</strong> ج.م).<br><br>هل تريد تحويل الرصيد إلى حساب "<strong style="color: #0ef;">${toAccount.name}</strong>" ثم حذف الحساب؟`,
+                confirmText: 'تحويل وحذف',
+                cancelText: 'إلغاء',
+                confirmColor: '#f59e0b',
+                icon: 'exchange-alt',
+                warning: '⚠️ تحذير: لا يمكن استرجاع الحساب بعد الحذف!',
+                onConfirm: async () => {
+                    BankUtils.showLoading(true, 'جاري تحويل الرصيد وحذف الحساب...');
+                    
+                    try {
+                        await BankApp.apiCall('/transfers/internal', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                fromAccountId: fromAccountId,
+                                toAccountNumber: toAccount.number,
+                                amount: amount,
+                                description: `تحويل رصيد من حساب ${fromAccount.name} إلى ${toAccount.name} قبل الحذف`
+                            })
+                        });
+                        
+                        await BankApp.apiCall(`/accounts/${fromAccountId}`, { method: 'DELETE' });
+                        
+                        BankUtils.showLoading(false);
+                        await BankApp.loadData(false);
+                        
+                        if (BankApp.user.accounts.length > 0) {
+                            const newMainAccount = BankApp.user.accounts.find(acc => acc.type === 'current') || BankApp.user.accounts[0];
+                            if (window.currentMainAccountId === fromAccountId || !window.currentMainAccountId) {
+                                window.currentMainAccountId = newMainAccount.id;
+                            }
+                        } else {
+                            window.currentMainAccountId = null;
+                        }
+                        
+                        BankApp.updateUI();
+                        
+                        if (typeof updateAccountsGridWithActions === 'function') {
+                            updateAccountsGridWithActions();
+                        }
+                        if (typeof updateMainAccountDisplay === 'function') {
+                            updateMainAccountDisplay();
+                        }
+                        if (typeof updateAccountTransactions === 'function') {
+                            updateAccountTransactions();
+                        }
+                        
+                        BankUtils.showAlert(`✅ تم تحويل رصيد ${amount.toLocaleString()} ج.م إلى "${toAccount.name}" وحذف الحساب "${fromAccount.name}"`, 'success');
+                        
+                    } catch (error) {
+                        BankUtils.showLoading(false);
+                        BankUtils.showAlert(error.message || 'فشلت عملية التحويل', 'error');
+                    }
+                }
+            });
+        }
+
+        console.log('✅ Custom confirm modal system loaded successfully');
+    </script>
+</body>
+</html>

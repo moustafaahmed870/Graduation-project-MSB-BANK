@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html rtl="ar" lang="en">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css files/email.css">
+    <script type="module" src="../js files/email.js"></script>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>    
+    <script src="/language.js"></script>  
+    <script src="/load-components.js"></script> 
+    <title data-i18n="email.pageTitle">خدمه البريد الالكتروني MSB</title>
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+</head>
+<body>
+    <div id="navbar-container"></div>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1 data-i18n="email.header.title">بنك MSB</h1>
+            </div>
+            <p data-i18n="email.header.description">للتمتع بخدمة البريد الإلكتروني يرجى استيفاء جميع البيانات الموضحة باستمارة استيفاء البيانات</p>
+        </header>
+        
+        <div class="main-content">
+            <section class="services-section">
+                <h2 class="section-title"><i class="fas fa-concierge-bell"></i> <span data-i18n="email.services_title">الخدمات المتاحة</span></h2>
+                <p data-i18n="email.services_description">يمكنكم الآن التمتع بالخدمات التالية عبر البريد الإلكتروني:</p>
+                
+                <ul class="services-list">
+                    <li><i class="fas fa-search"></i> <span data-i18n="email.service1">الاستعلام عن كافة منتجات وخدمات البنك</span></li>
+                    <li><i class="fas fa-exchange-alt"></i> <span data-i18n="email.service2">الاستعلام عن الحوالات الداخلية والخارجية</span></li>
+                    <li><i class="fas fa-credit-card"></i> <span data-i18n="email.service3">الاستعلام عن المديونية وإرسال بيان عمليات البطاقات الائتمانية</span></li>
+                    <li><i class="fas fa-headset"></i> <span data-i18n="email.service4">تلقي ومتابعة الشكاوى الخاصة بمنتجات وخدمات البنك</span></li>
+                </ul>
+                
+                <div class="email-info">
+                    <h4><i class="fas fa-envelope"></i> <span data-i18n="email.send_form_title">إرسال الاستمارة</span></h4>
+                    <p data-i18n="email.send_form_desc">بعد استيفاء جميع البيانات المطلوبة بها، يرجى إرسال الاستمارة على البريد الإلكتروني التالي:</p>
+                    <div class="email-address">BM19019@BanqMSB.com</div>
+                </div>
+                
+                <div class="response-time">
+                    <p><i class="fas fa-clock"></i> <strong data-i18n="email.response_time">مدة الرد:</strong> <span data-i18n="email.response_time_desc">يتم الرد على سيادتكم بالبريد الإلكتروني خلال يومي عمل</span></p>
+                </div>
+            </section>
+            
+            <section class="form-section">
+                <div class="instructions">
+                    <h4><i class="fas fa-info-circle"></i> <span data-i18n="email.instructions_title">تعليمات هامة</span></h4>
+                    <p data-i18n="email.instructions_desc">يرجى ملء جميع الحقول المطلوبة بدقة وتدقيق المعلومات قبل إرسال النموذج. الحقول التي تحتوي على علامة (*) إجبارية.</p>
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-edit"></i> <span data-i18n="email.form_title">استمارة استيفاء البيانات</span></h2>
+                
+                <form id="dataForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName" class="required" data-i18n="email.fullName_label">الاسم بالكامل</label>
+                            <input type="text" id="fullName" name="fullName" required 
+                                data-i18n-placeholder="email.fullName_placeholder"
+                                placeholder="الاسم ثلاثي كما هو مدون في البطاقة الشخصية">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nationalId" class="required" data-i18n="email.nationalId_label">رقم البطاقة الشخصية</label>
+                            <input type="text" id="nationalId" name="nationalId" required 
+                                data-i18n-placeholder="email.nationalId_placeholder"
+                                placeholder="14 رقمًا">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone" class="required" data-i18n="email.phone_label">رقم الهاتف المحمول</label>
+                            <input type="tel" id="phone" name="phone" required 
+                                data-i18n-placeholder="email.phone_placeholder"
+                                placeholder="مثال: 01001234567">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="required" data-i18n="email.email_label">البريد الإلكتروني</label>
+                            <input type="email" id="email" name="email" required 
+                                data-i18n-placeholder="email.email_placeholder"
+                                placeholder="example@domain.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="accountNumber" class="required" data-i18n="email.accountNumber_label">رقم الحساب البنكي</label>
+                        <input type="text" id="accountNumber" name="accountNumber" required 
+                            data-i18n-placeholder="email.accountNumber_placeholder"
+                            placeholder="رقم الحساب البنكي">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address" class="required" data-i18n="email.address_label">العنوان</label>
+                        <textarea id="address" name="address" rows="3" required 
+                                data-i18n-placeholder="email.address_placeholder"
+                                placeholder="العنوان بالتفصيل"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceType" class="required" data-i18n="email.serviceType_label">نوع الخدمة المطلوبة</label>
+                        <select id="serviceType" name="serviceType" required>
+                            <option value="" data-i18n="email.serviceType_select">اختر الخدمة المطلوبة</option>
+                            <option value="inquiry" data-i18n="email.serviceType_option1">الاستعلام عن منتجات وخدمات البنك</option>
+                            <option value="transfers" data-i18n="email.serviceType_option2">الاستعلام عن الحوالات الداخلية والخارجية</option>
+                            <option value="debt" data-i18n="email.serviceType_option3">الاستعلام عن المديونية والبطاقات الائتمانية</option>
+                            <option value="complaints" data-i18n="email.serviceType_option4">تقديم شكوى أو متابعة شكوى سابقة</option>
+                            <option value="other" data-i18n="email.serviceType_option5">خدمة أخرى</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label data-i18n="email.additional_services">الخدمات الإضافية المطلوبة (اختياري)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="service1" name="services" value="statements">
+                                <label for="service1" data-i18n="email.service_checkbox1">كشف حساب شهري</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="service2" name="services" value="alerts">
+                                <label for="service2" data-i18n="email.service_checkbox2">تنبيهات عبر البريد الإلكتروني</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="service3" name="services" value="offers">
+                                <label for="service3" data-i18n="email.service_checkbox3">عروض وتخفيضات حصرية</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes" data-i18n="email.notes_label">ملاحظات إضافية (اختياري)</label>
+                        <textarea id="notes" name="notes" rows="4" 
+                                data-i18n-placeholder="email.notes_placeholder"
+                                placeholder="أي معلومات إضافية تود إضافتها..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> <span data-i18n="email.submit_button">إرسال البيانات</span>
+                    </button>
+                </form>
+            </section>
+        </div>
+    </div>
+    <div id="footer-container"></div>
+
+</body>
+</html>

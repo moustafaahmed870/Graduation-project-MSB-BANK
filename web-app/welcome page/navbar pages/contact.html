@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html rtl="ar" lang="en">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css files/contact.css">
+    <script type="module" src="../js files/contact.js"></script>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>    
+    <script src="/language.js"></script>  
+    <script src="/load-components.js"></script> 
+    <title data-i18n="call_center">مركز الاتصال</title>
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+</head>
+<body>
+    <div id="navbar-container"></div>
+    <!-- المحتوى الرئيسي -->
+    <main class="main-container">
+        <div class="page-header">
+            <h2 data-i18n="contact_pageTitle">مركز الاتصال والخدمة الصوتية (IVR)</h2>
+            <p data-i18n="contact_pageDescription">نوفر لك خدمات متكاملة على مدار الساعة من خلال مركز الاتصال والخدمة الصوتية الآلية للرد على استفساراتك ومعاملاتك المصرفية</p>
+        </div>
+        
+        <!-- قسم مركز الاتصال -->
+        <section class="call-center-section">
+            <h2 class="section-title">
+                <i class="fas fa-headset"></i>
+                <span data-i18n="contact_callCenterTitle">مركز الاتصال للأفراد</span>
+            </h2>
+            
+            <div class="highlight-box">
+                <h3><i class="fas fa-phone-alt"></i> <span data-i18n="contact_unifiedNumber">الرقم الموحد لخدمتكم</span></h3>
+                <p data-i18n="contact_unifiedNumberDesc">من أهم منافذ البنك لخدمتكم من خلال تلقي مكالماتكم الهاتفية على الرقم الموحد المختصر (19019)، وبسعر المكالمة العادية طوال أيام الأسبوع (7×24).</p>
+                
+                <div class="phone-number-large pulse">19019</div>
+                <p class="phone-subtitle" data-i18n="contact_callNow">اتصل بنا على الرقم الموحد للحصول على المساعدة والدعم الفني</p>
+                
+                <div class="center-text">
+                    <a href="tel:19888" class="cta-button">
+                        <i class="fas fa-phone-alt"></i> <span data-i18n="contact_callNowBtn">اتصل الآن</span>
+                    </a>
+                </div>
+            </div>
+            
+            <h3 data-i18n="contact_servicesTitle">الخدمات التي يقدمها مركز الاتصال</h3>
+            <p style="margin-bottom: 20px; font-size: 1.1rem;" data-i18n="contact_servicesDesc">أولاً: خدمات يقوم مسئولو مركز الاتصال بالرد فيها على استفساراتكم وهي كالتالي:</p>
+            
+            <div class="services-container">
+                <!-- فئة الخدمات الأولى -->
+                <div class="service-category">
+                    <h4><i class="fas fa-user-tie"></i> <span data-i18n="contact_category1Title">خدمة العملاء المميزين</span></h4>
+                    <ul class="service-list">
+                        <li data-i18n="contact_category1_item1">خدمة كبار العملاء</li>
+                        <li data-i18n="contact_category1_item2">عملاء خدمة دولي</li>
+                        <li data-i18n="contact_category1_item3">الاستعلام عن كافه منتجات وخدمات البنك (بطاقات – شهادات – قروض – تحويلات - .... إلخ)</li>
+                    </ul>
+                </div>
+                
+                <!-- فئة الخدمات الثانية -->
+                <div class="service-category">
+                    <h4><i class="fas fa-chart-line"></i> <span data-i18n="contact_category2Title">استعلامات الحسابات</span></h4>
+                    <ul class="service-list">
+                        <li data-i18n="contact_category2_item1">الاستعلام عن أرصدة و حركات الحسابات (جارية – توفير – يوم بيوم)</li>
+                        <li data-i18n="contact_category2_item2">الاستعلام عن (الحوالات الأسمية – حوالات مرسله على الحساب)</li>
+                        <li data-i18n="contact_category2_item3">الاستعلام عن مواعيد وأماكن الفروع وأماكن آلات البنك الشخصي</li>
+                    </ul>
+                </div>
+                
+                <!-- فئة الخدمات الثالثة -->
+                <div class="service-category">
+                    <h4><i class="fas fa-comments"></i> <span data-i18n="contact_category3Title">الشكاوى والمقترحات</span></h4>
+                    <ul class="service-list">
+                        <li data-i18n="contact_category3_item1">تلقي مقترحات العملاء والعمل على دراسة مدى إمكانية تطبيقها</li>
+                        <li data-i18n="contact_category3_item2">تلقي شكاوى / طلبات العملاء سواء من المنتجات او الخدمات والرد عليها طبقا للمدة الزمنية المحددة مسبقا</li>
+                    </ul>
+                </div>
+                
+                <!-- فئة الخدمات الرابعة -->
+                <div class="service-category">
+                    <h4><i class="fas fa-credit-card"></i> <span data-i18n="contact_category4Title">خدمات البطاقات</span></h4>
+                    <ul class="service-list">
+                        <li data-i18n="contact_category4_item1">إلغاء محاولات الرقم السري الخطأ لكافة أنواع البطاقات</li>
+                        <li data-i18n="contact_category4_item2">إلغاء محاولات الرقم السري الخطأ لخدمة الأنترنت البنكي</li>
+                        <li data-i18n="contact_category4_item3">تنشيط البطاقات (البطاقات الائتمانية - بطاقات المرتبات)</li>
+                        <li data-i18n="contact_category4_item4">إنشاء أو تغيير الرقم السري للبطاقات الائتمانية</li>
+                        <li data-i18n="contact_category4_item5">إيقاف البطاقات في حالة الفقد او السرقة</li>
+                        <li data-i18n="contact_category4_item6">إرسال بيان العمليات الخاص بالبطاقات (الائتمانية – الفيزا نت)</li>
+                    </ul>
+                </div>
+                
+                <!-- فئة الخدمات الخامسة -->
+                <div class="service-category">
+                    <h4><i class="fas fa-cog"></i> <span data-i18n="contact_category5Title">خدمات أخرى</span></h4>
+                    <ul class="service-list">
+                        <li data-i18n="contact_category5_item1">تسجيل طلبات إنشاء الخدمة الصوتية الـ IVR</li>
+                        <li data-i18n="contact_category5_item2">تعديل بيانات و حسابات العملاء على خدمة الـ IVR إضافة / حذف / تعديل</li>
+                        <li data-i18n="contact_category5_item3">إتاحة استخدام بطاقات (الخصم الفوري - الائتمانية - المدفوعة مقدماً) للاستخدام بالخارج</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- قسم الخدمة الصوتية IVR -->
+        <section class="ivr-section">
+            <h2 class="section-title">
+                <i class="fas fa-phone-volume"></i>
+                <span data-i18n="contact_ivrTitle">الخدمة الصوتية البنكية (IVR)</span>
+            </h2>
+            
+            <div class="ivr-intro">
+                <h3 data-i18n="contact_ivrWhatIs">ما هي الخدمة الصوتية البنكية (IVR)؟</h3>
+                <p data-i18n="contact_ivrDescription">نظام الرد الصوتي التفاعلي (IVR) هو خدمة آلية تمكنك من إجراء معاملات بنكية والحصول على معلومات عن طريق الهاتف دون الحاجة للتحدث مع موظف. فقط اتبع التعليمات الصوتية للوصول إلى الخدمة المطلوبة.</p>
+            </div>
+            
+            <div class="highlight-box">
+                <h3><i class="fas fa-info-circle"></i> <span data-i18n="contact_howToUse">كيفية استخدام الخدمة الصوتية (IVR)</span></h3>
+                <p data-i18n="contact_howToUseDesc">اتصل بالرقم الموحد <span class="key">19019</span> ثم اختر اللغة المطلوبة (العربية أو الإنجليزية) واتبع التعليمات الصوتية للوصول إلى الخدمة التي تريدها.</p>
+            </div>
+            
+            <h3 data-i18n="contact_ivrFeaturesTitle">مميزات الخدمة الصوتية (IVR)</h3>
+            
+            <div class="ivr-features">
+                <div class="ivr-feature">
+                    <i class="fas fa-clock"></i>
+                    <h4 data-i18n="contact_feature1Title">خدمة 24/7</h4>
+                    <p data-i18n="contact_feature1Desc">متاحة على مدار الساعة طوال أيام الأسبوع</p>
+                </div>
+                
+                <div class="ivr-feature">
+                    <i class="fas fa-lock"></i>
+                    <h4 data-i18n="contact_feature2Title">آمنة وسريعة</h4>
+                    <p data-i18n="contact_feature2Desc">تحقق من هويتك باستخدام رقمك السري</p>
+                </div>
+                
+                <div class="ivr-feature">
+                    <i class="fas fa-tasks"></i>
+                    <h4 data-i18n="contact_feature3Title">معاملات متنوعة</h4>
+                    <p data-i18n="contact_feature3Desc">تنفيذ العديد من المعاملات المصرفية</p>
+                </div>
+                
+                <div class="ivr-feature">
+                    <i class="fas fa-save"></i>
+                    <h4 data-i18n="contact_feature4Title">توفير الوقت</h4>
+                    <p data-i18n="contact_feature4Desc">لا حاجة للانتظار في الطوابير</p>
+                </div>
+            </div>
+            
+            <h3 data-i18n="contact_ivrGuideTitle">دليل الخدمات في النظام الصوتي (IVR)</h3>
+            
+            <div class="ivr-table-container">
+                <table class="ivr-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="contact_tableService">الخدمة</th>
+                            <th data-i18n="contact_tableShortcut">الرقم المختصر</th>
+                            <th data-i18n="contact_tableDescription">الوصف</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-i18n="contact_service1">الاستعلام عن الرصيد</td>
+                            <td><span class="key">1</span></td>
+                            <td data-i18n="contact_service1Desc">معرفة رصيد حسابك الجاري أو التوفير</td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="contact_service2">آخر 5 عمليات</td>
+                            <td><span class="key">2</span></td>
+                            <td data-i18n="contact_service2Desc">الحصول على آخر 5 عمليات على حسابك</td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="contact_service3">تحويل الأموال</td>
+                            <td><span class="key">3</span></td>
+                            <td data-i18n="contact_service3Desc">تحويل الأموال بين حساباتك أو لحسابات أخرى</td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="contact_service4">خدمات البطاقات</td>
+                            <td><span class="key">4</span></td>
+                            <td data-i18n="contact_service4Desc">إيقاف بطاقة أو الاستعلام عن رصيد البطاقة</td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="contact_service5">دفع الفواتير</td>
+                            <td><span class="key">5</span></td>
+                            <td data-i18n="contact_service5Desc">دفع فواتير الخدمات (كهرباء، مياه، غاز)</td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="contact_service6">الشكاوى والمقترحات</td>
+                            <td><span class="key">6</span></td>
+                            <td data-i18n="contact_service6Desc">تسجيل شكوى أو اقتراح للبنك</td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="contact_service7">التحدث مع موظف</td>
+                            <td><span class="key">0</span></td>
+                            <td data-i18n="contact_service7Desc">للانتقال إلى موظف خدمة العملاء</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="center-text" style="margin-top: 40px;">
+                <a href="tel:19888" class="cta-button">
+                    <i class="fas fa-mobile-alt"></i> <span data-i18n="contact_tryIvrBtn">جرب الخدمة الصوتية الآن</span>
+                </a>
+            </div>
+        </section>
+    </main>
+    <div id="footer-container"></div>
+</body>
+</html>

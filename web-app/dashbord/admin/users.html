@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المستخدمين - MSB Bank</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* نفس الستايلات من dashboard.html */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Cairo', sans-serif; background: #081b29; }
+        .admin-container { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #0a2438 0%, #081b29 100%);
+            border-left: 1px solid rgba(0, 238, 255, 0.2);
+            position: fixed;
+            right: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .sidebar-header { padding: 25px 20px; text-align: center; border-bottom: 1px solid rgba(0, 238, 255, 0.2); }
+        .sidebar-header img { width: 70px; margin-bottom: 10px; }
+        .sidebar-header h3 { color: #0ef; font-size: 20px; }
+        .sidebar-header p { color: #a0d2db; font-size: 12px; opacity: 0.7; }
+        .sidebar-menu { padding: 20px 0; }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 25px;
+            color: #a0d2db;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-right: 3px solid transparent;
+        }
+        .menu-item i { width: 22px; font-size: 18px; }
+        .menu-item:hover { background: rgba(0, 238, 255, 0.1); color: #0ef; }
+        .menu-item.active { background: rgba(0, 238, 255, 0.15); border-right-color: #0ef; color: #0ef; }
+        .main-content { flex: 1; margin-right: 280px; padding: 20px; }
+        .top-header {
+            background: linear-gradient(135deg, rgba(10, 36, 56, 0.95) 0%, rgba(8, 27, 41, 0.98) 100%);
+            border-radius: 15px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(0, 238, 255, 0.2);
+        }
+        .page-title { color: #0ef; font-size: 24px; font-weight: 600; }
+        .admin-info { display: flex; align-items: center; gap: 15px; }
+        .admin-name { color: #a0d2db; }
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .logout-btn:hover { background: #ef4444; color: white; }
+        .search-bar {
+            background: linear-gradient(135deg, rgba(10, 36, 56, 0.95) 0%, rgba(8, 27, 41, 0.98) 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(0, 238, 255, 0.2);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 238, 255, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+        }
+        .search-input:focus { outline: none; border-color: #0ef; }
+        .filter-select {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 238, 255, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .filter-select option { background: #0a2438; }
+        .search-btn {
+            padding: 12px 25px;
+            background: #0ef;
+            border: none;
+            border-radius: 10px;
+            color: #081b29;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .search-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 238, 255, 0.3); }
+        .card {
+            background: linear-gradient(135deg, rgba(10, 36, 56, 0.95) 0%, rgba(8, 27, 41, 0.98) 100%);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 238, 255, 0.2);
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0, 238, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .card-header h3 { color: #0ef; font-size: 18px; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid rgba(0, 238, 255, 0.1);
+            color: #a0d2db;
+        }
+        .data-table th { color: #0ef; font-weight: 600; }
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .badge-suspended { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .btn-sm {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            border: none;
+            margin: 0 3px;
+            transition: all 0.3s ease;
+        }
+        .btn-sm:hover { transform: translateY(-1px); }
+        .btn-success { background: #10b981; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-primary { background: #0ef; color: #081b29; }
+        .btn-secondary { background: rgba(255, 255, 255, 0.1); color: #a0d2db; }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid rgba(0, 238, 255, 0.2);
+        }
+        .page-btn {
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 238, 255, 0.3);
+            border-radius: 8px;
+            color: #a0d2db;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .page-btn.active { background: #0ef; color: #081b29; border-color: #0ef; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: linear-gradient(135deg, #0a2438 0%, #081b29 100%);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid rgba(0, 238, 255, 0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 238, 255, 0.2);
+        }
+        .modal-header h3 { color: #0ef; }
+        .modal-close {
+            background: none;
+            border: none;
+            color: #a0d2db;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .detail-label { color: #0ef; font-weight: 500; }
+        .detail-value { color: #a0d2db; }
+        .menu-toggle {
+            display: none;
+            background: rgba(0, 238, 255, 0.2);
+            border: none;
+            color: #0ef;
+            font-size: 24px;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        @media (max-width: 992px) {
+            .sidebar { right: -280px; }
+            .main-content { margin-right: 0; }
+            .sidebar.mobile-open { right: 0; }
+            .menu-toggle { display: block; }
+            .data-table { font-size: 12px; }
+            .data-table th, .data-table td { padding: 8px; }
+        }
+        .loading-spinner { text-align: center; padding: 20px; color: #a0d2db; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="https://i.ibb.co/LhY9KjRv/MSB.png" alt="MSB Bank">
+                <h3>MSB Bank</h3>
+                <p>منصة المشرفين</p>
+            </div>
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>لوحة التحكم</span>
+                </a>
+                <a href="users.html" class="menu-item active">
+                    <i class="fas fa-users"></i>
+                    <span>إدارة المستخدمين</span>
+                </a>
+                <a href="analytics.html" class="menu-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>التحليلات</span>
+                </a>
+                <a href="settings.html" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>إعدادات النظام</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-header">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">إدارة المستخدمين</h1>
+                <div class="admin-info">
+                    <span class="admin-name" id="adminName">admin@msbbank.com</span>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> خروج
+                    </button>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 بحث بالاسم أو البريد الإلكتروني...">
+                <select class="filter-select" id="statusFilter">
+                    <option value="all">جميع الحالات</option>
+                    <option value="active">نشط</option>
+                    <option value="pending">قيد الانتظار</option>
+                    <option value="suspended">معلق</option>
+                </select>
+                <button class="search-btn" onclick="filterUsers()">
+                    <i class="fas fa-search"></i> بحث
+                </button>
+                <button class="search-btn" style="background: rgba(255,255,255,0.1); color:#a0d2db;" onclick="resetFilters()">
+                    <i class="fas fa-undo-alt"></i> إعادة تعيين
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-users"></i> قائمة المستخدمين</h3>
+                    <span id="usersCount" style="color: #a0d2db;">إجمالي: 0 مستخدم</span>
+                </div>
+                <div style="overflow-x: auto;">
+                    <div id="usersContainer">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i> جاري التحميل...
+                        </div>
+                    </div>
+                </div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal تفاصيل المستخدم -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-circle"></i> تفاصيل المستخدم</h3>
+                <button class="modal-close" id="closeUserModalBtn">&times;</button>
+            </div>
+            <div class="modal-body" id="userModalBody"></div>
+            <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; padding-top: 15px; border-top: 1px solid rgba(0,238,255,0.2);">
+                <button class="btn-sm btn-secondary" id="closeUserModalFooterBtn">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin-auth.js"></script>
+    <script src="admin-api.js"></script>
+    <script>
+        let allUsers = [];
+        let filteredUsers = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        // ============= دوال إغلاق مودال المستخدم =============
+        function closeUserModal() {
+            const modal = document.getElementById('userModal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('active');
+            }
+        }
+
+        // ربط أزرار الإغلاق بعد تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            const closeBtn = document.getElementById('closeUserModalBtn');
+            const closeFooterBtn = document.getElementById('closeUserModalFooterBtn');
+            
+            if (closeBtn) {
+                closeBtn.onclick = closeUserModal;
+            }
+            if (closeFooterBtn) {
+                closeFooterBtn.onclick = closeUserModal;
+            }
+        });
+
+        async function loadUsers() {
+            try {
+                const result = await AdminAPI.getAllUsers();
+                if (result.success) {
+                    allUsers = result.users || [];
+                    filterUsers();
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+                document.getElementById('usersContainer').innerHTML = `
+                    <div class="loading-spinner" style="color: #ef4444;">
+                        <i class="fas fa-exclamation-triangle"></i> خطأ في تحميل المستخدمين
+                    </div>
+                `;
+            }
+        }
+
+        function filterUsers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            filteredUsers = allUsers.filter(user => {
+                const matchesSearch = user.fullName?.toLowerCase().includes(searchTerm) ||
+                                     user.email?.toLowerCase().includes(searchTerm);
+                const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+            
+            document.getElementById('usersCount').textContent = `إجمالي: ${filteredUsers.length} مستخدم`;
+            currentPage = 1;
+            renderUsersTable();
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = 'all';
+            filterUsers();
+        }
+
+        function renderUsersTable() {
+            const container = document.getElementById('usersContainer');
+            const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+            const start = (currentPage - 1) * itemsPerPage;
+            const paginatedUsers = filteredUsers.slice(start, start + itemsPerPage);
+            
+            if (paginatedUsers.length === 0) {
+                container.innerHTML = `
+                    <div class="loading-spinner">
+                        <i class="fas fa-inbox"></i> لا توجد مستخدمين
+                    </div>
+                `;
+                document.getElementById('pagination').innerHTML = '';
+                return;
+            }
+            
+            container.innerHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>الاسم</th>
+                            <th>البريد الإلكتروني</th>
+                            <th>رقم الهاتف</th>
+                            <th>نوع الحساب</th>
+                            <th>الحالة</th>
+                            <th>تاريخ التسجيل</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${paginatedUsers.map((user, index) => {
+                            const statusClass = user.status === 'active' ? 'badge-active' : (user.status === 'pending' ? 'badge-pending' : 'badge-suspended');
+                            const statusText = user.status === 'active' ? 'نشط' : (user.status === 'pending' ? 'قيد الانتظار' : 'معلق');
+                            const accountText = user.accountType === 'current' ? 'حساب جاري' : 'حساب توفير';
+                            return `
+                                <tr>
+                                    <td>${start + index + 1}</td>
+                                    <td>${user.fullName || '---'}</td>
+                                    <td>${user.email || '---'}</td>
+                                    <td>${user.phone || '---'}</td>
+                                    <td>${accountText}</td>
+                                    <td><span class="badge ${statusClass}">${statusText}</span></td>
+                                    <td>${user.createdAt ? new Date(user.createdAt).toLocaleDateString('ar-EG') : '---'}</td>
+                                    <td>
+                                        <button class="btn-sm btn-primary" onclick="viewUserDetails('${user.uid}')" title="عرض التفاصيل">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        ${user.status !== 'active' && user.status !== 'admin' ? `
+                                            <button class="btn-sm btn-success" onclick="changeUserStatus('${user.uid}', 'active')" title="تفعيل">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        ` : ''}
+                                        ${user.status !== 'suspended' && user.status !== 'admin' ? `
+                                            <button class="btn-sm btn-warning" onclick="changeUserStatus('${user.uid}', 'suspended')" title="تعليق">
+                                                <i class="fas fa-pause"></i>
+                                            </button>
+                                        ` : ''}
+                                        ${user.status !== 'pending' && user.role !== 'admin' ? `
+                                            <button class="btn-sm btn-danger" onclick="deleteUserAccount('${user.uid}')" title="حذف">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        ` : ''}
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            // Pagination
+            if (totalPages > 1) {
+                let pages = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    pages += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                }
+                document.getElementById('pagination').innerHTML = pages;
+            } else {
+                document.getElementById('pagination').innerHTML = '';
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderUsersTable();
+        }
+
+        function viewUserDetails(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+            
+            const accountText = user.accountType === 'current' ? 'حساب جاري' : 'حساب توفير';
+            const statusText = user.status === 'active' ? 'نشط' : (user.status === 'pending' ? 'قيد الانتظار' : 'معلق');
+            const statusColor = user.status === 'active' ? '#10b981' : (user.status === 'pending' ? '#f59e0b' : '#ef4444');
+            
+            showDetailsModal(user, accountText, statusText, statusColor);
+        }
+
+        function showDetailsModal(user, accountText, statusText, statusColor) {
+            const existingModal = document.getElementById('userModal');
+            if (existingModal) {
+                // تنظيف المحتوى القديم
+                const modalBody = document.getElementById('userModalBody');
+                if (modalBody) {
+                    modalBody.innerHTML = `
+                        <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <span class="detail-label" style="color: #0ef;">الاسم الكامل:</span>
+                            <span class="detail-value" style="color: #a0d2db;">${user.fullName || '---'}</span>
+                        </div>
+                        <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <span class="detail-label" style="color: #0ef;">البريد الإلكتروني:</span>
+                            <span class="detail-value" style="color: #a0d2db;">${user.email || '---'}</span>
+                        </div>
+                        <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <span class="detail-label" style="color: #0ef;">رقم الهاتف:</span>
+                            <span class="detail-value" style="color: #a0d2db;">${user.phone || '---'}</span>
+                        </div>
+                        <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <span class="detail-label" style="color: #0ef;">الرقم القومي:</span>
+                            <span class="detail-value" style="color: #a0d2db;">${user.nationalId || '---'}</span>
+                        </div>
+                        <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <span class="detail-label" style="color: #0ef;">نوع الحساب:</span>
+                            <span class="detail-value" style="color: #a0d2db;">${accountText}</span>
+                        </div>
+                        <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <span class="detail-label" style="color: #0ef;">الحالة:</span>
+                            <span class="detail-value" style="color: ${statusColor};">${statusText}</span>
+                        </div>
+                        <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0;">
+                            <span class="detail-label" style="color: #0ef;">تاريخ التسجيل:</span>
+                            <span class="detail-value" style="color: #a0d2db;">${user.createdAt ? new Date(user.createdAt).toLocaleDateString('ar-EG') : '---'}</span>
+                        </div>
+                    `;
+                }
+                existingModal.style.display = 'flex';
+                existingModal.classList.add('active');
+                return;
+            }
+            
+            const modalHTML = `
+                <div class="modal" id="userModal" style="display: flex;">
+                    <div class="modal-content" style="max-width: 500px;">
+                        <div class="modal-header" style="border-bottom-color: rgba(0, 238, 255, 0.2);">
+                            <h3 style="color: #0ef;">
+                                <i class="fas fa-user-circle"></i>
+                                تفاصيل المستخدم: ${user.fullName || '---'}
+                            </h3>
+                            <button class="modal-close" id="closeUserModalBtn2" style="color: #a0d2db;">&times;</button>
+                        </div>
+                        <div class="modal-body" id="userModalBody">
+                            <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <span class="detail-label" style="color: #0ef;">الاسم الكامل:</span>
+                                <span class="detail-value" style="color: #a0d2db;">${user.fullName || '---'}</span>
+                            </div>
+                            <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <span class="detail-label" style="color: #0ef;">البريد الإلكتروني:</span>
+                                <span class="detail-value" style="color: #a0d2db;">${user.email || '---'}</span>
+                            </div>
+                            <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <span class="detail-label" style="color: #0ef;">رقم الهاتف:</span>
+                                <span class="detail-value" style="color: #a0d2db;">${user.phone || '---'}</span>
+                            </div>
+                            <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <span class="detail-label" style="color: #0ef;">الرقم القومي:</span>
+                                <span class="detail-value" style="color: #a0d2db;">${user.nationalId || '---'}</span>
+                            </div>
+                            <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <span class="detail-label" style="color: #0ef;">نوع الحساب:</span>
+                                <span class="detail-value" style="color: #a0d2db;">${accountText}</span>
+                            </div>
+                            <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <span class="detail-label" style="color: #0ef;">الحالة:</span>
+                                <span class="detail-value" style="color: ${statusColor};">${statusText}</span>
+                            </div>
+                            <div class="detail-row" style="display: flex; justify-content: space-between; padding: 10px 0;">
+                                <span class="detail-label" style="color: #0ef;">تاريخ التسجيل:</span>
+                                <span class="detail-value" style="color: #a0d2db;">${user.createdAt ? new Date(user.createdAt).toLocaleDateString('ar-EG') : '---'}</span>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; border-top-color: rgba(0, 238, 255, 0.2); padding-top: 15px;">
+                            <button class="btn-sm btn-secondary" id="closeUserModalBtn3" style="background: rgba(255,255,255,0.1); color: #a0d2db; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer;">
+                                <i class="fas fa-times"></i> إغلاق
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // ربط أزرار الإغلاق
+            const closeBtn2 = document.getElementById('closeUserModalBtn2');
+            const closeBtn3 = document.getElementById('closeUserModalBtn3');
+            
+            if (closeBtn2) closeBtn2.onclick = closeUserModal;
+            if (closeBtn3) closeBtn3.onclick = closeUserModal;
+        }
+
+        // دالة إغلاق المودال الرئيسية
+        function closeModal() {
+            closeUserModal();
+        }
+
+        async function changeUserStatus(userId, newStatus) {
+            const actionText = newStatus === 'active' ? 'تفعيل' : 'تعليق';
+            const icon = newStatus === 'active' ? 'fa-check-circle' : 'fa-pause-circle';
+            const color = newStatus === 'active' ? '#10b981' : '#f59e0b';
+            
+            showCustomConfirmModal(
+                `${actionText} المستخدم`,
+                `هل أنت متأكد من ${actionText} هذا المستخدم؟`,
+                actionText,
+                'إلغاء',
+                color,
+                icon,
+                async () => {
+                    try {
+                        let result;
+                        if (newStatus === 'active') {
+                            result = await AdminAPI.unsuspendUser(userId);
+                        } else {
+                            result = await AdminAPI.suspendUser(userId);
+                        }
+                        
+                        if (result.success) {
+                            showSuccessMessage(`✅ تم ${actionText} المستخدم بنجاح`);
+                            await loadUsers();
+                        }
+                    } catch (error) {
+                        showErrorMessage('❌ ' + error.message);
+                    }
+                }
+            );
+        }
+
+        function showCustomConfirmModal(title, message, confirmText, cancelText, confirmColor, icon, onConfirm) {
+            const existingModal = document.getElementById('customConfirmModal');
+            if (existingModal) existingModal.remove();
+            
+            const modalHTML = `
+                <div class="modal" id="customConfirmModal" style="display: flex;">
+                    <div class="modal-content" style="max-width: 450px;">
+                        <div class="modal-header" style="border-bottom-color: rgba(0, 238, 255, 0.2);">
+                            <h3 style="color: #0ef;">
+                                <i class="fas ${icon}" style="color: ${confirmColor};"></i>
+                                ${title}
+                            </h3>
+                            <button class="modal-close" onclick="closeConfirmModal()" style="color: #a0d2db;">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <i class="fas ${icon}" style="font-size: 48px; color: ${confirmColor};"></i>
+                            </div>
+                            <p style="text-align: center; color: #a0d2db; font-size: 16px; margin-bottom: 20px;">
+                                ${message}
+                            </p>
+                        </div>
+                        <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; border-top-color: rgba(0, 238, 255, 0.2); padding-top: 15px;">
+                            <button class="btn-sm btn-secondary" onclick="closeConfirmModal()" style="background: rgba(255,255,255,0.1); color: #a0d2db; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                                <i class="fas fa-times"></i>
+                                ${cancelText}
+                            </button>
+                            <button class="btn-sm btn-danger" id="confirmActionBtn" style="background: ${confirmColor}; color: white; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                                <i class="fas ${icon}"></i>
+                                ${confirmText}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            const confirmBtn = document.getElementById('confirmActionBtn');
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', () => {
+                    closeConfirmModal();
+                    if (onConfirm) onConfirm();
+                });
+            }
+        }
+
+        async function deleteUserAccount(userId) {
+            showConfirmModal(
+                '⚠️ تحذير: حذف مستخدم',
+                'هل أنت متأكد من حذف هذا المستخدم نهائياً؟ لا يمكن التراجع عن هذا الإجراء.',
+                'حذف المستخدم',
+                'إلغاء',
+                async () => {
+                    try {
+                        const result = await AdminAPI.deleteUser(userId);
+                        if (result.success) {
+                            showSuccessMessage('✅ تم حذف المستخدم بنجاح');
+                            await loadUsers();
+                        }
+                    } catch (error) {
+                        showErrorMessage('❌ ' + error.message);
+                    }
+                }
+            );
+        }
+
+        function showConfirmModal(title, message, confirmText, cancelText, onConfirm) {
+            const existingModal = document.getElementById('customConfirmModal');
+            if (existingModal) existingModal.remove();
+            
+            const modalHTML = `
+                <div class="modal" id="customConfirmModal" style="display: flex;">
+                    <div class="modal-content" style="max-width: 450px;">
+                        <div class="modal-header" style="border-bottom-color: rgba(0, 238, 255, 0.2);">
+                            <h3 style="color: #0ef;">
+                                <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                                ${title}
+                            </h3>
+                            <button class="modal-close" onclick="closeConfirmModal()" style="color: #a0d2db;">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <i class="fas fa-trash-alt" style="font-size: 48px; color: #ef4444;"></i>
+                            </div>
+                            <p style="text-align: center; color: #a0d2db; font-size: 16px; margin-bottom: 20px;">
+                                ${message}
+                            </p>
+                            <div style="background: rgba(239, 68, 68, 0.1); border-radius: 12px; padding: 12px; margin-bottom: 20px; border-right: 3px solid #ef4444;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-info-circle" style="color: #ef4444;"></i>
+                                    <span style="color: #a0d2db; font-size: 13px;">
+                                        هذا الإجراء لا يمكن التراجع عنه. سيتم حذف جميع بيانات المستخدم نهائياً.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; border-top-color: rgba(0, 238, 255, 0.2); padding-top: 15px;">
+                            <button class="btn-sm btn-secondary" onclick="closeConfirmModal()" style="background: rgba(255,255,255,0.1); color: #a0d2db; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                                <i class="fas fa-times"></i>
+                                ${cancelText}
+                            </button>
+                            <button class="btn-sm btn-danger" id="confirmActionBtn" style="background: #ef4444; color: white; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                                <i class="fas ${confirmText === 'حذف المستخدم' ? 'fa-trash' : 'fa-check'}"></i>
+                                ${confirmText}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            const confirmBtn = document.getElementById('confirmActionBtn');
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', () => {
+                    closeConfirmModal();
+                    if (onConfirm) onConfirm();
+                });
+            }
+        }
+
+        function closeConfirmModal() {
+            const modal = document.getElementById('customConfirmModal');
+            if (modal) modal.remove();
+        }
+
+        function showSuccessMessage(message) {
+            const alert = document.createElement('div');
+            alert.className = 'custom-alert';
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 10px;
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                font-weight: 500;
+            `;
+            alert.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 3000);
+        }
+
+        function showErrorMessage(message) {
+            const alert = document.createElement('div');
+            alert.className = 'custom-alert';
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 10px;
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                font-weight: 500;
+            `;
+            alert.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 3000);
+        }
+
+        // إضافة CSS للأنيميشن
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // إعدادات الصفحة
+        document.getElementById('menuToggle')?.addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('mobile-open');
+        });
+
+        document.getElementById('logoutBtn')?.addEventListener('click', function() {
+            adminLogout();
+        });
+
+        document.getElementById('adminName').textContent = localStorage.getItem('adminEmail') || 'admin@msbbank.com';
+        
+        // تحميل البيانات
+        loadUsers();
+
+        window.filterUsers = filterUsers;
+        window.resetFilters = resetFilters;
+        window.goToPage = goToPage;
+        window.viewUserDetails = viewUserDetails;
+        window.changeUserStatus = changeUserStatus;
+        window.deleteUserAccount = deleteUserAccount;
+        window.closeModal = closeModal;
+        window.closeUserModal = closeUserModal;
+    </script>
+</body>
+</html>

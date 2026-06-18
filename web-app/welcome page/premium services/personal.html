@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html rtl="ar" lang="en">
+<head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/91081d7dd9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/personal.css">
+    <script type="module" src="js/personal.js"></script>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>    
+    <script src="/language.js"></script>  
+    <script src="/load-components.js"></script> 
+    <link rel="icon" href="https://i.ibb.co/LhY9KjRv/MSB.png">
+    <title data-i18n="pageTitle">بطاقات بنك MSB البنكية</title>
+</head>
+<body>
+    <div id="navbar-container"></div> 
+    
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title" data-i18n="heroTitle">بطاقات بنك MSB البنكية</h1>
+            <p class="hero-subtitle" data-i18n="heroSubtitle">
+                اكتشف مجموعة بطاقاتنا المصممة خصيصًا لتلبية احتياجاتك المالية. من البطاقات الائتمانية المميزة إلى بطاقات السحب الآلي المتعددة الاستخدامات، نقدم لك حلولاً مالية مبتكرة تجعل حياتك أسهل.
+            </p>
+            <div class="vip-badge">
+                <i class="fas fa-crown"></i> <span data-i18n="vipBadge">بطاقات  حصرية</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cards Section -->
+    <section class="cards-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="cardsTitle">أنواع البطاقات المتاحة</h2>
+            <p class="section-subtitle" data-i18n="cardsSubtitle">
+                اختر البطاقة التي تناسب أسلوب حياتك واحتياجاتك المالية. جميع بطاقاتنا تأتي بمزايا حصرية وحماية متقدمة.
+            </p>
+            
+            <!-- Cards Filter -->
+            <div class="cards-filter">
+                <button class="filter-btn active" data-filter="all" data-i18n="filterAll">جميع البطاقات</button>
+                <button class="filter-btn" data-filter="credit" data-i18n="filterCredit">البطاقات الائتمانية</button>
+                <button class="filter-btn" data-filter="debit" data-i18n="filterDebit">بطاقات السحب الآلي</button>
+                <button class="filter-btn" data-filter="prepaid" data-i18n="filterPrepaid">البطاقات المسبقة الدفع</button>
+                <button class="filter-btn" data-filter="business" data-i18n="filterBusiness">بطاقات الأعمال</button>
+            </div>
+            
+            <!-- Cards Grid -->
+            <div class="cards-grid" id="cardsContainer">
+                <!-- Credit Card 1 -->
+                <div class="card-item" data-type="credit">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="card-type" data-i18n="cardTypeCredit">بطاقة ائتمانية</div>
+                        <div class="card-name" data-i18n="cardPlatinum">بطاقة MSB البلاتينية</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature1">حد ائتمان يصل إلى 500,000 جنيه</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature2">فترة سماح تصل إلى 55 يومًا</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature3">نقاط مكافآت قابلة للاستبدال</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature4">تأمين مجاني على السفر</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature5">خصومات حصرية في المطاعم والمتاجر</span></li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-btn" data-i18n="applyNow">قدم الآن</div>
+                        <div class="card-details" data-i18n="feePlatinum">رسوم إصدار: 750 جنيه/سنويًا</div>
+                    </div>
+                </div>
+                
+                <!-- Debit Card -->
+                <div class="card-item" data-type="debit">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="card-type" data-i18n="cardTypeDebit">بطاقة سحب آلي</div>
+                        <div class="card-name" data-i18n="cardGold">بطاقة MSB الذهبية</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature6">سحب نقدي من أي ماكينة في مصر</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature7">دفع إلكتروني آمن عبر الإنترنت</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature8">إشعارات فورية للمعاملات</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature9">مرتبط بحسابك الجاري أو التوفير</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature10">حماية متقدمة من الاحتيال</span></li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-btn" data-i18n="applyNow">قدم الآن</div>
+                        <div class="card-details" data-i18n="feeFree">بدون رسوم إصدار</div>
+                    </div>
+                </div>
+                
+                <!-- Business Card -->
+                <div class="card-item" data-type="business">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="card-type" data-i18n="cardTypeBusiness">بطاقة أعمال</div>
+                        <div class="card-name" data-i18n="cardBusiness">بطاقة MSB للأعمال</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature11">مصممة خصيصًا للشركات وأصحاب الأعمال</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature12">تقارير مفصلة للمصروفات</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature13">حد ائتمان مرن حسب حجم الأعمال</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature14">فواتير شهرية مفصلة</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature15">خصومات على شراء المعدات المكتبية</span></li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-btn" data-i18n="applyNow">قدم الآن</div>
+                        <div class="card-details" data-i18n="feeBusiness">رسوم خاصة للشركات</div>
+                    </div>
+                </div>
+                
+                <!-- Prepaid Card -->
+                <div class="card-item" data-type="prepaid">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="card-type" data-i18n="cardTypePrepaid">بطاقة مسبقة الدفع</div>
+                        <div class="card-name" data-i18n="cardElectronic">بطاقة MSB الإلكترونية</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature16">تحكم كامل في مصروفاتك</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature17">إعادة شحن عبر الإنترنت أو الفروع</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature18">مثالية للطلاب والمراهقين</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature19">تسوق آمن عبر الإنترنت</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature20">بدون رسوم على الإصدار</span></li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-btn" data-i18n="applyNow">قدم الآن</div>
+                        <div class="card-details" data-i18n="feeFree">بدون رسوم إصدار</div>
+                    </div>
+                </div>
+                
+                <!-- Credit Card 2 -->
+                <div class="card-item" data-type="credit">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <div class="card-type" data-i18n="cardTypeCredit">بطاقة ائتمانية</div>
+                        <div class="card-name" data-i18n="cardTravel">بطاقة MSB للسفر</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature21">أميال سفر مجانية مع كل عملية شراء</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature22">تأمين سفر شامل مجاني</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature23">صالات المطارات المجانية</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature24">خصومات على حجز الفنادق</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature25">تحويل العملات بدون رسوم</span></li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-btn" data-i18n="applyNow">قدم الآن</div>
+                        <div class="card-details" data-i18n="feeTravel">رسوم إصدار: 600 جنيه/سنويًا</div>
+                    </div>
+                </div>
+                
+                <!-- Debit Card 2 -->
+                <div class="card-item" data-type="debit">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="card-type" data-i18n="cardTypeDebit">بطاقة سحب آلي</div>
+                        <div class="card-name" data-i18n="cardStudent">بطاقة MSB الجامعية</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="card-features">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature26">مصممة خصيصًا للطلاب الجامعيين</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature27">سحب نقدي مجاني من ماكينات البنك</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature28">خصومات في المكتبات والمطاعم الطلابية</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature29">رسوم إصدار مخفضة</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="feature30">مرتبطة بحساب توفير خاص للطلاب</span></li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-btn" data-i18n="applyNow">قدم الآن</div>
+                        <div class="card-details" data-i18n="feeStudent">رسوم إصدار: 50 جنيه فقط</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="benefitsTitle">مزايا بطاقات بنك MSB</h2>
+            <p class="section-subtitle" data-i18n="benefitsSubtitle">
+                نضمن لك تجربة مصرفية فريدة مع مجموعة واسعة من المزايا والحماية المتقدمة.
+            </p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="benefit-title" data-i18n="benefit1Title">حماية متقدمة</h3>
+                    <p class="benefit-desc" data-i18n="benefit1Desc">
+                        أنظمة حماية متطورة ضد الاحتيال والاستخدام غير المصرح به لبطاقتك.
+                    </p>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="benefit-title" data-i18n="benefit2Title">قبول عالمي</h3>
+                    <p class="benefit-desc" data-i18n="benefit2Desc">
+                        استخدم بطاقتك في ملايين المنافذ حول العالم مع دعم جميع العملات.
+                    </p>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="benefit-title" data-i18n="benefit3Title">إدارة ذكية</h3>
+                    <p class="benefit-desc" data-i18n="benefit3Desc">
+                        تحكم كامل في بطاقتك عبر تطبيق MSB مصر الذكي وخدمات الإنترنت البنكية.
+                    </p>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3 class="benefit-title" data-i18n="benefit4Title">مكافآت حصرية</h3>
+                    <p class="benefit-desc" data-i18n="benefit4Desc">
+                        استفد من برامج المكافآت والخصومات الحصرية مع شركائنا في مختلف القطاعات.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Section -->
+    <section class="application-section">
+        <div class="container">
+            <div class="application-container">
+                <div class="application-content">
+                    <h3 data-i18n="applicationTitle">كيفية التقديم للحصول على بطاقة</h3>
+                    <p data-i18n="applicationDesc">
+                        عملية التقديم لبطاقة بنك MSB سريعة وسهلة. اتبع الخطوات البسيطة للحصول على بطاقتك في أسرع وقت.
+                    </p>
+                    
+                    <ul class="application-steps">
+                        <li><i class="fas fa-file-alt"></i> <span data-i18n="step1">قم بملء نموذج الطلب عبر الإنترنت</span></li>
+                        <li><i class="fas fa-user-check"></i> <span data-i18n="step2">قدم المستندات المطلوبة (صورة بطاقة الرقم القومي، إثبات دخل)</span></li>
+                        <li><i class="fas fa-search"></i> <span data-i18n="step3">نقوم بمراجعة طلبك والتحقق من المعلومات</span></li>
+                        <li><i class="fas fa-credit-card"></i> <span data-i18n="step4">استلم بطاقتك في الفرع المحدد خلال 5-7 أيام عمل</span></li>
+                        <li><i class="fas fa-lock"></i> <span data-i18n="step5">قم بتفعيل بطاقتك واستخدامها فورًا</span></li>
+                    </ul>
+                    
+                    <p data-i18n="applicationNote">
+                        يمكنك أيضًا التقديم عن طريق زيارة أي فرع من فروع بنك MSB أو عبر الاتصال بمركز خدمة العملاء.
+                    </p>
+                </div>
+                
+                <div class="application-form">
+                    <h3 class="form-title" data-i18n="formTitle">طلب بطاقة جديد</h3>
+                    <form id="cardApplicationForm">
+                        <div class="form-group">
+                            <label class="form-label" for="fullName" data-i18n="formFullName">الاسم بالكامل</label>
+                            <input type="text" id="fullName" class="form-input" data-i18n-placeholder="formFullNamePlaceholder" placeholder="الاسم الرباعي كما في البطاقة الشخصية" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="nationalId" data-i18n="formNationalId">الرقم القومي</label>
+                            <input type="text" id="nationalId" class="form-input" data-i18n-placeholder="formNationalIdPlaceholder" placeholder="14 رقمًا" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="phoneNumber" data-i18n="formPhone">رقم الهاتف</label>
+                            <input type="tel" id="phoneNumber" class="form-input" data-i18n-placeholder="formPhonePlaceholder" placeholder="01XXXXXXXXX" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="email" data-i18n="formEmail">البريد الإلكتروني</label>
+                            <input type="email" id="email" class="form-input" data-i18n-placeholder="formEmailPlaceholder" placeholder="name@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="cardType" data-i18n="formCardType">نوع البطاقة المطلوبة</label>
+                            <select id="cardType" class="form-input" required>
+                                <option value="" disabled selected data-i18n="formCardTypePlaceholder">اختر نوع البطاقة</option>
+                                <option value="platinum" data-i18n="cardPlatinum">بطاقة MSB البلاتينية</option>
+                                <option value="gold" data-i18n="cardGold">بطاقة MSB الذهبية</option>
+                                <option value="business" data-i18n="cardBusiness">بطاقة MSB للأعمال</option>
+                                <option value="electronic" data-i18n="cardElectronic">بطاقة MSB الإلكترونية</option>
+                                <option value="travel" data-i18n="cardTravel">بطاقة MSB للسفر</option>
+                                <option value="student" data-i18n="cardStudent">بطاقة MSB الجامعية</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <span data-i18n="formSubmit">إرسال الطلب</span> <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="footer-container"></div> 
+    
+</body>
+</html>

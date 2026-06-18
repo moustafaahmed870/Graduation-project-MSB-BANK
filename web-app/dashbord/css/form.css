@@ -1,0 +1,381 @@
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
+
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    }
+
+    body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #081b29;
+}
+#preview {
+    margin-top: 20px;
+}
+.delete-btn{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 4px 7px;
+    font-size: 12px;
+    border-radius: 5px;
+    transition: .3s;
+}
+
+.delete-btn:hover{
+    box-shadow: 0 0 10px #0ef;
+    background-color: transparent;
+    backdrop-filter: blur(3px);
+    transform: scale(1.1);
+    width: 20%;
+}
+
+.img-box {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+}
+
+.img-box img {
+    width: 150px;
+    border-radius: 10px;
+}
+
+.input-group .delete-btn{
+    background-color: #081b29;
+    border: 2px solid #0ef;
+    border-radius: 15px;
+    color: #0ef;
+    text-shadow: 0 0 17px #0ef;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 8px;
+    box-shadow:0 0 17px #0ef;
+    transition: all 0.6s ease;
+}
+.delete-btn:hover{
+    background-color: #081b29;
+    transform: scale(1.1);
+    width: 20%;
+}
+
+
+
+    :root {
+    --bg: linear-gradient(135deg, #0D1B2A, #1B263B);
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --text: #fff;
+    }
+
+    body.light {
+    --bg: #f0f0f0;
+    --card-bg: #fff;
+    --text: #000;
+    }
+
+    .container {
+    margin-bottom: 14px;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 480px;
+    }
+
+    .form-card {
+    box-shadow: 0 0 15px #0ef;
+    /* background: var(--card-bg); */
+    /* backdrop-filter: blur(12px); */
+    padding: 30px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text);
+    transform: translateY(30px);
+    opacity: 0;
+    animation: fadeInUp .8s forwards;
+    }
+
+    @keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    }
+
+    .input-group {
+    margin-bottom: 15px;
+    }
+
+    label {
+    display: block;
+    margin-bottom: 6px;
+    }
+
+    .input-icon {
+    position: relative;
+    }
+
+    .input-icon i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.6);
+    }
+
+    input, select, textarea {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(225,225,225,0.3);
+    background: rgba(255,255,255,0.08);
+    color: var(--text);
+    outline: none;
+    transition: .3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+    border-color: #00AEEF;
+    box-shadow: 0 0 8px rgba(0, 174, 239, 0.5);
+    }
+
+    .error {
+    color: #ff4d4d;
+    margin-top: 4px;
+    font-size: 13px;
+    }
+
+    .strength {
+    margin-top: 5px;
+    font-size: 14px;
+    }
+
+    .strength.weak { color: #ff4d4d; }
+    .strength.medium { color: #ffaa00; }
+    .strength.strong { color: #33ff66; }
+
+    .submit-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg,#081b29,#00AEEF,#0ef,#00AEEF,#081b29);
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 17px;
+    cursor: pointer;
+    transition: .4s;
+    }
+
+    .submit-btn:hover {
+    transform: rotateX(10deg) scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+}
+
+    .delet-btn:hover {
+    transform: rotateX(10deg) scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+}
+
+    .submit-btn.loading {
+    pointer-events: none;
+    opacity: .6;
+    }
+
+    
+    h2{
+        padding-bottom: 10px;
+    }
+
+.input-group select option {
+    padding-right:10px ;
+    color: #00AEEF;
+    background: #081b29;
+}
+
+
+
+/* Media Queries للـ Responsive Design */
+
+/* موبايل (أقل من 768px) */
+@media (max-width: 767px) {
+    body {
+        padding: 10px; /* إضافة padding عشان المحتوى ما يلزق الشاشة */
+    }
+    
+    #preview {
+        margin-top: 15px; /* تقليل الهامش */
+    }
+    
+    .delete-btn {
+        font-size: 10px; /* تقليل حجم الخط */
+        padding: 3px 5px; /* تقليل الـ padding */
+    }
+    
+    .img-box {
+        margin: 5px; /* تقليل الهامش */
+    }
+    
+    .img-box img {
+        width: 120px; /* تقليل عرض الصورة */
+    }
+    
+    .input-group .delete-btn {
+        font-size: 13px; /* تقليل حجم الخط */
+        padding: 6px; /* تقليل الـ padding */
+    }
+    
+    .container {
+        margin-bottom: 10px; /* تقليل الهامش */
+        margin-top: 15px; /* تقليل الهامش */
+        max-width: 100%; /* جعل العرض كاملاً */
+    }
+    
+    .form-card {
+        padding: 20px; /* تقليل الـ padding */
+    }
+    
+    .input-group {
+        margin-bottom: 12px; /* تقليل الهامش */
+    }
+    
+    label {
+        margin-bottom: 4px; /* تقليل الهامش */
+    }
+    
+    input, select, textarea {
+        padding: 10px 10px 10px 35px; /* تقليل الـ padding */
+        font-size: 14px; /* تقليل حجم الخط */
+    }
+    
+    .error {
+        font-size: 12px; /* تقليل حجم الخط */
+    }
+    
+    .strength {
+        font-size: 13px; /* تقليل حجم الخط */
+    }
+    
+    .submit-btn {
+        padding: 12px; /* تقليل الـ padding */
+        font-size: 15px; /* تقليل حجم الخط */
+    }
+    
+    h2 {
+        padding-bottom: 8px; /* تقليل الـ padding */
+        font-size: 1.2em; /* تقليل حجم الخط */
+    }
+}
+
+/* تابلت (768px إلى 1024px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    #preview {
+        margin-top: 18px; /* هامش متوسط */
+    }
+    
+    .delete-btn {
+        font-size: 11px; /* حجم متوسط */
+        padding: 3px 6px; /* padding متوسط */
+    }
+    
+    .img-box {
+        margin: 8px; /* هامش متوسط */
+    }
+    
+    .img-box img {
+        width: 140px; /* عرض متوسط */
+    }
+    
+    .input-group .delete-btn {
+        font-size: 14px; /* حجم متوسط */
+        padding: 7px; /* padding متوسط */
+    }
+    
+    .container {
+        margin-bottom: 12px; /* هامش متوسط */
+        margin-top: 18px; /* هامش متوسط */
+        max-width: 450px; /* عرض متوسط */
+    }
+    
+    .form-card {
+        padding: 25px; /* padding متوسط */
+    }
+    
+    .input-group {
+        margin-bottom: 14px; /* هامش متوسط */
+    }
+    
+    label {
+        margin-bottom: 5px; /* هامش متوسط */
+    }
+    
+    input, select, textarea {
+        padding: 11px 11px 11px 38px; /* padding متوسط */
+        font-size: 15px; /* حجم متوسط */
+    }
+    
+    .error {
+        font-size: 12px; /* حجم متوسط */
+    }
+    
+    .strength {
+        font-size: 13px; /* حجم متوسط */
+    }
+    
+    .submit-btn {
+        padding: 13px; /* padding متوسط */
+        font-size: 16px; /* حجم متوسط */
+    }
+    
+    h2 {
+        padding-bottom: 9px; /* padding متوسط */
+        font-size: 1.4em; /* حجم متوسط */
+    }
+}
+
+/* ديسكتوب (أكبر من 1024px) */
+@media (min-width: 1024px) {
+    /* احتفظ بالأحجام الأصلية */
+    .container {
+        max-width: 480px; /* كما هو */
+    }
+    
+    .img-box img {
+        width: 150px; /* كما هو */
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,461 @@
+/* question.css - محسّن للدعم ثنائي الاتجاه */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* تحديد الخط حسب اللغة */
+html[lang="ar"] body {
+    font-family: 'Cairo', sans-serif;
+}
+
+html[lang="en"] body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: #081b29;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* الدعم الكامل للغة العربية (RTL) */
+html[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+html[dir="rtl"] .nav-bar {
+    flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .nav-title {
+    margin-right: auto;
+    margin-left: 0;
+}
+
+html[dir="rtl"] .language-btn {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+html[dir="rtl"] .form-section h2 {
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+html[dir="rtl"] .radio-group {
+    flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .radio-option {
+    flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .buttons {
+    flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .submit-btn {
+    margin-left: 0;
+    margin-right: 15px;
+}
+
+html[dir="rtl"] input,
+html[dir="rtl"] select,
+html[dir="rtl"] textarea {
+    text-align: right;
+    padding-right: 14px;
+}
+
+html[dir="rtl"] select {
+    background-position: left 14px center;
+    padding-left: 40px;
+    padding-right: 14px;
+}
+
+/* الدعم الكامل للغة الإنجليزية (LTR) */
+html[dir="ltr"] {
+    direction: ltr;
+    text-align: left;
+}
+
+html[dir="ltr"] .nav-bar {
+    flex-direction: row;
+}
+
+html[dir="ltr"] .nav-title {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+html[dir="ltr"] .language-btn {
+    margin-right: 0;
+    margin-left: auto;
+}
+
+html[dir="ltr"] .form-section h2 {
+    flex-direction: row;
+    text-align: left;
+}
+
+html[dir="ltr"] .radio-group {
+    flex-direction: row;
+}
+
+html[dir="ltr"] .radio-option {
+    flex-direction: row;
+}
+
+html[dir="ltr"] .buttons {
+    flex-direction: row;
+}
+
+html[dir="ltr"] .submit-btn {
+    margin-right: 0;
+    margin-left: 15px;
+}
+
+html[dir="ltr"] input,
+html[dir="ltr"] select,
+html[dir="ltr"] textarea {
+    text-align: left;
+    padding-left: 14px;
+}
+
+html[dir="ltr"] select {
+    background-position: right 14px center;
+    padding-right: 40px;
+    padding-left: 14px;
+}
+
+/* الأنماط المشتركة */
+.nav-bar {
+    background: linear-gradient(135deg, #1ea3ba, #3b82f6);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-title {
+    color: #a0d2db;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.language-btn {
+    background: #0ef;
+    color: #081b29;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.language-btn:hover {
+    background: #00d4ff;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #081b29;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px #0ef;
+    overflow: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, #1ea3ba, #3b82f6);
+    color: #a0d2db;
+    padding: 25px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.form-container {
+    padding: 30px;
+}
+
+.form-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #a0d2db;
+}
+
+.form-section h2 {
+    color: #3b82f6;
+    margin-bottom: 20px;
+    font-size: 20px;
+    align-items: center;
+    gap: 10px;
+}
+
+option {
+    background: #081b29;
+    color: #1ea3ba;
+}
+
+.form-section h2 i {
+    color: #3b82f6;
+}
+
+span {
+    color: #a0d2db;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+input[type="radio"] {
+    accent-color: #0ef;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+input::placeholder {
+    color: #a0d2db;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #a0d2db;
+}
+
+.required::after {
+    content: " *";
+    color: #0ef;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #0ef;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border 0.3s;
+    background: #081b29;
+    color: #a0d2db;
+    background-repeat: no-repeat;
+    background-size: 20px;
+}
+
+select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%230ef' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #2a5298;
+    background-color: #081b29;
+    box-shadow: 0 0 0 2px rgba(42, 82, 152, 0.1);
+}
+
+option[value=""] {
+    color: #a0d2db;
+}
+
+.radio-group {
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.radio-option {
+    align-items: center;
+    gap: 8px;
+}
+
+.radio-option input[type="radio"] {
+    width: auto;
+}
+
+.error-message {
+    color: #e53935;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+button {
+    padding: 16px 40px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.submit-btn {
+    background: linear-gradient(to left, #1e3c72, #2a5298);
+    color: white;
+    flex-grow: 1;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(to left, #2a5298, #3a62a8);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(42, 82, 152, 0.3);
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 14px;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+}
+
+.success-message {
+    display: none;
+    background-color: #d4edda;
+    color: #155724;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+    border: 1px solid #c3e6cb;
+}
+
+/* إصلاحات للشاشات الصغيرة */
+@media (max-width: 768px) {
+    .container {
+        border-radius: 10px;
+        margin: 10px;
+    }
+
+    .form-container {
+        padding: 20px;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    html[dir="rtl"] .radio-group,
+    html[dir="ltr"] .radio-group {
+        flex-direction: column;
+    }
+
+    .buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    html[dir="rtl"] .buttons,
+    html[dir="ltr"] .buttons {
+        flex-direction: column;
+    }
+
+    .submit-btn {
+        margin: 0 !important;
+    }
+
+    .nav-bar {
+        padding: 10px 15px;
+    }
+
+    .nav-title {
+        font-size: 20px;
+    }
+
+    .language-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+}
+
+/* تحسينات إضافية للدعم ثنائي الاتجاه */
+html[dir="rtl"] .fa-chevron-down:before {
+    content: "\f078";
+}
+
+html[dir="ltr"] .fa-chevron-down:before {
+    content: "\f054";
+}
+
+/* إصلاح لمحاذاة العناصر داخل النموذج */
+.form-group input[type="date"] {
+    text-align: inherit;
+}
+
+/* إصلاح للملصقات في وضع RTL */
+html[dir="rtl"] label {
+    text-align: right;
+}
+
+html[dir="ltr"] label {
+    text-align: left;
+}
+
+/* تحسين عرض الحقول النصية */
+input, textarea {
+    text-align: inherit;
+}
+
+/* إصلاح لخلفية العناصر المحددة */
+option:checked {
+    background-color: #2a5298;
+    color: white;
+}
+
+/* تحسينات للرسائل */
+.success-message {
+    direction: inherit;
+    text-align: center;
+}
+
+.error-message {
+    text-align: inherit;
+}
+
+/* تحسين لعناصر التاريخ والوقت */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+    cursor: pointer;
+}
+
+html[dir="rtl"] input[type="date"]::-webkit-calendar-picker-indicator {
+    margin-left: 0;
+    margin-right: 5px;
+}
+
+html[dir="ltr"] input[type="date"]::-webkit-calendar-picker-indicator {
+    margin-right: 0;
+    margin-left: 5px;
+}

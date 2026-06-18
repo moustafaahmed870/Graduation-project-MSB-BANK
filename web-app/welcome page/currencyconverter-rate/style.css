@@ -1,0 +1,558 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #081b29;
+    color: #a0d2db;
+    line-height: 1.6;
+    padding-bottom: 40px;
+    font-family: 'Arial', sans-serif;
+}
+
+header {
+    background: linear-gradient(135deg, #0a2438 0%, #081b29 100%);
+    color: #a0d2db;
+    padding: 25px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    border-bottom: 2px solid #317C814D;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo i {
+    font-size: 2.5rem;
+    color: #317c81;
+}
+
+.logo h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #a0d2db;
+}
+
+.date-info {
+    background: #FFFFFF1A;
+    padding: 12px 20px;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid #317c81;
+    width: 100%;
+    max-width: 500px;
+}
+
+.date-info .current-date {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #a0d2db;
+}
+
+.date-info .update-time {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-top: 5px;
+    color: #a0d2db;
+}
+
+.header-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+.exchange-currency-link {
+    background: linear-gradient(135deg, #317c81 0%, #3a8d93 100%);
+    color:#a0d2db;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 2px solid #317c81;
+    text-decoration: none;
+    display: inline-block;
+}
+.fas {
+    color: #ffffffb9 !important; 
+}
+
+.exchange-currency-link h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #ffffffb9;
+}
+
+.exchange-currency-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #3a8d93 0%, #317c81 100%);
+
+}
+
+.exchange-currency-link.active {
+    background: linear-gradient(135deg, #4fc3f7 0%, #317c81 100%);
+    border-color: #4fc3f7;
+
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.card {
+    background: #FFFFFF1A;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    margin-bottom: 25px;
+    border: 2px solid #317c81;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: #a0d2db;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #317C814D;
+}
+
+.card-title i {
+    font-size: 1.5rem;
+    color: #317c81;
+}
+
+.card-title h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* rate */
+.exchange-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.exchange-table th {
+    background: linear-gradient(135deg, #317c81 0%, #3a8d93 100%);
+    color: #a0d2db;
+    padding: 15px;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #317C814D;
+}
+
+.exchange-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #317C814D;
+    vertical-align: middle;
+}
+
+.exchange-table tr:nth-child(even) {
+    background-color: #FFFFFF0A;
+}
+
+.exchange-table tr:hover {
+    background-color: #FFFFFF14;
+}
+
+.currency-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.currency-flag {
+    width: 35px;
+    height: 25px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+    margin: 0 auto;
+    border: 1px solid #317C814D;
+}
+
+.currency-name {
+    font-weight: 600;
+    color: #a0d2db;
+    font-size: 1.1rem;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.exchange-rate {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #a0d2db;
+}
+
+.rate-egp {
+    color: #4fc3f7;
+    font-weight: bold;
+}
+
+/* converter */
+.converter-container {
+    background: linear-gradient(135deg, #0a2438 0%, #081b29 100%);
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    min-height: 50vh;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 30px #317C8199;
+    border: 2px solid #317C814D;
+    margin: 0 auto;
+}
+
+.converter-container h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #a0d2db;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #317C814D;
+}
+
+.amount, .from, .to {
+    color: #a0d2db;
+    margin-bottom: 1.5rem;
+}
+
+.amount, .dropdown {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: #a0d2db;
+}
+
+.amount input,
+form select,
+form button {
+    width: 100%;
+    border: none;
+    outline: none;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.amount input {
+    border: 2px solid #317c81;
+    background: #FFFFFF1A;
+    color: #a0d2db;
+}
+
+.select-container {
+    display: flex;
+    align-items: center;
+    background: #FFFFFF1A;
+    border-radius: 0.75rem;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    border: 2px solid #317c81;
+}
+
+.select-container:hover {
+    background: #FFFFFF26;
+    transform: translateY(-2px);
+}
+
+.select-container img {
+    max-width: 2rem;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+}
+
+.select-container select {
+    background: transparent;
+    border: none;
+    width: 100%;
+    color: #a0d2db;
+    cursor: pointer;
+}
+
+.select-container select::-webkit-scrollbar {
+    width: 8px;
+    scrollbar-color:#081b29 ;
+}
+
+.select-container select::-webkit-scrollbar-thumb {
+    background: #081b29; 
+}
+
+.select-container select {
+    scrollbar-width: thin;
+    scrollbar-color: #081b29 #081b29; 
+}
+
+.select-container select option {
+    background-color: #081b29;
+    color: #a0d2db;
+}
+
+.dropdown {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dropdown i {
+    font-size: 1.5rem;
+    color: #317c81;
+    margin: 0.5rem 0;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    transform: rotate(90deg);
+}
+
+.dropdown i:hover {
+    transform: rotate(180deg);
+}
+
+.msg {
+    margin: 2rem 0;
+    padding: 1rem;
+    text-align: center;
+    background: #FFFFFF1A;
+    border-radius: 1rem;
+    font-size: 1.1rem;
+    color: #a0d2db;
+    border: 2px solid #317c81;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+form button {
+    background: linear-gradient(135deg, #317c81 0%, #3a8d93 100%);
+    color: #a0d2db;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+form button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px #317C8166;
+}
+
+form button:active {
+    transform: translateY(-1px);
+}
+
+#updateTimestamp {
+    font-weight: bold;
+    color: #4fc3f7;
+    font-family: 'Courier New', monospace;
+    background: #00000033;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #a0d2db;
+}
+
+.loading-spinner {
+    border: 5px solid #FFFFFF1A;
+    border-top: 5px solid #317c81;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    background-color: #FF52521A;
+    color: #ff5252;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    border-right: 5px solid #ff5252;
+    border: 2px solid #ff5252;
+}
+.error-component {
+    text-align: center;
+    padding: 40px;
+    color: #a0d2db;
+}
+
+.error-component .card {
+    background-color: #FF52521A;
+    border-color: #ff5252;
+}
+
+.error-component h2 {
+    color: #ff5252;
+    margin-bottom: 15px;
+}
+
+.error-component button {
+    background: linear-gradient(135deg, #317c81 0%, #3a8d93 100%);
+    color: #a0d2db;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.error-component button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .header-buttons {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .exchange-currency-link {
+        min-width: 250px;
+        padding: 15px 20px;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .exchange-table {
+        font-size: 0.9rem;
+    }
+    
+    .exchange-table th, 
+    .exchange-table td {
+        padding: 12px 8px;
+    }
+    
+    .currency-cell {
+        gap: 6px;
+    }
+    
+    .currency-flag {
+        width: 30px;
+        height: 20px;
+    }
+    
+    .currency-name {
+        font-size: 1rem;
+    }
+    
+    .exchange-rate {
+        font-size: 1.1rem;
+    }
+    
+    .exchange-currency-link h3 {
+        font-size: 1rem;
+    }
+    
+    .converter-container {
+        padding: 1.5rem;
+        width: 95%;
+    }
+
+    .dropdown {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .dropdown i:hover {
+        transform: rotate(270deg);
+    }
+}
+
+@media (max-width: 480px) {
+    .exchange-table {
+        font-size: 0.85rem;
+    }
+    
+    .currency-flag {
+        width: 28px;
+        height: 18px;
+    }
+    
+    .currency-name {
+        font-size: 0.9rem;
+    }
+    
+    .container {
+        padding: 1.5rem;
+        width: 95%;
+    }
+    
+    .exchange-currency-link {
+        min-width: 200px;
+        padding: 12px 15px;
+    }
+    
+    .exchange-currency-link h3 {
+        font-size: 0.95rem;
+    }
+}
