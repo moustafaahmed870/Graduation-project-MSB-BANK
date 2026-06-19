@@ -1,0 +1,61 @@
+name: msb_bank
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.4
+  http: ^1.2.0
+  shared_preferences: ^2.2.2
+  cupertino_icons: ^1.0.8
+  equatable: ^2.0.5
+  flutter_secure_storage: ^9.0.0
+
+  # 🔥 Firebase Core (أساسي)
+  firebase_core: ^2.25.4
+
+  # 🔐 Firebase Authentication
+  firebase_auth: ^4.17.4
+  qr_flutter: ^4.1.0
+
+  # 🗄️ Cloud Firestore
+  cloud_firestore: ^4.15.4
+  mobile_scanner: ^4.0.1
+
+  # 🔔 Firebase Cloud Messaging (FCM)
+  firebase_messaging: ^14.7.19
+
+  # 🔔 Local Notifications (عرض الإشعار لما التطبيق مفتوح)
+  flutter_local_notifications: ^17.2.2
+
+  # 🌍 Localization
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+
+# ✅ إعداد أيقونة التطبيق
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/image/logo.png"
+  remove_alpha_ios: true
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  # ✅ إضافة الصور
+  assets:
+    - assets/image/

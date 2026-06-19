@@ -1,0 +1,14 @@
+# الملفات السرية
+.env
+serviceAccountKey.json
+
+# مجلدات dependencies
+node_modules/
+
+# ملفات نظام التشغيل
+.DS_Store
+Thumbs.db
+
+# مجلدات IDE
+.vscode/
+.idea/

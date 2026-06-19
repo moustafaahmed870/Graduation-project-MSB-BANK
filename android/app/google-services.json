@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "313351382497",
+    "project_id": "msb-bank",
+    "storage_bucket": "msb-bank.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313351382497:android:a587713c9d509a6f0c9ea0",
+        "android_client_info": {
+          "package_name": "com.example.msb_bank"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUqimbQzftwZTbSz4uet-zpVmKKEwhihA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
