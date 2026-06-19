@@ -7,6 +7,7 @@ import 'package:msb_bank/Main_Screen.dart';
 import 'package:msb_bank/l10n/app_localizations.dart';
 import '../my_theme.dart';
 import '../notification.dart';
+import '../otp_page.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -151,7 +152,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               behavior: SnackBarBehavior.floating,
             ),
           );
-          Navigator.pushReplacementNamed(context, MainScreen.routeName);
+
+          // ✅ بعد اللوجن ينجح، روح على شاشة OTP الوهمية قبل الدخول الفعلي
+          Navigator.pushReplacementNamed(
+            context,
+            OtpPage.routeName,
+          );
 
         } else if (state is AuthPendingApproval) {
           // ===================================================

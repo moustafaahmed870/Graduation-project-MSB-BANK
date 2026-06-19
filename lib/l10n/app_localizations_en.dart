@@ -872,4 +872,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get transfer_to_this_account => 'Transfer to this account';
+
+  @override
+  String get otp_title => 'Verify Code';
+
+  @override
+  String otp_subtitle_with_destination(String destination) {
+    return 'Enter the code sent to $destination';
+  }
+
+  @override
+  String otp_subtitle_generic(int length) {
+    return 'Enter the $length-digit code';
+  }
+
+  @override
+  String get otp_incomplete_error => 'Please enter the full code';
+
+  @override
+  String get otp_verified_success => 'Verified successfully';
+
+  @override
+  String get otp_resend_message => 'Code resent (mock only)';
+
+  @override
+  String get otp_confirm_button => 'Confirm';
+
+  @override
+  String get otp_resend_button => 'Resend code';
 }

@@ -1795,6 +1795,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Transfer to this account'**
   String get transfer_to_this_account;
+
+  /// No description provided for @otp_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Code'**
+  String get otp_title;
+
+  /// No description provided for @otp_subtitle_with_destination.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code sent to {destination}'**
+  String otp_subtitle_with_destination(String destination);
+
+  /// No description provided for @otp_subtitle_generic.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the {length}-digit code'**
+  String otp_subtitle_generic(int length);
+
+  /// No description provided for @otp_incomplete_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the full code'**
+  String get otp_incomplete_error;
+
+  /// No description provided for @otp_verified_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified successfully'**
+  String get otp_verified_success;
+
+  /// No description provided for @otp_resend_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Code resent (mock only)'**
+  String get otp_resend_message;
+
+  /// No description provided for @otp_confirm_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get otp_confirm_button;
+
+  /// No description provided for @otp_resend_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get otp_resend_button;
 }
 
 class _AppLocalizationsDelegate

@@ -865,4 +865,32 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get transfer_to_this_account => 'تحويل إلى هذا الحساب';
+
+  @override
+  String get otp_title => 'تأكيد الكود';
+
+  @override
+  String otp_subtitle_with_destination(String destination) {
+    return 'أدخل الكود المرسل إلى $destination';
+  }
+
+  @override
+  String otp_subtitle_generic(int length) {
+    return 'أدخل الكود المكوّن من $length أرقام';
+  }
+
+  @override
+  String get otp_incomplete_error => 'من فضلك أدخل الكود كامل';
+
+  @override
+  String get otp_verified_success => 'تم التحقق بنجاح';
+
+  @override
+  String get otp_resend_message => 'تم إعادة إرسال الكود (شكلي فقط)';
+
+  @override
+  String get otp_confirm_button => 'تأكيد';
+
+  @override
+  String get otp_resend_button => 'إعادة إرسال الكود';
 }

@@ -18,6 +18,7 @@ import 'Account Details Screen/account_repository.dart';
 import 'Account Details Screen/accout_detis.dart';
 import 'language_provider.dart';
 import 'notification.dart';
+import 'otp_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
                 SplashScreen.routeName: (context) => SplashScreen(),
                 AccountDetails.routeName: (context) => const AccountDetails(),
                 AddCardScreen.routeName: (context) => const AddCardScreen(),
+                OtpPage.routeName: (context) => const OtpPage(), // ✅ جديد
               },
             );
           },

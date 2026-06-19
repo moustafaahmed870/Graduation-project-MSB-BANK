@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiClient {
-  static const String baseUrl = 'http://192.168.1.18:3000/api';
+  static const String baseUrl = 'http://192.168.1.13:3000/api';
 
   static Future<Map<String, dynamic>> _request({
     required String method,

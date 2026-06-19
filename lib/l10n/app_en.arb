@@ -300,5 +300,29 @@
      "qr_code_info": "Scan anyone's QR code to send them money quickly",
      "scan_result": "Scan Result",
      "scanned_account_number": "Scanned Account Number",
-     "transfer_to_this_account": "Transfer to this account"
+     "transfer_to_this_account": "Transfer to this account",
+
+       "otp_title": "Verify Code",
+       "otp_subtitle_with_destination": "Enter the code sent to {destination}",
+       "@otp_subtitle_with_destination": {
+         "placeholders": {
+           "destination": {
+             "type": "String"
+           }
+         }
+       },
+       "otp_subtitle_generic": "Enter the {length}-digit code",
+       "@otp_subtitle_generic": {
+         "placeholders": {
+           "length": {
+             "type": "int"
+           }
+         }
+       },
+       "otp_incomplete_error": "Please enter the full code",
+       "otp_verified_success": "Verified successfully",
+       "otp_resend_message": "Code resent (mock only)",
+       "otp_confirm_button": "Confirm",
+       "otp_resend_button": "Resend code"
+
 }

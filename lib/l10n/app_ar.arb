@@ -304,5 +304,31 @@
           "nav_home": "Home",
           "nav_account": "Account",
           "nav_services": "Services",
-          "nav_settings": "Settings"
+          "nav_settings": "Settings",
+
+            "otp_title": "تأكيد الكود",
+            "otp_subtitle_with_destination": "أدخل الكود المرسل إلى {destination}",
+            "@otp_subtitle_with_destination": {
+              "placeholders": {
+                "destination": {
+                  "type": "String"
+                }
+              }
+            },
+            "otp_subtitle_generic": "أدخل الكود المكوّن من {length} أرقام",
+            "@otp_subtitle_generic": {
+              "placeholders": {
+                "length": {
+                  "type": "int"
+                }
+              }
+            },
+            "otp_incomplete_error": "من فضلك أدخل الكود كامل",
+            "otp_verified_success": "تم التحقق بنجاح",
+            "otp_resend_message": "تم إعادة إرسال الكود (شكلي فقط)",
+            "otp_confirm_button": "تأكيد",
+            "otp_resend_button": "إعادة إرسال الكود"
+
+
+
 }
